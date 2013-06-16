@@ -36,6 +36,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Net" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -53,6 +54,7 @@
   <ItemGroup>
     <Compile Include="Expression.cs" />
     <Compile Include="Filter.cs" />
+    <Compile Include="LyricsLoader.cs" />
     <Compile Include="LyricsReader.cs" />
     <Compile Include="LyricsReloaded.cs" />
     <Compile Include="MusicBeeInterface.cs" />
@@ -70,7 +72,7 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
@@ -81,7 +83,12 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="providers\example.yml" />
+    <None Include="providers\azlyrics.com.yml" />
+    <None Include="providers\urbanlyrics.com.yml" />
+    <None Include="providers\plyrics.com.yml" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

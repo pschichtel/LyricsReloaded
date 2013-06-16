@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,23 +10,30 @@ using System.Net;
 using CubeIsland.LyricsReloaded;
 using System.Reflection;
 using YamlDotNet.RepresentationModel;
+using System.Resources;
 
 namespace MusicBeePlugin
 {
     public partial class Plugin
     {
-        private static const YamlScalarNode NODE_NAME = new YamlScalarNode("name");
-        private static const YamlScalarNode NODE_URL = new YamlScalarNode("url");
-        private static const YamlScalarNode NODE_EXPRESSIONS = new YamlScalarNode("expressions");
-        private static const YamlScalarNode NODE_FILTERS = new YamlScalarNode("filters");
+        private static readonly YamlScalarNode NODE_NAME = new YamlScalarNode("name");
+        private static readonly YamlScalarNode NODE_URL = new YamlScalarNode("url");
+        private static readonly YamlScalarNode NODE_EXPRESSIONS = new YamlScalarNode("expressions");
+        private static readonly YamlScalarNode NODE_FILTERS = new YamlScalarNode("filters");
 
         public static MusicBeeApiInterface API;
+        private bool initialized = false;
+        private string pluginDirectory = ".\\Plugins";
+        private LyricsLoader loader;
         private Dictionary<String, LyricsReader> readers = new Dictionary<string, LyricsReader>();
         private Dictionary<string, Filter> filters = new Dictionary<string, Filter>();
 
+        // Called from MusicBee
         public PluginInfo Initialise(IntPtr apiPtr)
         {
             API = (MusicBeeApiInterface)Marshal.PtrToStructure(apiPtr, typeof(MusicBeeApiInterface));
+
+            this.Initialise();
 
             PluginInfo info = new PluginInfo();
             info.PluginInfoVersion = PluginInfoVersion;
@@ -45,24 +53,36 @@ namespace MusicBeePlugin
             return info;
         }
 
+        public void Initialise()
+        {
+            if (!this.initialized)
+            {
+                this.initialized = true;
+                this.pluginDirectory = Path.GetDirectoryName(Assembly.GetAssembly(this.GetType()).Location);
+                this.loader = new LyricsLoader(20000);
+                this.initFilters();
+                this.initBuildInReaders();
+            }
+        }
+
         private void initFilters()
         {
-            
+            this.filters.Add("strip_html", new HtmlStripper());
+            this.filters.Add("strip_links", new LinkRemover());
+            this.filters.Add("entity_decode", new HtmlEntityDecoder());
+            this.filters.Add("utf8_encode", new UTF8Encoder());
         }
 
         private void initBuildInReaders()
         {
-            Assembly assembly = Assembly.GetExecutingAssembly();
-            foreach (String resourceName in assembly.GetManifestResourceNames())
-            {
-                if (resourceName.EndsWith(".yml"))
-                {
-                    using (Stream stream = assembly.GetManifestResourceStream(resourceName))
-                    {
-                        this.loadReader(new StreamReader(stream));
-                    }
-                }
-            }
+            this.loadReaderFromResource(Properties.Resources.azlyrics_com);
+            this.loadReaderFromResource(Properties.Resources.plyrics_com);
+            this.loadReaderFromResource(Properties.Resources.urbanlyrics_com);
+        }
+
+        private void loadReaderFromResource(byte[] resourceData)
+        {
+            this.loadReader(new StreamReader(new MemoryStream(resourceData), Encoding.UTF8));
         }
 
         public void loadReader(TextReader configReader)
@@ -113,7 +133,7 @@ namespace MusicBeePlugin
             Filter tmp;
             if (node is YamlScalarNode)
             {
-                tmp = this.getFilter(((YamlScalarNode)entry).Value);
+                tmp = this.getFilter(((YamlScalarNode)node).Value);
                 if (tmp != null)
                 {
                     filters.AddLast(tmp);
@@ -138,6 +158,9 @@ namespace MusicBeePlugin
             {
                 throw new IOException("Invalid configuration");
             }
+
+            LyricsReader reader = new LyricsReader(name, url, expressions, filters);
+            this.readers.Add(reader.getName(), reader);
         }
 
         public Filter getFilter(string name)
@@ -150,11 +173,6 @@ namespace MusicBeePlugin
             return null;
         }
 
-        public void registerReader(LyricsReader reader)
-        {
-            this.readers.Add(reader.getName(), reader);
-        }
-
         public String[] GetProviders()
         {
             return this.readers.Keys.ToArray();
@@ -162,15 +180,21 @@ namespace MusicBeePlugin
 
         public String RetrieveLyrics(String source, String artist, String title, String album, bool preferSynced, String provider)
         {
-            LyricsReader reader = this.readers[provider];
+            LyricsReader reader;
+            try
+            {
+                reader = this.readers[provider];
+            }
+            catch (KeyNotFoundException e)
+            {
+                return null;
+            }
 
             String url = reader.constructUrl(artist, title, album, preferSynced);
 
-            String content = "";
+            LyricsResponse response = this.loader.loadContent(url, "USER_AGENT");
 
-            content = reader.processContent(content);
-
-            return content;
+            return reader.processContent(response.getContent(), response.getEncoding());
         }
 
         public void ReceiveNotification(String source, NotificationType type)
@@ -181,7 +205,13 @@ namespace MusicBeePlugin
                     String proxySetting = API.Setting_GetWebProxy();
                     if (proxySetting != null)
                     {
-                        // setup proxy
+                        string[] raw = proxySetting.Split(Convert.ToChar(0));
+                        WebProxy proxy = new WebProxy(raw[0]);
+                        if (raw.Length >= 3)
+                        {
+                            proxy.Credentials = new NetworkCredential(raw[1], raw[2]);
+                        }
+                        this.loader.setProxy(proxy);
                     }
                     break;
             }

@@ -1,0 +1,9 @@
+name: "plyrics.com"
+url: "http://www.plyrics.com/lyrics/{artist:lower,alpha}/{title:lower,alpha}.html"
+    
+expressions:
+- '<!-- start of lyrics -->(?<lyrics>.+?)<!-- end of lyrics -->'
+    
+filters:
+- strip_html
+- utf8_encode

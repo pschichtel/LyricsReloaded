@@ -8,19 +8,22 @@ namespace CubeIsland.LyricsReloaded
 {
     public class Expression
     {
-        private Regex regex;
-        private int group;
+        private readonly Regex regex;
 
         public Expression(string regex)
         {
-            this.regex = new Regex(regex, RegexOptions.Compiled);
-            this.group = this.regex.GroupNumberFromName("lyrics");
+            this.regex = new Regex(regex, RegexOptions.Compiled | RegexOptions.Singleline);
         }
 
         public string apply(string content)
         {
             Match match = this.regex.Match(content);
-            return match.Groups[1].ToString();
+            if (match.Success)
+            {
+                content = match.Groups["lyrics"].ToString();
+            }
+
+            return content;
         }
     }
 }
