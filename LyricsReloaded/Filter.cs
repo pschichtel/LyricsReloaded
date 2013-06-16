@@ -14,7 +14,7 @@ namespace CubeIsland.LyricsReloaded
 
     public class HtmlStripper : Filter
     {
-        private static readonly Regex STRIP_TAG_REGEX = new Regex("<[a-z]+(\\s+[a-z]+(=(\"[^\"]*\"|'[^']*'|[^\\s\"'/>]+))?)*\\s*/?>|</[a-z]+>", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static readonly Regex STRIP_TAG_REGEX = new Regex("<[a-z]+(\\s+[a-z-]+(=(\"[^\"]*\"|'[^']*'|[^\\s\"'/>]+))?)*\\s*/?>|</[a-z]+>", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         public string filter(string content, Encoding encoding)
         {
@@ -53,6 +53,41 @@ namespace CubeIsland.LyricsReloaded
             UTF8.GetChars(rawUtf8, 0, rawUtf8.Length, utf8Chars, 0);
 
             return new String(utf8Chars);
+        }
+    }
+
+    public class Br2Nl : Filter
+    {
+        private static readonly Regex BR2NL_REGEX = new Regex("<br\\s*/?>", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+        public string filter(string content, Encoding encoding)
+        {
+            return BR2NL_REGEX.Replace(content, "\n");
+        }
+    }
+
+    public class P2Break : Filter
+    {
+        private static readonly Regex P2BREAK_REGEX = new Regex("<p[^/>]*/?>(\\s*</p>)?", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline);
+
+        public string filter(string content, Encoding encoding)
+        {
+            return P2BREAK_REGEX.Replace(content, "\n");
+        }
+    }
+
+    public class WhitespaceCleaner : Filter
+    {
+        private static readonly Regex CLEAN_WHITESPACE_REGEX = new Regex("^\\s+|\\s+$", RegexOptions.Compiled);
+        private static readonly Regex CLEAN_LINES_REGEX = new Regex("\n{3,}", RegexOptions.Compiled);
+
+        public string filter(string content, Encoding encoding)
+        {
+            content = content.Replace("\r\n", "\n").Replace('\r', '\n');
+            content = CLEAN_WHITESPACE_REGEX.Replace(content, "\n\n");
+            content = CLEAN_LINES_REGEX.Replace(content, "");
+
+            return content;
         }
     }
 }

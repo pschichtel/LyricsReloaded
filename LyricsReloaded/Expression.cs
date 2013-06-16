@@ -12,7 +12,7 @@ namespace CubeIsland.LyricsReloaded
 
         public Expression(string regex)
         {
-            this.regex = new Regex(regex, RegexOptions.Compiled | RegexOptions.Singleline);
+            this.regex = new Regex(regex, RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.ExplicitCapture | RegexOptions.CultureInvariant);
         }
 
         public string apply(string content)
@@ -21,6 +21,10 @@ namespace CubeIsland.LyricsReloaded
             if (match.Success)
             {
                 content = match.Groups["lyrics"].ToString();
+            }
+            else
+            {
+                throw new Exception("The pattern didn't match: " + this.regex.ToString());
             }
 
             return content;

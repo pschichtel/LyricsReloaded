@@ -1,0 +1,12 @@
+name: "oldielyrics.com"
+url: "http://oldielyrics.com/lyrics/{artist:lower,uscore}/{title:lower,uscore}.html"
+    
+expressions:
+- '<div\s+class="lyrics"[^>]*>\s*<p>(?<lyrics>.+)</p>\s*</div>'
+    
+filters:
+- br2nl
+- p2break
+- strip_html
+- entity_decode
+- utf8_encode

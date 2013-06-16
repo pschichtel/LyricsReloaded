@@ -84,6 +84,8 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <None Include="providers\azlyrics.com.yml" />
+    <None Include="providers\oldielyrics.com.yml" />
+    <None Include="providers\rapgenius.com.yml" />
     <None Include="providers\urbanlyrics.com.yml" />
     <None Include="providers\plyrics.com.yml" />
   </ItemGroup>

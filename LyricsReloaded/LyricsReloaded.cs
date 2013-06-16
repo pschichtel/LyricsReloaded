@@ -71,6 +71,9 @@ namespace MusicBeePlugin
             this.filters.Add("strip_links", new LinkRemover());
             this.filters.Add("entity_decode", new HtmlEntityDecoder());
             this.filters.Add("utf8_encode", new UTF8Encoder());
+            this.filters.Add("br2nl", new Br2Nl());
+            this.filters.Add("p2break", new P2Break());
+            this.filters.Add("clean_spaces", new WhitespaceCleaner());
         }
 
         private void initBuildInReaders()
@@ -78,6 +81,8 @@ namespace MusicBeePlugin
             this.loadReaderFromResource(Properties.Resources.azlyrics_com);
             this.loadReaderFromResource(Properties.Resources.plyrics_com);
             this.loadReaderFromResource(Properties.Resources.urbanlyrics_com);
+            this.loadReaderFromResource(Properties.Resources.rapgenius_com);
+            this.loadReaderFromResource(Properties.Resources.oldielyrics_com);
         }
 
         private void loadReaderFromResource(byte[] resourceData)
@@ -191,6 +196,8 @@ namespace MusicBeePlugin
             }
 
             String url = reader.constructUrl(artist, title, album, preferSynced);
+
+            Console.WriteLine("URL: " + url);
 
             LyricsResponse response = this.loader.loadContent(url, "USER_AGENT");
 

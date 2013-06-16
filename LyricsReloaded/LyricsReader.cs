@@ -112,6 +112,9 @@ namespace CubeIsland.LyricsReloaded
                         case "name":
                             content = stripDown(content, "-");
                             break;
+                        case "uscore":
+                            content = stripDown(content, "_");
+                            break;
                         case "normal":
                             content = normaizeString(content);
                             break;

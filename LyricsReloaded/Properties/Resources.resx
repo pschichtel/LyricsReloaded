@@ -121,8 +121,14 @@
   <data name="azlyrics_com" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\providers\azlyrics.com.yml;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="oldielyrics_com" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\providers\oldielyrics.com.yml;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="plyrics_com" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\providers\plyrics.com.yml;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="rapgenius_com" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\providers\rapgenius.com.yml;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="urbanlyrics_com" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\providers\urbanlyrics.com.yml;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>

@@ -73,9 +73,29 @@ namespace MusicBeePlugin.Properties {
         /// <summary>
         ///   Sucht eine lokalisierte Ressource vom Typ System.Byte[].
         /// </summary>
+        public static byte[] oldielyrics_com {
+            get {
+                object obj = ResourceManager.GetObject("oldielyrics_com", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Ressource vom Typ System.Byte[].
+        /// </summary>
         public static byte[] plyrics_com {
             get {
                 object obj = ResourceManager.GetObject("plyrics_com", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Ressource vom Typ System.Byte[].
+        /// </summary>
+        public static byte[] rapgenius_com {
+            get {
+                object obj = ResourceManager.GetObject("rapgenius_com", resourceCulture);
                 return ((byte[])(obj));
             }
         }

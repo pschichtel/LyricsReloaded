@@ -1,0 +1,10 @@
+name: "rapgenius.com"
+url: "http://rapgenius.com/{artist:lower,name}-{title:lower,name}-lyrics"
+    
+expressions:
+- '<div\s+class="lyrics"[^>]*?>(?<lyrics>.*?)</div>'
+    
+filters:
+- strip_html
+- clean_spaces
+- utf8_encode
