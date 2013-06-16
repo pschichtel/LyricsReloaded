@@ -9,7 +9,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>MusicBeePlugin</RootNamespace>
-    <AssemblyName>LyricsReloaded</AssemblyName>
+    <AssemblyName>mb_LyricsReloaded</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -30,6 +30,8 @@
     </DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -54,6 +56,7 @@
   <ItemGroup>
     <Compile Include="Expression.cs" />
     <Compile Include="Filter.cs" />
+    <Compile Include="Logger.cs" />
     <Compile Include="LyricsLoader.cs" />
     <Compile Include="LyricsProvider.cs" />
     <Compile Include="LyricsReloaded.cs" />
@@ -98,6 +101,11 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>if not exist "$(TargetDir)\merged" mkdir "$(TargetDir)\merged"
+
+"$(SolutionDir)\packages\ilmerge.2.13.0307\ILMerge.exe" "/out:$(TargetDir)\merged\$(TargetFileName)" "$(TargetPath)" "$(TargetDir)\YamlDotNet.Core.dll" "$(TargetDir)\YamlDotNet.RepresentationModel.dll"</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

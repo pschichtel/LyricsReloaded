@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Express 2012 for Windows Desktop
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LyricsReloaded", "LyricsReloaded\LyricsReloaded.csproj", "{0EBB89EE-8500-4DD9-B7E9-52D5AE85DEFC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mb_LyricsReloaded", "LyricsReloaded\mb_LyricsReloaded.csproj", "{0EBB89EE-8500-4DD9-B7E9-52D5AE85DEFC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LyricsTester", "LyricsTester\LyricsTester.csproj", "{9BB223A4-A756-4530-9B61-A2E0CE6E2937}"
 EndProject

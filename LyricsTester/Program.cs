@@ -12,7 +12,7 @@ namespace LyricsTester
         {
             MusicBeePlugin.Plugin plugin = new MusicBeePlugin.Plugin();
 
-            plugin.Initialise();
+            plugin.init();
 
             Console.WriteLine("The providers:");
             foreach (String provider in plugin.GetProviders())

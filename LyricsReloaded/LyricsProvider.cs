@@ -6,19 +6,21 @@ using System.Web;
 using YamlDotNet.RepresentationModel;
 using System.Text.RegularExpressions;
 using System.Globalization;
+using MusicBeePlugin;
 
 namespace CubeIsland.LyricsReloaded
 {
     public class LyricsProvider
     {
-
+        private readonly Plugin plugin;
         private readonly string name;
         private readonly string url;
         private readonly LinkedList<Expression> expressions;
         private readonly LinkedList<Filter> filters;
 
-        public LyricsProvider(string name, string url, LinkedList<Expression> expressions, LinkedList<Filter> filters)
+        public LyricsProvider(Plugin plugin, string name, string url, LinkedList<Expression> expressions, LinkedList<Filter> filters)
         {
+            this.plugin = plugin;
             this.name = name;
             this.url = url;
             this.expressions = expressions;

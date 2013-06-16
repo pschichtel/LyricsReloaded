@@ -21,8 +21,11 @@ namespace MusicBeePlugin
         private static readonly YamlScalarNode NODE_EXPRESSIONS = new YamlScalarNode("expressions");
         private static readonly YamlScalarNode NODE_FILTERS = new YamlScalarNode("filters");
 
-        public static MusicBeeApiInterface API;
+        private MusicBeeApiInterface musicBee;
+        private PluginInfo info = new PluginInfo();
+        private Logger logger;
         private bool initialized = false;
+        private string name = "LyricsReloaded";
         private string pluginDirectory = ".\\Plugins";
         private LyricsLoader loader;
         private Dictionary<String, LyricsProvider> providers = new Dictionary<string, LyricsProvider>();
@@ -31,37 +34,47 @@ namespace MusicBeePlugin
         // Called from MusicBee
         public PluginInfo Initialise(IntPtr apiPtr)
         {
-            API = (MusicBeeApiInterface)Marshal.PtrToStructure(apiPtr, typeof(MusicBeeApiInterface));
+            try
+            {
+                this.musicBee = (MusicBeeApiInterface)Marshal.PtrToStructure(apiPtr, typeof(MusicBeeApiInterface));
 
-            this.Initialise();
+                this.info.PluginInfoVersion = PluginInfoVersion;
+                this.info.Name = "Lyrics Reloaded!";
+                this.info.Description = "Lyrics loading done properly!";
+                this.info.Author = "Phillip Schichtel <Quick_Wango>";
+                this.info.TargetApplication = "MusicBee";
+                this.info.Type = PluginType.LyricsRetrieval;
+                this.info.VersionMajor = 1;
+                this.info.VersionMinor = 0;
+                this.info.Revision = 1;
+                this.info.MinInterfaceVersion = MinInterfaceVersion;
+                this.info.MinApiRevision = MinApiRevision;
+                this.info.ReceiveNotifications = ReceiveNotificationFlags.StartupOnly;
+                this.info.ConfigurationPanelHeight = 0;
 
-            PluginInfo info = new PluginInfo();
-            info.PluginInfoVersion = PluginInfoVersion;
-            info.Name = "Lyrics Reloaded!";
-            info.Description = "Lyrics loading done properly! - https://github.com/quickwango/LyricsReloaded";
-            info.Author = "Phillip Schichtel <Quick_Wango>";
-            info.TargetApplication = "MusicBee";
-            info.Type = PluginType.LyricsRetrieval;
-            info.VersionMajor = 1;
-            info.VersionMinor = 0;
-            info.Revision = 1;
-            info.MinInterfaceVersion = MinInterfaceVersion;
-            info.MinApiRevision = MinApiRevision;
-            info.ReceiveNotifications = ReceiveNotificationFlags.StartupOnly;
-            info.ConfigurationPanelHeight = 0;
+                this.init();
+            }
+            catch (Exception e)
+            {
+                this.logger.error("An exception occurred during initialization: %s", e.Message);
+            }
 
-            return info;
+            return this.info;
         }
 
-        public void Initialise()
+        public void init()
         {
             if (!this.initialized)
             {
+                Assembly asm = Assembly.GetAssembly(this.GetType());
                 this.initialized = true;
-                this.pluginDirectory = Path.GetDirectoryName(Assembly.GetAssembly(this.GetType()).Location);
-                this.loader = new LyricsLoader(20000);
+                this.name = asm.GetName().Name;
+                this.pluginDirectory = Path.GetDirectoryName(asm.Location);
+                this.logger = new Logger(this.pluginDirectory + Path.DirectorySeparatorChar + this.name + ".log");
+                this.loader = new LyricsLoader(this, 20000);
                 this.initFilters();
-                this.initBuildInReaders();
+                this.loadProviders();
+                this.logger.info("Plugin initialized!");
             }
         }
 
@@ -76,7 +89,26 @@ namespace MusicBeePlugin
             this.filters.Add("clean_spaces", new WhitespaceCleaner());
         }
 
-        private void initBuildInReaders()
+        private void loadProviders()
+        {
+            this.loadBuildInProviders();
+
+            DirectoryInfo di = new DirectoryInfo(this.pluginDirectory + Path.DirectorySeparatorChar + this.name);
+            if (!di.Exists)
+            {
+                di.Create();
+            }
+
+            foreach (FileInfo fi in di.GetFiles("*.yml", SearchOption.TopDirectoryOnly))
+            {
+                using (StreamReader reader = fi.OpenText())
+                {
+                    this.loadProvider(reader);
+                }
+            }
+        }
+
+        private void loadBuildInProviders()
         {
             this.loadProviderFromResource(Properties.Resources.songlyrics_com);
             this.loadProviderFromResource(Properties.Resources.metrolyrics_com);
@@ -169,8 +201,33 @@ namespace MusicBeePlugin
                 throw new IOException("Invalid configuration");
             }
 
-            LyricsProvider provider = new LyricsProvider(name, url, expressions, filters);
-            this.providers.Add(provider.getName(), provider);
+            LyricsProvider provider = new LyricsProvider(this, name, url, expressions, filters);
+            this.logger.info("Provider loaded: " + provider.getName());
+
+            lock (this.providers)
+            {
+                if (this.providers.ContainsKey(provider.getName()))
+                {
+                    this.logger.info("The provider %s does already exist and will be replaced.", provider.getName());
+                    this.providers.Remove(provider.getName());
+                }
+                this.providers.Add(provider.getName(), provider);
+            }
+        }
+
+        public string getName()
+        {
+            return this.name;
+        }
+
+        public MusicBeeApiInterface getMusicBee()
+        {
+            return this.musicBee;
+        }
+
+        public Logger getLogger()
+        {
+            return this.logger;
         }
 
         public Filter getFilter(string name)
@@ -195,7 +252,7 @@ namespace MusicBeePlugin
             {
                 provider = this.providers[providerName];
             }
-            catch (KeyNotFoundException e)
+            catch (KeyNotFoundException)
             {
                 return null;
             }
@@ -209,12 +266,31 @@ namespace MusicBeePlugin
             return provider.processContent(response.getContent(), response.getEncoding());
         }
 
+        #region "MusicBee implementations"
+        public bool Configure(IntPtr panelHandle)
+        {
+            return true;
+        }
+
+        public void Close(PluginCloseReason reason)
+        {
+            this.logger.info("Closing ...");
+            this.providers.Clear();
+        }
+
+        public void SaveSettings()
+        {}
+
+        public void Uninstall()
+        {}
+
         public void ReceiveNotification(String source, NotificationType type)
         {
+            this.logger.debug("Received a notification of type %s", type);
             switch (type)
             {
                 case NotificationType.PluginStartup:
-                    String proxySetting = API.Setting_GetWebProxy();
+                    String proxySetting = this.musicBee.Setting_GetWebProxy();
                     if (proxySetting != null)
                     {
                         string[] raw = proxySetting.Split(Convert.ToChar(0));
@@ -228,5 +304,7 @@ namespace MusicBeePlugin
                     break;
             }
         }
+
+        #endregion
     }
 }
