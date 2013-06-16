@@ -55,7 +55,7 @@
     <Compile Include="Expression.cs" />
     <Compile Include="Filter.cs" />
     <Compile Include="LyricsLoader.cs" />
-    <Compile Include="LyricsReader.cs" />
+    <Compile Include="LyricsProvider.cs" />
     <Compile Include="LyricsReloaded.cs" />
     <Compile Include="MusicBeeInterface.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

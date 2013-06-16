@@ -183,12 +183,12 @@ namespace MusicBeePlugin
             return this.providers.Keys.ToArray();
         }
 
-        public String RetrieveLyrics(String source, String artist, String title, String album, bool preferSynced, String provider)
+        public String RetrieveLyrics(String source, String artist, String title, String album, bool preferSynced, String providerName)
         {
             LyricsProvider provider;
             try
             {
-                provider = this.providers[provider];
+                provider = this.providers[providerName];
             }
             catch (KeyNotFoundException e)
             {
