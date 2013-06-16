@@ -1,0 +1,10 @@
+name: "teksty.org"
+url: "http://teksty.org/{artist:lower,name},{title:lower,name},tekst-piosenki"
+    
+expressions:
+- '<div\s+class="songText"[^>]*>(?<lyrics>.*?)</div>'
+    
+filters:
+- strip_html
+- clean_spaces
+- utf8_encode

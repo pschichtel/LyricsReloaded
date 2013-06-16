@@ -26,8 +26,8 @@ namespace LyricsTester
             Console.Write("Enter title: ");
             string title = def(Console.ReadLine(), "Misery Business");
 
-            Console.Write("Enter album: ");
-            string album = def(Console.ReadLine(), "Roit!");
+            //Console.Write("Enter album: ");
+            //string album = def(Console.ReadLine(), "Roit!");
 
             String lyrics;
             foreach (String provider in plugin.GetProviders())
@@ -35,7 +35,7 @@ namespace LyricsTester
                 Console.Write("Provider " + provider + ": ");
                 try
                 {
-                    lyrics = plugin.RetrieveLyrics("abc.mp3", artist, title, album, false, provider);
+                    lyrics = plugin.RetrieveLyrics("abc.mp3", artist, title, "", false, provider);
                     if (string.IsNullOrWhiteSpace(lyrics))
                     {
                         Console.WriteLine("failed (not found)");

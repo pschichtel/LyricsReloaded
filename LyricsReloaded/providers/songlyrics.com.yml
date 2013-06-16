@@ -1,0 +1,11 @@
+name: "songlyrics.com"
+url: "http://www.songlyrics.com/{artist:lower,name}/{title:lower,name}-lyrics/"
+    
+expressions:
+- '<div id="songLyricsDiv-outer">(?<lyrics>.*?)</div>'
+    
+filters:
+- strip_html
+- entity_decode
+- clean_spaces
+- utf8_encode

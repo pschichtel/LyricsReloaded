@@ -1,0 +1,9 @@
+name: "tekstowo.pl"
+url: "http://www.tekstowo.pl/piosenka,{artist:lower,uscore},{title:lower,uscore}.html"
+    
+expressions:
+- '<div\s+class="song-text"[^>]*>(?<lyrics>.*?)<p>&nbsp;</p>'
+    
+filters:
+- strip_html
+- utf8_encode

@@ -121,6 +121,12 @@
   <data name="azlyrics_com" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\providers\azlyrics.com.yml;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="letras_mus_br" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\providers\letras.mus.br.yml;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="metrolyrics_com" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\providers\metrolyrics.com.yml;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="oldielyrics_com" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\providers\oldielyrics.com.yml;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
@@ -129,6 +135,15 @@
   </data>
   <data name="rapgenius_com" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\providers\rapgenius.com.yml;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="songlyrics_com" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\providers\songlyrics.com.yml;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="tekstowo_pl" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\providers\tekstowo.pl.yml;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="teksty_org" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\providers\teksty.org.yml;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="urbanlyrics_com" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\providers\urbanlyrics.com.yml;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>

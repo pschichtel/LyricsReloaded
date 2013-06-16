@@ -1,0 +1,11 @@
+name: "letras.mus.br"
+url: "http://letras.mus.br/{artist:lower,name}/{title:lower,name}/"
+    
+expressions:
+- '<div id="div_letra"[^>]*>(?<lyrics>.*?)</div>'
+    
+filters:
+- p2break
+- strip_html
+- clean_spaces
+- utf8_encode

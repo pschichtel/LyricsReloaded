@@ -84,6 +84,11 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <None Include="providers\azlyrics.com.yml" />
+    <None Include="providers\songlyrics.com.yml" />
+    <None Include="providers\metrolyrics.com.yml" />
+    <None Include="providers\letras.mus.br.yml" />
+    <None Include="providers\teksty.org.yml" />
+    <None Include="providers\tekstowo.pl.yml" />
     <None Include="providers\oldielyrics.com.yml" />
     <None Include="providers\rapgenius.com.yml" />
     <None Include="providers\urbanlyrics.com.yml" />

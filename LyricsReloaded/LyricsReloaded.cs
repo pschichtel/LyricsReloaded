@@ -78,19 +78,24 @@ namespace MusicBeePlugin
 
         private void initBuildInReaders()
         {
-            this.loadReaderFromResource(Properties.Resources.azlyrics_com);
-            this.loadReaderFromResource(Properties.Resources.plyrics_com);
-            this.loadReaderFromResource(Properties.Resources.urbanlyrics_com);
-            this.loadReaderFromResource(Properties.Resources.rapgenius_com);
-            this.loadReaderFromResource(Properties.Resources.oldielyrics_com);
+            this.loadProviderFromResource(Properties.Resources.songlyrics_com);
+            this.loadProviderFromResource(Properties.Resources.metrolyrics_com);
+            this.loadProviderFromResource(Properties.Resources.letras_mus_br);
+            this.loadProviderFromResource(Properties.Resources.teksty_org);
+            this.loadProviderFromResource(Properties.Resources.tekstowo_pl);
+            this.loadProviderFromResource(Properties.Resources.azlyrics_com);
+            this.loadProviderFromResource(Properties.Resources.plyrics_com);
+            this.loadProviderFromResource(Properties.Resources.urbanlyrics_com);
+            this.loadProviderFromResource(Properties.Resources.rapgenius_com);
+            this.loadProviderFromResource(Properties.Resources.oldielyrics_com);
         }
 
-        private void loadReaderFromResource(byte[] resourceData)
+        private void loadProviderFromResource(byte[] resourceData)
         {
-            this.loadReader(new StreamReader(new MemoryStream(resourceData), Encoding.UTF8));
+            this.loadProvider(new StreamReader(new MemoryStream(resourceData), Encoding.UTF8));
         }
 
-        public void loadReader(TextReader configReader)
+        public void loadProvider(TextReader configReader)
         {
             YamlStream yaml = new YamlStream();
             yaml.Load(configReader);

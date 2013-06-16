@@ -32,11 +32,11 @@ namespace CubeIsland.LyricsReloaded
 
     public class LinkRemover : Filter
     {
-        private static readonly Regex STRIP_LINKS_REGEX = new Regex("https?://(\\s|$)*", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static readonly Regex STRIP_LINKS_REGEX = new Regex("https?://.*?(\\s|$)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         public string filter(string content, Encoding encoding)
         {
-            return STRIP_LINKS_REGEX.Replace(content, "");
+            return STRIP_LINKS_REGEX.Replace(content, "$1");
         }
     }
 

@@ -1,0 +1,12 @@
+name: "metrolyrics.com"
+url: "http://www.metrolyrics.com/{title:lower,name}-lyrics-{artist:lower,name}.html"
+    
+expressions:
+- '<div id="lyrics-body">(?<lyrics>.*?)</div>'
+    
+filters:
+- strip_html
+- strip_links
+- entity_decode
+- clean_spaces
+- utf8_encode
