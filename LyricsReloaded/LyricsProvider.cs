@@ -9,7 +9,7 @@ using System.Globalization;
 
 namespace CubeIsland.LyricsReloaded
 {
-    public class LyricsReader
+    public class LyricsProvider
     {
 
         private readonly string name;
@@ -17,7 +17,7 @@ namespace CubeIsland.LyricsReloaded
         private readonly LinkedList<Expression> expressions;
         private readonly LinkedList<Filter> filters;
 
-        public LyricsReader(string name, string url, LinkedList<Expression> expressions, LinkedList<Filter> filters)
+        public LyricsProvider(string name, string url, LinkedList<Expression> expressions, LinkedList<Filter> filters)
         {
             this.name = name;
             this.url = url;

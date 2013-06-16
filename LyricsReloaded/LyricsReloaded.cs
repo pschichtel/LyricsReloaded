@@ -25,7 +25,7 @@ namespace MusicBeePlugin
         private bool initialized = false;
         private string pluginDirectory = ".\\Plugins";
         private LyricsLoader loader;
-        private Dictionary<String, LyricsReader> readers = new Dictionary<string, LyricsReader>();
+        private Dictionary<String, LyricsProvider> providers = new Dictionary<string, LyricsProvider>();
         private Dictionary<string, Filter> filters = new Dictionary<string, Filter>();
 
         // Called from MusicBee
@@ -164,8 +164,8 @@ namespace MusicBeePlugin
                 throw new IOException("Invalid configuration");
             }
 
-            LyricsReader reader = new LyricsReader(name, url, expressions, filters);
-            this.readers.Add(reader.getName(), reader);
+            LyricsProvider provider = new LyricsProvider(name, url, expressions, filters);
+            this.providers.Add(provider.getName(), provider);
         }
 
         public Filter getFilter(string name)
@@ -180,28 +180,28 @@ namespace MusicBeePlugin
 
         public String[] GetProviders()
         {
-            return this.readers.Keys.ToArray();
+            return this.providers.Keys.ToArray();
         }
 
         public String RetrieveLyrics(String source, String artist, String title, String album, bool preferSynced, String provider)
         {
-            LyricsReader reader;
+            LyricsProvider provider;
             try
             {
-                reader = this.readers[provider];
+                provider = this.providers[provider];
             }
             catch (KeyNotFoundException e)
             {
                 return null;
             }
 
-            String url = reader.constructUrl(artist, title, album, preferSynced);
+            String url = provider.constructUrl(artist, title, album, preferSynced);
 
             Console.WriteLine("URL: " + url);
 
             LyricsResponse response = this.loader.loadContent(url, "USER_AGENT");
 
-            return reader.processContent(response.getContent(), response.getEncoding());
+            return provider.processContent(response.getContent(), response.getEncoding());
         }
 
         public void ReceiveNotification(String source, NotificationType type)
