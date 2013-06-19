@@ -2,12 +2,12 @@
 using System.IO;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Runtime.InteropServices;
 using System.Net;
 using CubeIsland.LyricsReloaded;
+using CubeIsland.LyricsReloaded.Filters;
 using System.Reflection;
 using YamlDotNet.RepresentationModel;
 using System.Resources;
@@ -36,7 +36,8 @@ namespace MusicBeePlugin
         {
             try
             {
-                this.musicBee = (MusicBeeApiInterface)Marshal.PtrToStructure(apiPtr, typeof(MusicBeeApiInterface));
+                this.musicBee = new MusicBeeApiInterface();
+                this.musicBee.Initialise(apiPtr);
 
                 this.info.PluginInfoVersion = PluginInfoVersion;
                 this.info.Name = "Lyrics Reloaded!";
@@ -47,30 +48,67 @@ namespace MusicBeePlugin
                 this.info.VersionMajor = 1;
                 this.info.VersionMinor = 0;
                 this.info.Revision = 1;
-                this.info.MinInterfaceVersion = MinInterfaceVersion;
-                this.info.MinApiRevision = MinApiRevision;
+                this.info.MinInterfaceVersion = 20;
+                this.info.MinApiRevision = 25;
                 this.info.ReceiveNotifications = ReceiveNotificationFlags.StartupOnly;
                 this.info.ConfigurationPanelHeight = 0;
 
-                this.init();
+                Assembly asm = Assembly.GetAssembly(this.GetType());
+                this.name = asm.GetName().Name;
+                this.pluginDirectory = Path.GetDirectoryName(asm.Location);
+                this.logger = new Logger(this.pluginDirectory + Path.DirectorySeparatorChar + this.name + ".log");
             }
             catch (Exception e)
             {
-                this.logger.error("An exception occurred during initialization: %s", e.Message);
+                Console.Out.WriteLine("An exception occurred during initialization: {0}", e.Message);
             }
 
             return this.info;
+        }
+
+        public void ReceiveNotification(String source, NotificationType type)
+        {
+            this.logger.debug("Received a notification of type %s", type);
+            switch (type)
+            {
+                case NotificationType.PluginStartup:
+                    this.init();
+
+                    String proxySetting = this.musicBee.Setting_GetWebProxy();
+                    if (!string.IsNullOrEmpty(proxySetting))
+                    {
+                        string[] raw = proxySetting.Split(Convert.ToChar(0));
+                        WebProxy proxy = new WebProxy(raw[0]);
+                        if (raw.Length >= 3)
+                        {
+                            proxy.Credentials = new NetworkCredential(raw[1], raw[2]);
+                        }
+                        this.loader.setProxy(proxy);
+                    }
+
+                    break;
+            }
+        }
+
+        public void Close(PluginCloseReason reason)
+        {
+            this.logger.info("Closing ...");
+            this.providers.Clear();
+            this.filters.Clear();
+            this.loader = null;
+            this.initialized = false;
+
+            if (reason == PluginCloseReason.MusicBeeClosing)
+            {
+                this.logger.close();
+            }
         }
 
         public void init()
         {
             if (!this.initialized)
             {
-                Assembly asm = Assembly.GetAssembly(this.GetType());
                 this.initialized = true;
-                this.name = asm.GetName().Name;
-                this.pluginDirectory = Path.GetDirectoryName(asm.Location);
-                this.logger = new Logger(this.pluginDirectory + Path.DirectorySeparatorChar + this.name + ".log");
                 this.loader = new LyricsLoader(this, 20000);
                 this.initFilters();
                 this.loadProviders();
@@ -80,13 +118,20 @@ namespace MusicBeePlugin
 
         private void initFilters()
         {
-            this.filters.Add("strip_html", new HtmlStripper());
-            this.filters.Add("strip_links", new LinkRemover());
-            this.filters.Add("entity_decode", new HtmlEntityDecoder());
-            this.filters.Add("utf8_encode", new UTF8Encoder());
-            this.filters.Add("br2nl", new Br2Nl());
-            this.filters.Add("p2break", new P2Break());
-            this.filters.Add("clean_spaces", new WhitespaceCleaner());
+            Type filterType = typeof(Filter);
+            foreach (Type type in Assembly.GetAssembly(this.GetType()).GetTypes())
+            {
+                if (filterType.IsAssignableFrom(type) && !type.IsAbstract && !type.IsInterface)
+                {
+                    try
+                    {
+                        Filter filter = (Filter)Activator.CreateInstance(type);
+                        this.filters.Add(filter.getName(), filter);
+                    }
+                    catch
+                    {}
+                }
+            }
         }
 
         private void loadProviders()
@@ -242,7 +287,9 @@ namespace MusicBeePlugin
 
         public String[] GetProviders()
         {
-            return this.providers.Keys.ToArray();
+            String[] providers = new String[this.providers.Count];
+            this.providers.Keys.CopyTo(providers, 0);
+            return providers;
         }
 
         public String RetrieveLyrics(String source, String artist, String title, String album, bool preferSynced, String providerName)
@@ -272,39 +319,25 @@ namespace MusicBeePlugin
             return true;
         }
 
-        public void Close(PluginCloseReason reason)
-        {
-            this.logger.info("Closing ...");
-            this.providers.Clear();
-        }
-
         public void SaveSettings()
         {}
 
         public void Uninstall()
         {}
 
-        public void ReceiveNotification(String source, NotificationType type)
-        {
-            this.logger.debug("Received a notification of type %s", type);
-            switch (type)
-            {
-                case NotificationType.PluginStartup:
-                    String proxySetting = this.musicBee.Setting_GetWebProxy();
-                    if (proxySetting != null)
-                    {
-                        string[] raw = proxySetting.Split(Convert.ToChar(0));
-                        WebProxy proxy = new WebProxy(raw[0]);
-                        if (raw.Length >= 3)
-                        {
-                            proxy.Credentials = new NetworkCredential(raw[1], raw[2]);
-                        }
-                        this.loader.setProxy(proxy);
-                    }
-                    break;
-            }
-        }
-
         #endregion
+
+        // used for testing only
+        public static IntPtr mockApi()
+        {
+            MusicBeeApiInterface api = new Plugin.MusicBeeApiInterface();
+
+            api.Setting_GetWebProxy = delegate() { return ""; };
+
+            IntPtr ptr = Marshal.AllocHGlobal(Marshal.SizeOf(api));
+            Marshal.StructureToPtr(api, ptr, true);
+
+            return ptr;
+        }
     }
 }

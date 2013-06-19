@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MusicBeePlugin;
 
 namespace LyricsTester
 {
@@ -10,9 +12,12 @@ namespace LyricsTester
     {
         static void Main(string[] args)
         {
-            MusicBeePlugin.Plugin plugin = new MusicBeePlugin.Plugin();
+            MusicBeePlugin.Plugin plugin = new Plugin();
 
-            plugin.init();
+            IntPtr structPointer = Plugin.mockApi();
+
+            plugin.Initialise(structPointer);
+            plugin.ReceiveNotification("tester", Plugin.NotificationType.PluginStartup);
 
             Console.WriteLine("The providers:");
             foreach (String provider in plugin.GetProviders())
@@ -54,6 +59,9 @@ namespace LyricsTester
 
             Console.WriteLine("\nPress any key to exit...");
             Console.ReadKey();
+
+            plugin.Close(Plugin.PluginCloseReason.MusicBeeClosing);
+            Marshal.FreeHGlobal(structPointer);
         }
 
         private static string def(String str, string value)

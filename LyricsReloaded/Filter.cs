@@ -1,20 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
 
-namespace CubeIsland.LyricsReloaded
+namespace CubeIsland.LyricsReloaded.Filters
 {
     public interface Filter
     {
+        string getName();
         string filter(string content, Encoding encoding);
     }
 
     public class HtmlStripper : Filter
     {
         private static readonly Regex STRIP_TAG_REGEX = new Regex("<[a-z]+(\\s+[a-z-]+(=(\"[^\"]*\"|'[^']*'|[^\\s\"'/>]+))?)*\\s*/?>|</[a-z]+>", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+        public string getName()
+        {
+            return "strip_html";
+        }
 
         public string filter(string content, Encoding encoding)
         {
@@ -24,6 +29,11 @@ namespace CubeIsland.LyricsReloaded
 
     public class HtmlEntityDecoder : Filter
     {
+        public string getName()
+        {
+            return "entity_decode";
+        }
+
         public string filter(string content, Encoding encoding)
         {
             return HttpUtility.HtmlDecode(content);
@@ -34,6 +44,11 @@ namespace CubeIsland.LyricsReloaded
     {
         private static readonly Regex STRIP_LINKS_REGEX = new Regex("https?://.*?(\\s|$)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
+        public string getName()
+        {
+            return "strip_links";
+        }
+
         public string filter(string content, Encoding encoding)
         {
             return STRIP_LINKS_REGEX.Replace(content, "$1");
@@ -43,6 +58,11 @@ namespace CubeIsland.LyricsReloaded
     public class UTF8Encoder : Filter
     {
         private static readonly Encoding UTF8 = Encoding.UTF8;
+
+        public string getName()
+        {
+            return "utf8_encode";
+        }
 
         public string filter(string content, Encoding encoding)
         {
@@ -60,6 +80,11 @@ namespace CubeIsland.LyricsReloaded
     {
         private static readonly Regex BR2NL_REGEX = new Regex("<br\\s*/?>", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
+        public string getName()
+        {
+            return "br2nl";
+        }
+
         public string filter(string content, Encoding encoding)
         {
             return BR2NL_REGEX.Replace(content, "\n");
@@ -69,6 +94,11 @@ namespace CubeIsland.LyricsReloaded
     public class P2Break : Filter
     {
         private static readonly Regex P2BREAK_REGEX = new Regex("<p[^/>]*/?>(\\s*</p>)?", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline);
+
+        public string getName()
+        {
+            return "p2break";
+        }
 
         public string filter(string content, Encoding encoding)
         {
@@ -80,6 +110,11 @@ namespace CubeIsland.LyricsReloaded
     {
         private static readonly Regex CLEAN_WHITESPACE_REGEX = new Regex("^\\s+|\\s+$", RegexOptions.Compiled);
         private static readonly Regex CLEAN_LINES_REGEX = new Regex("\n{3,}", RegexOptions.Compiled);
+
+        public string getName()
+        {
+            return "clean_spaces";
+        }
 
         public string filter(string content, Encoding encoding)
         {

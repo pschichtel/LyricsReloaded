@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Web;
 using YamlDotNet.RepresentationModel;
 using System.Text.RegularExpressions;
 using System.Globalization;
 using MusicBeePlugin;
+using CubeIsland.LyricsReloaded.Filters;
 
 namespace CubeIsland.LyricsReloaded
 {

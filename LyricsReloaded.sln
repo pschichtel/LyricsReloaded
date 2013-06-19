@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mb_LyricsReloaded", "Lyrics
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LyricsTester", "LyricsTester\LyricsTester.csproj", "{9BB223A4-A756-4530-9B61-A2E0CE6E2937}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LyricsUnitTests", "LyricsUnitTests\LyricsUnitTests.csproj", "{3CE3018F-2A59-4796-84D9-D65133D043A2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +21,10 @@ Global
 		{9BB223A4-A756-4530-9B61-A2E0CE6E2937}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9BB223A4-A756-4530-9B61-A2E0CE6E2937}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9BB223A4-A756-4530-9B61-A2E0CE6E2937}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3CE3018F-2A59-4796-84D9-D65133D043A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3CE3018F-2A59-4796-84D9-D65133D043A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3CE3018F-2A59-4796-84D9-D65133D043A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3CE3018F-2A59-4796-84D9-D65133D043A2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

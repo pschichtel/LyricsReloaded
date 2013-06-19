@@ -45,8 +45,7 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="YamlDotNet.Core, Version=2.0.1.19282, Culture=neutral, PublicKeyToken=2b53052c5884d7a1, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="YamlDotNet.Core">
       <HintPath>..\packages\YamlDotNet.Core.2.0.1\lib\net35\YamlDotNet.Core.dll</HintPath>
     </Reference>
     <Reference Include="YamlDotNet.RepresentationModel">
@@ -97,14 +96,13 @@
     <None Include="providers\urbanlyrics.com.yml" />
     <None Include="providers\plyrics.com.yml" />
   </ItemGroup>
-  <ItemGroup>
-    <WCFMetadata Include="Service References\" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>if not exist "$(TargetDir)\merged" mkdir "$(TargetDir)\merged"
+    <PostBuildEvent>if "$(ConfigurationName)"=="Release" (
+    if not exist "$(TargetDir)merged" mkdir "$(TargetDir)\merged"
 
-"$(SolutionDir)\packages\ilmerge.2.13.0307\ILMerge.exe" "/out:$(TargetDir)\merged\$(TargetFileName)" "$(TargetPath)" "$(TargetDir)\YamlDotNet.Core.dll" "$(TargetDir)\YamlDotNet.RepresentationModel.dll"</PostBuildEvent>
+    "$(SolutionDir)\packages\ilmerge.2.13.0307\ILMerge.exe" "/out:$(TargetDir)\merged\$(TargetFileName)" "$(TargetPath)" "$(TargetDir)\YamlDotNet.Core.dll" "$(TargetDir)\YamlDotNet.RepresentationModel.dll"
+)</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
