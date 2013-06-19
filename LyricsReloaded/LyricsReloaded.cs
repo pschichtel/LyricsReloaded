@@ -34,34 +34,27 @@ namespace MusicBeePlugin
         // Called from MusicBee
         public PluginInfo Initialise(IntPtr apiPtr)
         {
-            try
-            {
-                this.musicBee = new MusicBeeApiInterface();
-                this.musicBee.Initialise(apiPtr);
+            this.musicBee = new MusicBeeApiInterface();
+            this.musicBee.Initialise(apiPtr);
 
-                this.info.PluginInfoVersion = PluginInfoVersion;
-                this.info.Name = "Lyrics Reloaded!";
-                this.info.Description = "Lyrics loading done properly!";
-                this.info.Author = "Phillip Schichtel <Quick_Wango>";
-                this.info.TargetApplication = "MusicBee";
-                this.info.Type = PluginType.LyricsRetrieval;
-                this.info.VersionMajor = 1;
-                this.info.VersionMinor = 0;
-                this.info.Revision = 1;
-                this.info.MinInterfaceVersion = 20;
-                this.info.MinApiRevision = 25;
-                this.info.ReceiveNotifications = ReceiveNotificationFlags.StartupOnly;
-                this.info.ConfigurationPanelHeight = 0;
+            this.info.PluginInfoVersion = PluginInfoVersion;
+            this.info.Name = "Lyrics Reloaded!";
+            this.info.Description = "Lyrics loading done properly!";
+            this.info.Author = "Phillip Schichtel <Quick_Wango>";
+            this.info.TargetApplication = "MusicBee";
+            this.info.Type = PluginType.LyricsRetrieval;
+            this.info.VersionMajor = 1;
+            this.info.VersionMinor = 0;
+            this.info.Revision = 1;
+            this.info.MinInterfaceVersion = 20;
+            this.info.MinApiRevision = 25;
+            this.info.ReceiveNotifications = ReceiveNotificationFlags.StartupOnly;
+            this.info.ConfigurationPanelHeight = 0;
 
-                Assembly asm = Assembly.GetAssembly(this.GetType());
-                this.name = asm.GetName().Name;
-                this.pluginDirectory = Path.GetDirectoryName(asm.Location);
-                this.logger = new Logger(this.pluginDirectory + Path.DirectorySeparatorChar + this.name + ".log");
-            }
-            catch (Exception e)
-            {
-                Console.Out.WriteLine("An exception occurred during initialization: {0}", e.Message);
-            }
+            Assembly asm = Assembly.GetAssembly(this.GetType());
+            this.name = asm.GetName().Name;
+            this.pluginDirectory = Path.GetDirectoryName(asm.Location);
+            this.logger = new Logger(this.pluginDirectory + Path.DirectorySeparatorChar + this.name + ".log");
 
             return this.info;
         }
@@ -77,10 +70,12 @@ namespace MusicBeePlugin
                     String proxySetting = this.musicBee.Setting_GetWebProxy();
                     if (!string.IsNullOrEmpty(proxySetting))
                     {
+                        this.logger.debug("Proxy setting found");
                         string[] raw = proxySetting.Split(Convert.ToChar(0));
                         WebProxy proxy = new WebProxy(raw[0]);
                         if (raw.Length >= 3)
                         {
+                            this.logger.debug("Proxy credentials found");
                             proxy.Credentials = new NetworkCredential(raw[1], raw[2]);
                         }
                         this.loader.setProxy(proxy);
