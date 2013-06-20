@@ -27,22 +27,36 @@ namespace CubeIsland.LyricsReloaded
 {
     public class Logger
     {
-        private readonly StreamWriter writer;
+        private readonly FileInfo fileInfo;
+        private StreamWriter writer;
 
         public Logger(string path)
         {
-            this.writer = new StreamWriter(path, true);
+            this.fileInfo = new FileInfo(path);
+            this.writer = null;
+        }
+
+        public FileInfo getFileInfo()
+        {
+            return this.fileInfo;
         }
 
         private void write(string type, string message, object[] args)
         {
+            if (this.writer == null)
+            {
+                this.writer = new StreamWriter(this.fileInfo.Open(FileMode.Append, FileAccess.Write));
+            }
             this.writer.WriteLine(DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss") + " [" + type.ToUpper() + "] " + string.Format(message, args));
             this.writer.Flush();
         }
 
         public void close()
         {
-            this.writer.Close();
+            if (this.writer != null)
+            {
+                this.writer.Close();
+            }
         }
 
         public void debug(string message, params object[] args)

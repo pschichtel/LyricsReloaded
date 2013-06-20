@@ -32,6 +32,11 @@ namespace LyricsUnitTests
             this.plugin.ReceiveNotification("test", Plugin.NotificationType.PluginStartup);
         }
 
+        private void disable()
+        {
+            this.plugin.Close(Plugin.PluginCloseReason.UserDisabled);
+        }
+
         private void shutdown()
         {
             this.plugin.Close(Plugin.PluginCloseReason.MusicBeeClosing);
@@ -42,17 +47,17 @@ namespace LyricsUnitTests
         {
             this.startup();
 
-            plugin.Close(Plugin.PluginCloseReason.UserDisabled);
+            this.disable();
 
-            plugin.ReceiveNotification("test", Plugin.NotificationType.PluginStartup);
+            this.startup();
 
-            plugin.Close(Plugin.PluginCloseReason.UserDisabled);
+            this.disable();
 
-            plugin.ReceiveNotification("test", Plugin.NotificationType.PluginStartup);
+            this.startup();
 
-            plugin.Close(Plugin.PluginCloseReason.UserDisabled);
+            this.disable();
 
-            plugin.ReceiveNotification("test", Plugin.NotificationType.PluginStartup);
+            this.startup();
 
             this.shutdown();
         }

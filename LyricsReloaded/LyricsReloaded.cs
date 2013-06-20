@@ -1,4 +1,4 @@
-/*
+﻿/*
     Copyright 2013 Phillip Schichtel
 
     This file is part of LyricsReloaded.
@@ -19,6 +19,7 @@
 */
 
 using System;
+using System.Windows.Forms;
 using System.IO;
 using System.Collections;
 using System.Collections.Generic;
@@ -45,8 +46,8 @@ namespace MusicBeePlugin
         private PluginInfo info = new PluginInfo();
         private Logger logger;
         private bool initialized = false;
-        private string name = "LyricsReloaded";
-        private string pluginDirectory = ".\\Plugins";
+        private string name;
+        private string pluginDirectory;
         private LyricsLoader loader;
         private Dictionary<String, LyricsProvider> providers = new Dictionary<string, LyricsProvider>();
         private Dictionary<string, Filter> filters = new Dictionary<string, Filter>();
@@ -54,6 +55,7 @@ namespace MusicBeePlugin
         // Called from MusicBee
         public PluginInfo Initialise(IntPtr apiPtr)
         {
+            //MessageBox.Show("Initialised(" + apiPtr + ")");
             this.musicBee = new MusicBeeApiInterface();
             this.musicBee.Initialise(apiPtr);
 
@@ -71,22 +73,41 @@ namespace MusicBeePlugin
             this.info.ReceiveNotifications = ReceiveNotificationFlags.StartupOnly;
             this.info.ConfigurationPanelHeight = 0;
 
-            Assembly asm = Assembly.GetAssembly(this.GetType());
-            this.name = asm.GetName().Name;
-            this.pluginDirectory = this.musicBee.Setting_GetPersistentStoragePath() + Path.DirectorySeparatorChar + this.name;
-            this.logger = new Logger(this.pluginDirectory + Path.DirectorySeparatorChar + this.name + ".log");
+            try
+            {
+                Assembly asm = Assembly.GetAssembly(this.GetType());
+                this.name = asm.GetName().Name;
+                this.pluginDirectory = Path.Combine(this.musicBee.Setting_GetPersistentStoragePath(), this.name);
+                Directory.CreateDirectory(this.pluginDirectory);
+                this.logger = new Logger(Path.Combine(this.pluginDirectory, this.name + ".log"));
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("An error occurred during plugin startup: " + e.Message);
+                throw e;
+            }
+
+            try
+            {
+                this.init();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("An error occurred during plugin startup, send this file to the developer:\n\n" + this.logger.getFileInfo().FullName);
+                this.logger.error(e.Message);
+                throw e;
+            }
 
             return this.info;
         }
 
         public void ReceiveNotification(String source, NotificationType type)
         {
+            //MessageBox.Show("ReceiveNotification(" + source + ", " + type + ")");
             this.logger.debug("Received a notification of type %s", type);
             switch (type)
             {
                 case NotificationType.PluginStartup:
-                    this.init();
-
                     String proxySetting = this.musicBee.Setting_GetWebProxy();
                     if (!string.IsNullOrEmpty(proxySetting))
                     {
@@ -107,16 +128,14 @@ namespace MusicBeePlugin
 
         public void Close(PluginCloseReason reason)
         {
+            //MessageBox.Show("Close(" + reason + ")");
             this.logger.info("Closing ...");
             this.providers.Clear();
             this.filters.Clear();
             this.loader = null;
+            this.logger.close();
+            this.logger = null;
             this.initialized = false;
-
-            if (reason == PluginCloseReason.MusicBeeClosing)
-            {
-                this.logger.close();
-            }
         }
 
         public void init()
@@ -153,7 +172,7 @@ namespace MusicBeePlugin
         {
             this.loadBuildInProviders();
 
-            DirectoryInfo di = new DirectoryInfo(this.pluginDirectory + Path.DirectorySeparatorChar + this.name);
+            DirectoryInfo di = new DirectoryInfo(Path.Combine(this.pluginDirectory, "providers"));
             if (!di.Exists)
             {
                 di.Create();
