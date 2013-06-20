@@ -53,7 +53,7 @@ namespace MusicBeePlugin
 
             Assembly asm = Assembly.GetAssembly(this.GetType());
             this.name = asm.GetName().Name;
-            this.pluginDirectory = Path.GetDirectoryName(asm.Location);
+            this.pluginDirectory = this.musicBee.Setting_GetPersistentStoragePath() + Path.DirectorySeparatorChar + this.name;
             this.logger = new Logger(this.pluginDirectory + Path.DirectorySeparatorChar + this.name + ".log");
 
             return this.info;
@@ -327,7 +327,13 @@ namespace MusicBeePlugin
         {
             MusicBeeApiInterface api = new Plugin.MusicBeeApiInterface();
 
-            api.Setting_GetWebProxy = delegate() { return ""; };
+            api.Setting_GetWebProxy = delegate() {
+                return "";
+            };
+
+            api.Setting_GetPersistentStoragePath = delegate() {
+                return Path.GetDirectoryName(Assembly.GetAssembly(typeof(LyricsLoader)).Location);
+            };
 
             IntPtr ptr = Marshal.AllocHGlobal(Marshal.SizeOf(api));
             Marshal.StructureToPtr(api, ptr, true);
