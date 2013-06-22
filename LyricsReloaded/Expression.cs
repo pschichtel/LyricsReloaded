@@ -39,14 +39,12 @@ namespace CubeIsland.LyricsReloaded
             Match match = this.regex.Match(content);
             if (match.Success)
             {
-                content = match.Groups["lyrics"].ToString();
+                return match.Groups["lyrics"].ToString();
             }
             else
             {
                 throw new Exception("The pattern didn't match: " + this.regex.ToString());
             }
-
-            return content;
         }
     }
 }

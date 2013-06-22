@@ -104,7 +104,7 @@ namespace MusicBeePlugin
         public void ReceiveNotification(String source, NotificationType type)
         {
             //MessageBox.Show("ReceiveNotification(" + source + ", " + type + ")");
-            this.logger.debug("Received a notification of type %s", type);
+            this.logger.debug("Received a notification of type {0}", type);
             switch (type)
             {
                 case NotificationType.PluginStartup:
@@ -338,13 +338,20 @@ namespace MusicBeePlugin
                 return null;
             }
 
-            String url = provider.constructUrl(artist, title, album, preferSynced);
+            string url = provider.constructUrl(artist, title, album, preferSynced);
 
-            Console.WriteLine("URL: " + url);
+            this.logger.debug("{0} constructed this URL: {1}", provider.getName(), url);
 
             LyricsResponse response = this.loader.loadContent(url, "USER_AGENT");
 
-            return provider.processContent(response.getContent(), response.getEncoding());
+            String content = provider.processContent(response.getContent(), response.getEncoding());
+
+            if (String.IsNullOrWhiteSpace(content))
+            {
+                return null;
+            }
+
+            return content;
         }
 
         #region "MusicBee implementations"

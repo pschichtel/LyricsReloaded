@@ -57,15 +57,30 @@ namespace CubeIsland.LyricsReloaded
             return new UrlCompiler(this.url, artist, title, album).compile();
         }
 
-        public string processContent(string content, Encoding encoding)
+        public String processContent(string content, Encoding encoding)
         {
             foreach (Expression expr in this.expressions)
             {
-                content = expr.apply(content);
+                try
+                {
+                    content = expr.apply(content);
+                }
+                catch (Exception e)
+                {
+                    this.plugin.getLogger().warn(e.Message);
+                    return null;
+                }
             }
             foreach (Filter filter in this.filters)
             {
-                content = filter.filter(content, encoding);
+                try
+                {
+                    content = filter.filter(content, encoding);
+                }
+                catch (Exception e)
+                {
+                    this.plugin.getLogger().warn("The filter {0} failed: {1}", filter.getName(), e.Message);
+                }
             }
             return content;
         }
