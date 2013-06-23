@@ -8,7 +8,7 @@
     <ProjectGuid>{0EBB89EE-8500-4DD9-B7E9-52D5AE85DEFC}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MusicBeePlugin</RootNamespace>
+    <RootNamespace>CubeIsland.LyricsReloaded</RootNamespace>
     <AssemblyName>mb_LyricsReloaded</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -55,27 +55,24 @@
   <ItemGroup>
     <Compile Include="Expression.cs" />
     <Compile Include="Filter.cs" />
+    <Compile Include="FilterCollection.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="LyricsLoader.cs" />
     <Compile Include="LyricsProvider.cs" />
     <Compile Include="LyricsReloaded.cs" />
     <Compile Include="MusicBeeInterface.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="ProviderFactory.cs" />
+    <Compile Include="providers\StaticProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -85,16 +82,17 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="providers\azlyrics.com.yml" />
-    <None Include="providers\songlyrics.com.yml" />
-    <None Include="providers\metrolyrics.com.yml" />
-    <None Include="providers\letras.mus.br.yml" />
-    <None Include="providers\teksty.org.yml" />
-    <None Include="providers\tekstowo.pl.yml" />
-    <None Include="providers\oldielyrics.com.yml" />
-    <None Include="providers\rapgenius.com.yml" />
-    <None Include="providers\urbanlyrics.com.yml" />
-    <None Include="providers\plyrics.com.yml" />
+    <None Include="configurations\azlyrics.com.yml" />
+    <None Include="configurations\example.yml" />
+    <None Include="configurations\songlyrics.com.yml" />
+    <None Include="configurations\metrolyrics.com.yml" />
+    <None Include="configurations\letras.mus.br.yml" />
+    <None Include="configurations\teksty.org.yml" />
+    <None Include="configurations\tekstowo.pl.yml" />
+    <None Include="configurations\oldielyrics.com.yml" />
+    <None Include="configurations\rapgenius.com.yml" />
+    <None Include="configurations\urbanlyrics.com.yml" />
+    <None Include="configurations\plyrics.com.yml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

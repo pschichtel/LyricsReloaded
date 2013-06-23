@@ -35,12 +35,12 @@ namespace CubeIsland.LyricsReloaded
         private static readonly Regex ENCODING_REGEX = new Regex("<meta\\s+http-equiv=[\"']?content-type[\"']?\\s+content=.*?;\\s*charset\\s*=\\s*([a-z0-9-]+)[^>]*>|<\\?xml.+?encoding=\"([^\"]).*?\\?>", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         private WebProxy proxy;
-        private readonly Plugin plugin;
+        private readonly LyricsReloaded lyricsReloaded;
         private readonly int timeout;
 
-        public LyricsLoader(Plugin plugin, int timeout)
+        public LyricsLoader(LyricsReloaded lyricsReloaded, int timeout)
         {
-            this.plugin = plugin;
+            this.lyricsReloaded = lyricsReloaded;
             this.timeout = timeout;
         }
 
@@ -49,15 +49,12 @@ namespace CubeIsland.LyricsReloaded
             return this.timeout;
         }
 
-        public LyricsResponse loadContent(string url, String userAgent)
+        public LyricsResponse loadContent(string url)
         {
             HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(url);
 
             request.Method = "GET";
-            if (userAgent != null)
-            {
-                request.UserAgent = userAgent;
-            }
+            request.UserAgent = this.lyricsReloaded.getUserAgent();
             //request.ContentType = "application/x-www-form-urlencoded";
             request.Accept = "*/*";
             request.Headers.Add("Accept-Encoding", "gzip");
@@ -99,7 +96,7 @@ namespace CubeIsland.LyricsReloaded
                 Stream responsesStream = response.GetResponseStream();
                 if (String.Compare(response.ContentEncoding, "gzip", StringComparison.OrdinalIgnoreCase) == 0)
                 {
-                    this.plugin.getLogger().debug("gzip compression detected");
+                    this.lyricsReloaded.getLogger().debug("gzip compression detected");
                     responsesStream = new GZipStream(responsesStream, CompressionMode.Decompress);
                 }
                 MemoryStream content = new MemoryStream();

@@ -23,13 +23,29 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
+using System.Globalization;
 
 namespace CubeIsland.LyricsReloaded.Filters
 {
     public interface Filter
     {
         string getName();
-        string filter(string content, Encoding encoding);
+        string filter(string content, string[] args, Encoding encoding);
+
+        public static KeyValuePair<string, string[]> parse(string str)
+        {
+            string[] parts = str.Split(new char[] {':'}, 2);
+
+            string name = HttpUtility.UrlDecode(parts[0].ToLower(), Encoding.ASCII);
+
+            string[] args = parts[1].Split(',');
+            for (int i = 0; i < args.Length; ++i)
+            {
+                args[i] = HttpUtility.UrlDecode(args[i], Encoding.ASCII);
+            }
+
+            return new KeyValuePair<string, string[]>(name, args);
+        }
     }
 
     public class HtmlStripper : Filter
@@ -41,7 +57,7 @@ namespace CubeIsland.LyricsReloaded.Filters
             return "strip_html";
         }
 
-        public string filter(string content, Encoding encoding)
+        public string filter(string content, string[] args, Encoding encoding)
         {
             return STRIP_TAG_REGEX.Replace(content, "");
         }
@@ -54,7 +70,7 @@ namespace CubeIsland.LyricsReloaded.Filters
             return "entity_decode";
         }
 
-        public string filter(string content, Encoding encoding)
+        public string filter(string content, string[] args, Encoding encoding)
         {
             return HttpUtility.HtmlDecode(content);
         }
@@ -69,7 +85,7 @@ namespace CubeIsland.LyricsReloaded.Filters
             return "strip_links";
         }
 
-        public string filter(string content, Encoding encoding)
+        public string filter(string content, string[] args, Encoding encoding)
         {
             return STRIP_LINKS_REGEX.Replace(content, "$1");
         }
@@ -84,7 +100,7 @@ namespace CubeIsland.LyricsReloaded.Filters
             return "utf8_encode";
         }
 
-        public string filter(string content, Encoding encoding)
+        public string filter(string content, string[] args, Encoding encoding)
         {
             byte[] raw = encoding.GetBytes(content);
             byte[] rawUtf8 = Encoding.Convert(encoding, UTF8, raw);
@@ -105,7 +121,7 @@ namespace CubeIsland.LyricsReloaded.Filters
             return "br2nl";
         }
 
-        public string filter(string content, Encoding encoding)
+        public string filter(string content, string[] args, Encoding encoding)
         {
             return BR2NL_REGEX.Replace(content, "\n");
         }
@@ -120,7 +136,7 @@ namespace CubeIsland.LyricsReloaded.Filters
             return "p2break";
         }
 
-        public string filter(string content, Encoding encoding)
+        public string filter(string content, string[] args, Encoding encoding)
         {
             return P2BREAK_REGEX.Replace(content, "\n");
         }
@@ -136,7 +152,7 @@ namespace CubeIsland.LyricsReloaded.Filters
             return "clean_spaces";
         }
 
-        public string filter(string content, Encoding encoding)
+        public string filter(string content, string[] args, Encoding encoding)
         {
             content = content.Replace("\r\n", "\n").Replace('\r', '\n');
             content = CLEAN_WHITESPACE_REGEX.Replace(content, "\n\n");
@@ -153,9 +169,169 @@ namespace CubeIsland.LyricsReloaded.Filters
             return "trim";
         }
 
-        public string filter(string content, Encoding encoding)
+        public string filter(string content, string[] args, Encoding encoding)
         {
             return content.Trim();
+        }
+    }
+
+    public class Lowercaser : Filter
+    {
+        public string getName()
+        {
+            return "lowercase";
+        }
+
+        public string filter(string content, string[] args, Encoding encoding)
+        {
+            return content.ToLower(); // TODO culture info
+        }
+    }
+
+    public class Uppercaser : Filter
+    {
+        public string getName()
+        {
+            return "uppercase";
+        }
+
+        public string filter(string content, string[] args, Encoding encoding)
+        {
+            return content.ToUpper(); // TODO culture info
+        }
+    }
+
+    public class DiacriticsNormalizer : Filter
+    {
+        public string getName()
+        {
+            return "uni2ascii";
+        }
+
+        public string filter(string content, string[] args, Encoding encoding)
+        {
+            string normalized = content.Normalize(NormalizationForm.FormD);
+            StringBuilder newString = new StringBuilder();
+
+            foreach (char c in normalized)
+            {
+                if (char.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
+                {
+                    newString.Append(c);
+                }
+            }
+
+            return newString.ToString();
+        }
+    }
+
+    public class UrlEncoder : Filter
+    {
+        public string getName()
+        {
+            return "urlencode";
+        }
+
+        public string filter(string content, string[] args, Encoding encoding)
+        {
+            return HttpUtility.UrlEncode(content, encoding);
+        }
+    }
+
+    public class RegexReplacer : Filter
+    {
+        private readonly Dictionary<string, Regex> regexCache = new Dictionary<string, Regex>();
+        private readonly object lockObject = new object();
+
+        public string getName()
+        {
+            return "regex";
+        }
+
+        public string filter(string content, string[] args, Encoding encoding)
+        {
+            if (args.Length < 2)
+            {
+                throw new Exception("The regex filter needs at least 2 arguments: regex:<pattern>,<replacement>[,<options>]");
+            }
+
+            string pattern = HttpUtility.UrlDecode(args[0], Encoding.ASCII);
+            string replacement = HttpUtility.UrlDecode(args[0], Encoding.ASCII);
+            string optionString = "";
+            if (args.Length > 2)
+            {
+                optionString = args[2];
+            }
+
+            Regex regex;
+            try
+            {
+                lock (this.lockObject)
+                {
+                    regex = this.regexCache[cacheKey(pattern, optionString)];
+                }
+            }
+            catch
+            {
+                RegexOptions options = RegexOptions.Compiled | Pattern.optionStringToRegexOptions(optionString);
+                regex = new Regex(pattern, options);
+                lock (this.lockObject)
+                {
+                    this.regexCache.Add(cacheKey(pattern, optionString), regex);
+                }
+            }
+
+            content = regex.Replace(content, replacement);
+
+            return content;
+        }
+
+        private static string cacheKey(string pattern, string optionString)
+        {
+            return pattern + '|' + optionString;
+        }
+    }
+
+    public class NonAsciiStripper : Filter
+    {
+        public string getName()
+        {
+            return "strip_nonascii";
+        }
+
+        public string filter(string content, string[] args, Encoding encoding)
+        {
+            if (args.Length < 1)
+            {
+                throw new Exception("The strip_nonascii filter need at least 1 arg: strip_nonascii:<replacement>[,duplicate]");
+            }
+            string replacement = args[0];
+            bool duplicate = false;
+            if (args.Length > 1)
+            {
+                duplicate = true;
+            }
+
+            StringBuilder newString = new StringBuilder();
+
+            char c;
+            bool replacedLast = false;
+            foreach (char cur in content)
+            {
+                c = char.ToLower(cur);
+                if ((c >= 'a' && c <= 'z') || (c >= '0' && c <= '9'))
+                {
+                    replacedLast = false;
+                    newString.Append(cur);
+                }
+                else if (!replacedLast || duplicate)
+                {
+                    newString.Append(replacement);
+                    replacedLast = true;
+                }
+            }
+
+            return newString.ToString();
         }
     }
 }

@@ -1,307 +1,53 @@
-﻿/*
-    Copyright 2013 Phillip Schichtel
-
-    This file is part of LyricsReloaded.
-
-    LyricsReloaded is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    LyricsReloaded is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with LyricsReloaded. If not, see <http://www.gnu.org/licenses/>.
-
-*/
-
-using System;
-using System.Windows.Forms;
-using System.IO;
-using System.Collections;
+﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Threading;
-using System.Runtime.InteropServices;
-using System.Net;
-using CubeIsland.LyricsReloaded;
-using CubeIsland.LyricsReloaded.Filters;
+using System.IO;
 using System.Reflection;
+using System.Text;
+using CubeIsland.LyricsReloaded.Providers;
+using CubeIsland.LyricsReloaded.Filters;
+using MusicBeePlugin;
 using YamlDotNet.RepresentationModel;
-using System.Resources;
+using System.Net;
 
-namespace MusicBeePlugin
+namespace CubeIsland.LyricsReloaded
 {
-    public partial class Plugin
+    public class LyricsReloaded
     {
         private static readonly YamlScalarNode NODE_NAME = new YamlScalarNode("name");
-        private static readonly YamlScalarNode NODE_URL = new YamlScalarNode("url");
-        private static readonly YamlScalarNode NODE_EXPRESSIONS = new YamlScalarNode("expressions");
-        private static readonly YamlScalarNode NODE_FILTERS = new YamlScalarNode("filters");
+        private static readonly YamlScalarNode NODE_TYPE = new YamlScalarNode("type");
+        private static readonly YamlScalarNode NODE_PREPARATION = new YamlScalarNode("preparation");
+        private static readonly YamlScalarNode NODE_POST_FILTERS = new YamlScalarNode("post-filters");
+        private static readonly YamlScalarNode NODE_CONFIG = new YamlScalarNode("config");
 
-        private MusicBeeApiInterface musicBee;
-        private PluginInfo info = new PluginInfo();
-        private Logger logger;
-        private bool initialized = false;
-        private string name;
-        private string pluginDirectory;
-        private LyricsLoader loader;
-        private Dictionary<String, LyricsProvider> providers = new Dictionary<string, LyricsProvider>();
-        private Dictionary<string, Filter> filters = new Dictionary<string, Filter>();
+        private readonly string name;
+        private readonly string pluginDirectory;
+        private readonly Logger logger;
+        private readonly Dictionary<string, ProviderFactory> providerFactories;
+        private readonly Dictionary<string, LyricsProvider> providers;
+        private readonly Dictionary<string, Filter> filters;
+        private string userAgent;
+        private WebProxy proxy;
 
-        // Called from MusicBee
-        public PluginInfo Initialise(IntPtr apiPtr)
+        public LyricsReloaded(Plugin.MusicBeeApiInterface musicBee)
         {
-            //MessageBox.Show("Initialised(" + apiPtr + ")");
-            this.musicBee = new MusicBeeApiInterface();
-            this.musicBee.Initialise(apiPtr);
+            Assembly asm = Assembly.GetAssembly(this.GetType());
+            this.name = asm.GetName().Name;
+            this.pluginDirectory = Path.Combine(musicBee.Setting_GetPersistentStoragePath(), this.name);
+            Directory.CreateDirectory(this.pluginDirectory);
+            this.logger = new Logger(Path.Combine(this.pluginDirectory, this.name + ".log"));
 
-            this.info.PluginInfoVersion = PluginInfoVersion;
-            this.info.Name = "Lyrics Reloaded!";
-            this.info.Description = "Lyrics loading done properly!";
-            this.info.Author = "Phillip Schichtel <Quick_Wango>";
-            this.info.TargetApplication = "MusicBee";
-            this.info.Type = PluginType.LyricsRetrieval;
-            this.info.VersionMajor = 1;
-            this.info.VersionMinor = 0;
-            this.info.Revision = 1;
-            this.info.MinInterfaceVersion = 20;
-            this.info.MinApiRevision = 25;
-            this.info.ReceiveNotifications = ReceiveNotificationFlags.StartupOnly;
-            this.info.ConfigurationPanelHeight = 0;
-
-            try
+            this.providerFactories = new Dictionary<string, ProviderFactory>()
             {
-                Assembly asm = Assembly.GetAssembly(this.GetType());
-                this.name = asm.GetName().Name;
-                this.pluginDirectory = Path.Combine(this.musicBee.Setting_GetPersistentStoragePath(), this.name);
-                Directory.CreateDirectory(this.pluginDirectory);
-                this.logger = new Logger(Path.Combine(this.pluginDirectory, this.name + ".log"));
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show("An error occurred during plugin startup: " + e.Message);
-                throw e;
-            }
+                {"static", new StaticProviderFactory(this)}
+            };
 
-            try
-            {
-                this.init();
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show("An error occurred during plugin startup, send this file to the developer:\n\n" + this.logger.getFileInfo().FullName);
-                this.logger.error(e.Message);
-                throw e;
-            }
+            this.providers = new Dictionary<string, LyricsProvider>();
 
-            return this.info;
-        }
+            this.filters = new Dictionary<string, Filter>();
+            this.loadFilters();
 
-        public void ReceiveNotification(String source, NotificationType type)
-        {
-            //MessageBox.Show("ReceiveNotification(" + source + ", " + type + ")");
-            this.logger.debug("Received a notification of type {0}", type);
-            switch (type)
-            {
-                case NotificationType.PluginStartup:
-                    String proxySetting = this.musicBee.Setting_GetWebProxy();
-                    if (!string.IsNullOrEmpty(proxySetting))
-                    {
-                        this.logger.debug("Proxy setting found");
-                        string[] raw = proxySetting.Split(Convert.ToChar(0));
-                        WebProxy proxy = new WebProxy(raw[0]);
-                        if (raw.Length >= 3)
-                        {
-                            this.logger.debug("Proxy credentials found");
-                            proxy.Credentials = new NetworkCredential(raw[1], raw[2]);
-                        }
-                        this.loader.setProxy(proxy);
-                    }
-
-                    break;
-            }
-        }
-
-        public void Close(PluginCloseReason reason)
-        {
-            //MessageBox.Show("Close(" + reason + ")");
-            this.logger.info("Closing ...");
-            this.providers.Clear();
-            this.filters.Clear();
-            this.loader = null;
-            this.logger.close();
-            this.logger = null;
-            this.initialized = false;
-        }
-
-        public void init()
-        {
-            if (!this.initialized)
-            {
-                this.initialized = true;
-                this.loader = new LyricsLoader(this, 20000);
-                this.initFilters();
-                this.loadProviders();
-                this.logger.info("Plugin initialized!");
-            }
-        }
-
-        private void initFilters()
-        {
-            Type filterType = typeof(Filter);
-            foreach (Type type in Assembly.GetAssembly(this.GetType()).GetTypes())
-            {
-                if (filterType.IsAssignableFrom(type) && !type.IsAbstract && !type.IsInterface)
-                {
-                    try
-                    {
-                        Filter filter = (Filter)Activator.CreateInstance(type);
-                        this.filters.Add(filter.getName(), filter);
-                    }
-                    catch
-                    {}
-                }
-            }
-        }
-
-        private void loadProviders()
-        {
-            this.loadBuildInProviders();
-
-            DirectoryInfo di = new DirectoryInfo(Path.Combine(this.pluginDirectory, "providers"));
-            if (!di.Exists)
-            {
-                di.Create();
-            }
-
-            foreach (FileInfo fi in di.GetFiles("*.yml", SearchOption.TopDirectoryOnly))
-            {
-                using (StreamReader reader = fi.OpenText())
-                {
-                    this.loadProvider(reader);
-                }
-            }
-        }
-
-        private void loadBuildInProviders()
-        {
-            this.loadProviderFromResource(Properties.Resources.songlyrics_com);
-            this.loadProviderFromResource(Properties.Resources.metrolyrics_com);
-            this.loadProviderFromResource(Properties.Resources.letras_mus_br);
-            this.loadProviderFromResource(Properties.Resources.teksty_org);
-            this.loadProviderFromResource(Properties.Resources.tekstowo_pl);
-            this.loadProviderFromResource(Properties.Resources.azlyrics_com);
-            this.loadProviderFromResource(Properties.Resources.plyrics_com);
-            this.loadProviderFromResource(Properties.Resources.urbanlyrics_com);
-            this.loadProviderFromResource(Properties.Resources.rapgenius_com);
-            this.loadProviderFromResource(Properties.Resources.oldielyrics_com);
-        }
-
-        private void loadProviderFromResource(byte[] resourceData)
-        {
-            this.loadProvider(new StreamReader(new MemoryStream(resourceData), Encoding.UTF8));
-        }
-
-        public void loadProvider(TextReader configReader)
-        {
-            YamlStream yaml = new YamlStream();
-            yaml.Load(configReader);
-
-            YamlMappingNode root = (YamlMappingNode)yaml.Documents[0].RootNode;
-
-            YamlNode node = root.Children[NODE_NAME];
-            if (!(node is YamlScalarNode))
-            {
-                throw new IOException("Invalid configuration");
-            }
-            string name = ((YamlScalarNode)node).Value;
-
-            node = root.Children[NODE_URL];
-            if (!(node is YamlScalarNode))
-            {
-                throw new IOException("Invalid configuration");
-            }
-            string url = ((YamlScalarNode)node).Value;
-
-            node = root.Children[NODE_EXPRESSIONS];
-            LinkedList<Expression> expressions = new LinkedList<Expression>();
-            if (node is YamlScalarNode)
-            {
-                expressions.AddLast(new Expression(((YamlScalarNode)node).Value));
-            }
-            else if (node is YamlSequenceNode)
-            {
-                YamlSequenceNode seq = (YamlSequenceNode)node;
-                foreach (YamlNode entry in seq.Children)
-                {
-                    if (entry is YamlScalarNode)
-                    {
-                        expressions.AddLast(new Expression(((YamlScalarNode)entry).Value));
-                    }
-                }
-            }
-            else
-            {
-                throw new IOException("Invalid configuration");
-            }
-
-            node = root.Children[NODE_FILTERS];
-            LinkedList<Filter> filters = new LinkedList<Filter>();
-            Filter tmp;
-            if (node is YamlScalarNode)
-            {
-                tmp = this.getFilter(((YamlScalarNode)node).Value);
-                if (tmp != null)
-                {
-                    filters.AddLast(tmp);
-                }
-            }
-            else if (node is YamlSequenceNode)
-            {
-                YamlSequenceNode seq = (YamlSequenceNode)node;
-                foreach (YamlNode entry in seq.Children)
-                {
-                    if (entry is YamlScalarNode)
-                    {
-                        tmp = this.getFilter(((YamlScalarNode)entry).Value);
-                        if (tmp != null)
-                        {
-                            filters.AddLast(tmp);
-                        }
-                    }
-                }
-            }
-            else
-            {
-                throw new IOException("Invalid configuration");
-            }
-
-            LyricsProvider provider = new LyricsProvider(this, name, url, expressions, filters);
-            this.logger.info("Provider loaded: " + provider.getName());
-
-            lock (this.providers)
-            {
-                if (this.providers.ContainsKey(provider.getName()))
-                {
-                    this.logger.info("The provider %s does already exist and will be replaced.", provider.getName());
-                    this.providers.Remove(provider.getName());
-                }
-                this.providers.Add(provider.getName(), provider);
-            }
-        }
-
-        public string getName()
-        {
-            return this.name;
-        }
-
-        public MusicBeeApiInterface getMusicBee()
-        {
-            return this.musicBee;
+            this.userAgent = "Firefox XY";
+            this.proxy = null;
         }
 
         public Logger getLogger()
@@ -319,76 +65,230 @@ namespace MusicBeePlugin
             return null;
         }
 
-        public String[] GetProviders()
+        public LyricsProvider getProvider(string providerName)
         {
-            String[] providers = new String[this.providers.Count];
-            this.providers.Keys.CopyTo(providers, 0);
-            return providers;
+            providerName = providerName.ToLower();
+            if (this.providers.ContainsKey(providerName))
+            {
+                return this.providers[providerName];
+            }
+            return null;
         }
 
-        public String RetrieveLyrics(String source, String artist, String title, String album, bool preferSynced, String providerName)
+        public Dictionary<string, LyricsProvider> getProviders()
         {
-            this.logger.debug("Lyrics request: {0} - {1} - {2} - {3} - {4} - {5}", source, artist, title, album, (preferSynced ? "synced" : "unsynced"), providerName);
-            LyricsProvider provider;
-            try
-            {
-                provider = this.providers[providerName];
-            }
-            catch (KeyNotFoundException)
-            {
-                return null;
-            }
-
-            string url = provider.constructUrl(artist, title, album, preferSynced);
-
-            this.logger.debug("{0} constructed this URL: {1}", provider.getName(), url);
-
-            LyricsResponse response = this.loader.loadContent(url, "USER_AGENT");
-
-            String content = provider.processContent(response.getContent(), response.getEncoding());
-
-            if (String.IsNullOrWhiteSpace(content))
-            {
-                this.logger.debug("no lyrics found");
-                return null;
-            }
-
-            this.logger.debug("lyrics found");
-
-            return content;
+            return new Dictionary<string, LyricsProvider>(this.providers);
         }
 
-        #region "MusicBee implementations"
-        public bool Configure(IntPtr panelHandle)
+        public void setUserAgent(string userAgent)
         {
-            return true;
+            this.userAgent = userAgent;
         }
 
-        public void SaveSettings()
-        {}
+        public string getUserAgent()
+        {
+            return this.userAgent;
+        }
 
-        public void Uninstall()
-        {}
+        public void setProxy(WebProxy proxy)
+        {
+            this.proxy = proxy;
+        }
 
+        public WebProxy getProxy()
+        {
+            return this.proxy;
+        }
+
+        #region "internal helpers"
+        private void loadFilters()
+        {
+            Type filterType = typeof(Filter);
+            foreach (Type type in Assembly.GetAssembly(this.GetType()).GetTypes())
+            {
+                if (filterType.IsAssignableFrom(type) && !type.IsAbstract && !type.IsInterface)
+                {
+                    try
+                    {
+                        Filter filter = (Filter)Activator.CreateInstance(type);
+                        this.filters.Add(filter.getName(), filter);
+                    }
+                    catch
+                    { }
+                }
+            }
+        }
+
+        public void loadConfigurations()
+        {
+            this.loadDefaultConfiguration();
+
+            DirectoryInfo di = new DirectoryInfo(Path.Combine(this.pluginDirectory, "providers"));
+            if (!di.Exists)
+            {
+                di.Create();
+            }
+
+            foreach (FileInfo fi in di.GetFiles("*.yml", SearchOption.TopDirectoryOnly))
+            {
+                using (StreamReader reader = fi.OpenText())
+                {
+                    this.loadProvider(reader);
+                }
+            }
+        }
+
+        private void loadDefaultConfiguration()
+        {
+            //this.loadProvider(Properties.Resources.songlyrics_com);
+            //this.loadProvider(Properties.Resources.metrolyrics_com);
+            //this.loadProvider(Properties.Resources.letras_mus_br);
+            //this.loadProvider(Properties.Resources.teksty_org);
+            //this.loadProvider(Properties.Resources.tekstowo_pl);
+            //this.loadProvider(Properties.Resources.azlyrics_com);
+            //this.loadProvider(Properties.Resources.plyrics_com);
+            //this.loadProvider(Properties.Resources.urbanlyrics_com);
+            //this.loadProvider(Properties.Resources.rapgenius_com);
+            //this.loadProvider(Properties.Resources.oldielyrics_com);
+        }
+
+
+        private void loadProvider(byte[] resourceData)
+        {
+            this.loadProvider(new StreamReader(new MemoryStream(resourceData), Encoding.UTF8));
+        }
+
+        public void loadProvider(TextReader configReader)
+        {
+            YamlStream yaml = new YamlStream();
+            yaml.Load(configReader);
+
+            YamlNode node;
+            YamlMappingNode root = (YamlMappingNode)yaml.Documents[0].RootNode;
+
+            node = root.Children[NODE_TYPE];
+            if (!(node is YamlScalarNode))
+            {
+                throw new InvalidConfigurationException("Invalid configuration");
+            }
+            string type = ((YamlScalarNode)node).Value.ToLower();
+            if (!this.providerFactories.ContainsKey(type))
+            {
+                this.logger.warn("Unknown provider type {0}, skipping", type);
+            }
+            ProviderFactory factory = this.providerFactories[type];
+
+            node = root.Children[NODE_NAME];
+            if (!(node is YamlScalarNode))
+            {
+                throw new InvalidConfigurationException("Invalid configuration");
+            }
+            string name = ((YamlScalarNode)node).Value;
+
+            node = root.Children[NODE_PREPARATION];
+            Dictionary<string, FilterCollection> preparation = new Dictionary<string, FilterCollection>();
+            if (node != null && node is YamlMappingNode)
+            {
+                string filterCollectionName;
+                foreach (KeyValuePair<YamlNode, YamlNode> preparationEntry in ((YamlMappingNode)node).Children)
+                {
+                    node = preparationEntry.Key;
+                    if (node is YamlScalarNode)
+                    {
+                        filterCollectionName = ((YamlScalarNode)node).Value.ToLower();
+
+                        node = preparationEntry.Value;
+                        if (node is YamlScalarNode)
+                        {
+                            string filterReference = ((YamlScalarNode)node).Value.ToLower();
+                            if (preparation.ContainsKey(filterReference))
+                            {
+                                preparation.Add(filterCollectionName, preparation[filterReference]);
+                            }
+                            else if (filterReference.Equals("skip", StringComparison.OrdinalIgnoreCase))
+                            {
+                                this.logger.debug("Instead of using the skip reference, just omit it.");
+                            }
+                            else
+                            {
+                                this.logger.warn("Invalid preparation reference, skipping the section.");
+                            }
+                        }
+                        else if (node is YamlSequenceNode)
+                        {
+                            FilterCollection filterCollection = new FilterCollection();
+                            foreach (YamlNode listEntry in ((YamlSequenceNode)node).Children)
+                            {
+                                if (listEntry is YamlScalarNode)
+                                {
+                                    KeyValuePair<string, string[]> parsedEntry = Filter.parse(((YamlScalarNode)listEntry).Value);
+
+                                    if (this.filters.ContainsKey(parsedEntry.Key))
+                                    {
+                                        filterCollection.Add(this.filters[parsedEntry.Key], parsedEntry.Value);
+                                    }
+                                }
+                                else
+                                {
+                                    this.logger.warn("The filter lists may only contain strings");
+                                }
+                            }
+                            if (filterCollection.getSize() > 0)
+                            {
+                                preparation.Add(filterCollectionName, filterCollection);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        this.logger.warn("Invalid configration, skipping a preparation section.");
+                    }
+                }
+            }
+
+            node = root.Children[NODE_POST_FILTERS];
+            FilterCollection filters = new FilterCollection();
+            if (node is YamlSequenceNode)
+            {
+                FilterCollection filterCollection = new FilterCollection();
+                foreach (YamlNode listEntry in ((YamlSequenceNode)node).Children)
+                {
+                    if (listEntry is YamlScalarNode)
+                    {
+                        KeyValuePair<string, string[]> parsedEntry = Filter.parse(((YamlScalarNode)listEntry).Value);
+
+                        if (this.filters.ContainsKey(parsedEntry.Key))
+                        {
+                            filterCollection.Add(this.filters[parsedEntry.Key], parsedEntry.Value);
+                        }
+                    }
+                    else
+                    {
+                        this.logger.warn("The filter lists may only contain strings");
+                    }
+                }
+            }
+
+            node = root.Children[NODE_CONFIG];
+            if (!(node is YamlMappingNode))
+            {
+                this.logger.warn("The config node must be a map");
+                return;
+            }
+
+            LyricsProvider provider = factory.newProvider(name, (YamlMappingNode)node);
+            this.logger.info("Provider loaded: " + provider.getName());
+
+            lock (this.providers)
+            {
+                if (this.providers.ContainsKey(provider.getName()))
+                {
+                    this.logger.info("The provider {0} does already exist and will be replaced.", provider.getName());
+                    this.providerFactories.Remove(provider.getName());
+                }
+                this.providers.Add(provider.getName(), provider);
+            }
+        }
         #endregion
-
-        // used for testing only
-        public static IntPtr mockApi()
-        {
-            MusicBeeApiInterface api = new Plugin.MusicBeeApiInterface();
-
-            api.Setting_GetWebProxy = delegate() {
-                return "";
-            };
-
-            api.Setting_GetPersistentStoragePath = delegate() {
-                return Path.GetDirectoryName(Assembly.GetAssembly(typeof(LyricsLoader)).Location);
-            };
-
-            IntPtr ptr = Marshal.AllocHGlobal(Marshal.SizeOf(api));
-            Marshal.StructureToPtr(api, ptr, true);
-
-            return ptr;
-        }
     }
 }

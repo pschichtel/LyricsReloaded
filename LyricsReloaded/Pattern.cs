@@ -25,13 +25,13 @@ using System.Text.RegularExpressions;
 
 namespace CubeIsland.LyricsReloaded
 {
-    public class Expression
+    public class Pattern
     {
         private readonly Regex regex;
 
-        public Expression(string regex)
+        public Pattern(string regex, string options)
         {
-            this.regex = new Regex(regex, RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.ExplicitCapture | RegexOptions.CultureInvariant);
+            this.regex = new Regex(regex, RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.CultureInvariant | optionStringToRegexOptions(options));
         }
 
         public string apply(string content)
@@ -45,6 +45,29 @@ namespace CubeIsland.LyricsReloaded
             {
                 throw new Exception("The pattern didn't match: " + this.regex.ToString());
             }
+        }
+
+        private static readonly Dictionary<char, RegexOptions> regexOptionMap = new Dictionary<char, RegexOptions>() {
+            {'i', RegexOptions.IgnoreCase},
+            {'s', RegexOptions.Singleline},
+            {'m', RegexOptions.Multiline}
+        };
+
+        public static RegexOptions optionStringToRegexOptions(string optionString)
+        {
+            RegexOptions options = RegexOptions.None;
+
+            char lc;
+            foreach (char c in optionString)
+            {
+                lc = Char.ToLower(c);
+                if (regexOptionMap.ContainsKey(lc))
+                {
+                    options |= regexOptionMap[lc];
+                }
+            }
+
+            return options;
         }
     }
 }
