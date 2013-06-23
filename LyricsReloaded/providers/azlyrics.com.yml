@@ -7,3 +7,4 @@ expressions:
 filters:
 - strip_html
 - utf8_encode
+- trim

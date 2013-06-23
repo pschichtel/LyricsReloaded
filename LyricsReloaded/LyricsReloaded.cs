@@ -328,6 +328,7 @@ namespace MusicBeePlugin
 
         public String RetrieveLyrics(String source, String artist, String title, String album, bool preferSynced, String providerName)
         {
+            this.logger.debug("Lyrics request: {0} - {1} - {2} - {3} - {4} - {5}", source, artist, title, album, (preferSynced ? "synced" : "unsynced"), providerName);
             LyricsProvider provider;
             try
             {
@@ -348,8 +349,11 @@ namespace MusicBeePlugin
 
             if (String.IsNullOrWhiteSpace(content))
             {
+                this.logger.debug("no lyrics found");
                 return null;
             }
+
+            this.logger.debug("lyrics found");
 
             return content;
         }

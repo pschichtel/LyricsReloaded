@@ -34,7 +34,7 @@ namespace CubeIsland.LyricsReloaded.Filters
 
     public class HtmlStripper : Filter
     {
-        private static readonly Regex STRIP_TAG_REGEX = new Regex("<[a-z]+(\\s+[a-z-]+(=(\"[^\"]*\"|'[^']*'|[^\\s\"'/>]+))?)*\\s*/?>|</[a-z]+>", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static readonly Regex STRIP_TAG_REGEX = new Regex("<[a-z]+(\\s+[a-z-]+(=(\"[^\"]*\"|'[^']*'|[^\\s\"'/>]+))?)*\\s*/?>|</[a-z]+>", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.CultureInvariant);
 
         public string getName()
         {
@@ -143,6 +143,19 @@ namespace CubeIsland.LyricsReloaded.Filters
             content = CLEAN_LINES_REGEX.Replace(content, "");
 
             return content;
+        }
+    }
+
+    public class Trimmer : Filter
+    {
+        public string getName()
+        {
+            return "trim";
+        }
+
+        public string filter(string content, Encoding encoding)
+        {
+            return content.Trim();
         }
     }
 }
