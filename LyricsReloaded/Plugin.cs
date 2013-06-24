@@ -42,7 +42,6 @@ namespace MusicBeePlugin
         private PluginInfo info = new PluginInfo();
         private LyricsReloaded lyricsReloaded;
 
-        private Logger logger;
         private bool initialized = false;
 
         // Called from MusicBee
@@ -82,8 +81,8 @@ namespace MusicBeePlugin
             }
             catch (Exception e)
             {
-                MessageBox.Show("An error occurred during plugin startup, send this file to the developer:\n\n" + this.logger.getFileInfo().FullName);
-                this.logger.error(e.Message);
+                MessageBox.Show("An error occurred during plugin startup, send this file to the developer:\n\n" + this.lyricsReloaded.getLogger().getFileInfo().FullName);
+                this.lyricsReloaded.getLogger().error(e.Message);
                 throw e;
             }
 
@@ -93,19 +92,19 @@ namespace MusicBeePlugin
         public void ReceiveNotification(String source, NotificationType type)
         {
             //MessageBox.Show("ReceiveNotification(" + source + ", " + type + ")");
-            this.logger.debug("Received a notification of type {0}", type);
+            this.lyricsReloaded.getLogger().debug("Received a notification of type {0}", type);
             switch (type)
             {
                 case NotificationType.PluginStartup:
                     String proxySetting = this.musicBee.Setting_GetWebProxy();
                     if (!string.IsNullOrEmpty(proxySetting))
                     {
-                        this.logger.debug("Proxy setting found");
+                        this.lyricsReloaded.getLogger().debug("Proxy setting found");
                         string[] raw = proxySetting.Split(Convert.ToChar(0));
                         WebProxy proxy = new WebProxy(raw[0]);
                         if (raw.Length >= 3)
                         {
-                            this.logger.debug("Proxy credentials found");
+                            this.lyricsReloaded.getLogger().debug("Proxy credentials found");
                             proxy.Credentials = new NetworkCredential(raw[1], raw[2]);
                         }
                         this.lyricsReloaded.setProxy(proxy);
@@ -118,7 +117,7 @@ namespace MusicBeePlugin
         public void Close(PluginCloseReason reason)
         {
             //MessageBox.Show("Close(" + reason + ")");
-            this.logger.info("Closing ...");
+            this.lyricsReloaded.getLogger().info("Closing ...");
             this.initialized = false;
         }
 
@@ -133,7 +132,7 @@ namespace MusicBeePlugin
 
         public String[] GetProviders()
         {
-            Dictionary<string, LyricsProvider> providers = this.lyricsReloaded.getProviders();
+            Dictionary<string, Provider> providers = this.lyricsReloaded.getProviders();
             string[] providerNames = new string[providers.Count];
             providers.Keys.CopyTo(providerNames, 0);
             return providerNames;
@@ -141,8 +140,8 @@ namespace MusicBeePlugin
 
         public String RetrieveLyrics(String source, String artist, String title, String album, bool preferSynced, String providerName)
         {
-            this.logger.debug("Lyrics request: {0} - {1} - {2} - {3} - {4} - {5}", source, artist, title, album, (preferSynced ? "synced" : "unsynced"), providerName);
-            LyricsProvider provider = this.lyricsReloaded.getProvider(providerName);
+            this.lyricsReloaded.getLogger().debug("Lyrics request: {0} - {1} - {2} - {3} - {4} - {5}", source, artist, title, album, (preferSynced ? "synced" : "unsynced"), providerName);
+            Provider provider = this.lyricsReloaded.getProvider(providerName);
             if (provider == null)
             {
                 this.lyricsReloaded.getLogger().warn("The provider {0} was not found!", providerName);
@@ -193,7 +192,7 @@ namespace MusicBeePlugin
             };
 
             api.Setting_GetPersistentStoragePath = delegate() {
-                return Path.GetDirectoryName(Assembly.GetAssembly(typeof(LyricsLoader)).Location);
+                return Path.GetDirectoryName(Assembly.GetAssembly(typeof(Plugin)).Location);
             };
 
             IntPtr ptr = Marshal.AllocHGlobal(Marshal.SizeOf(api));

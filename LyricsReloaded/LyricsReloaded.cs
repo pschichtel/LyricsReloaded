@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
-using CubeIsland.LyricsReloaded.Providers;
+using CubeIsland.LyricsReloaded.Loaders;
 using CubeIsland.LyricsReloaded.Filters;
 using MusicBeePlugin;
 using YamlDotNet.RepresentationModel;
@@ -22,8 +22,8 @@ namespace CubeIsland.LyricsReloaded
         private readonly string name;
         private readonly string pluginDirectory;
         private readonly Logger logger;
-        private readonly Dictionary<string, ProviderFactory> providerFactories;
-        private readonly Dictionary<string, LyricsProvider> providers;
+        private readonly Dictionary<string, LoaderFactory> loaderFactories;
+        private readonly Dictionary<string, Provider> providers;
         private readonly Dictionary<string, Filter> filters;
         private string userAgent;
         private WebProxy proxy;
@@ -36,12 +36,12 @@ namespace CubeIsland.LyricsReloaded
             Directory.CreateDirectory(this.pluginDirectory);
             this.logger = new Logger(Path.Combine(this.pluginDirectory, this.name + ".log"));
 
-            this.providerFactories = new Dictionary<string, ProviderFactory>()
+            this.loaderFactories = new Dictionary<string, LoaderFactory>()
             {
-                {"static", new StaticProviderFactory(this)}
+                {"static", new StaticLoaderFactory(this)}
             };
 
-            this.providers = new Dictionary<string, LyricsProvider>();
+            this.providers = new Dictionary<string, Provider>();
 
             this.filters = new Dictionary<string, Filter>();
             this.loadFilters();
@@ -65,7 +65,7 @@ namespace CubeIsland.LyricsReloaded
             return null;
         }
 
-        public LyricsProvider getProvider(string providerName)
+        public Provider getProvider(string providerName)
         {
             providerName = providerName.ToLower();
             if (this.providers.ContainsKey(providerName))
@@ -75,9 +75,9 @@ namespace CubeIsland.LyricsReloaded
             return null;
         }
 
-        public Dictionary<string, LyricsProvider> getProviders()
+        public Dictionary<string, Provider> getProviders()
         {
-            return new Dictionary<string, LyricsProvider>(this.providers);
+            return new Dictionary<string, Provider>(this.providers);
         }
 
         public void setUserAgent(string userAgent)
@@ -172,11 +172,11 @@ namespace CubeIsland.LyricsReloaded
                 throw new InvalidConfigurationException("Invalid configuration");
             }
             string type = ((YamlScalarNode)node).Value.ToLower();
-            if (!this.providerFactories.ContainsKey(type))
+            if (!this.loaderFactories.ContainsKey(type))
             {
                 this.logger.warn("Unknown provider type {0}, skipping", type);
             }
-            ProviderFactory factory = this.providerFactories[type];
+            LoaderFactory factory = this.loaderFactories[type];
 
             node = root.Children[NODE_NAME];
             if (!(node is YamlScalarNode))
@@ -221,7 +221,7 @@ namespace CubeIsland.LyricsReloaded
                             {
                                 if (listEntry is YamlScalarNode)
                                 {
-                                    KeyValuePair<string, string[]> parsedEntry = Filter.parse(((YamlScalarNode)listEntry).Value);
+                                    KeyValuePair<string, string[]> parsedEntry = FilterUtil.parse(((YamlScalarNode)listEntry).Value);
 
                                     if (this.filters.ContainsKey(parsedEntry.Key))
                                     {
@@ -247,7 +247,7 @@ namespace CubeIsland.LyricsReloaded
             }
 
             node = root.Children[NODE_POST_FILTERS];
-            FilterCollection filters = new FilterCollection();
+            FilterCollection postFilters = new FilterCollection();
             if (node is YamlSequenceNode)
             {
                 FilterCollection filterCollection = new FilterCollection();
@@ -255,7 +255,7 @@ namespace CubeIsland.LyricsReloaded
                 {
                     if (listEntry is YamlScalarNode)
                     {
-                        KeyValuePair<string, string[]> parsedEntry = Filter.parse(((YamlScalarNode)listEntry).Value);
+                        KeyValuePair<string, string[]> parsedEntry = FilterUtil.parse(((YamlScalarNode)listEntry).Value);
 
                         if (this.filters.ContainsKey(parsedEntry.Key))
                         {
@@ -276,7 +276,9 @@ namespace CubeIsland.LyricsReloaded
                 return;
             }
 
-            LyricsProvider provider = factory.newProvider(name, (YamlMappingNode)node);
+            LyricsLoader loader = factory.newLoader(name, (YamlMappingNode)node);
+
+            Provider provider = new Provider(name, new object(), postFilters, loader);
             this.logger.info("Provider loaded: " + provider.getName());
 
             lock (this.providers)
@@ -284,7 +286,7 @@ namespace CubeIsland.LyricsReloaded
                 if (this.providers.ContainsKey(provider.getName()))
                 {
                     this.logger.info("The provider {0} does already exist and will be replaced.", provider.getName());
-                    this.providerFactories.Remove(provider.getName());
+                    this.loaderFactories.Remove(provider.getName());
                 }
                 this.providers.Add(provider.getName(), provider);
             }

@@ -31,10 +31,16 @@ namespace CubeIsland.LyricsReloaded.Filters
     {
         string getName();
         string filter(string content, string[] args, Encoding encoding);
+    }
+
+    public class FilterUtil
+    {
+        private FilterUtil()
+        {}
 
         public static KeyValuePair<string, string[]> parse(string str)
         {
-            string[] parts = str.Split(new char[] {':'}, 2);
+            string[] parts = str.Split(new char[] { ':' }, 2);
 
             string name = HttpUtility.UrlDecode(parts[0].ToLower(), Encoding.ASCII);
 

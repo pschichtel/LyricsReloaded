@@ -5,11 +5,11 @@ using System.Text;
 using CubeIsland.LyricsReloaded.Filters;
 using YamlDotNet.RepresentationModel;
 
-namespace CubeIsland.LyricsReloaded.Providers
+namespace CubeIsland.LyricsReloaded.Loaders
 {
-    public interface ProviderFactory
+    public interface LoaderFactory
     {
-        LyricsProvider newProvider(string name, YamlMappingNode configuration);
+        LyricsLoader newLoader(string name, YamlMappingNode configuration);
     }
 
     public class InvalidConfigurationException : Exception

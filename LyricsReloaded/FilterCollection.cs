@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,14 +20,19 @@ namespace CubeIsland.LyricsReloaded.Filters
             this.filters.AddLast(new KeyValuePair<Filter, string[]>(filter, args));
         }
 
-        public IEnumerator<KeyValuePair<Filter, string[]>> GetEnumerator()
+        public int getSize()
+        {
+            return this.filters.Count;
+        }
+
+        IEnumerator<KeyValuePair<Filter, string[]>> IEnumerable<KeyValuePair<Filter, string[]>>.GetEnumerator()
         {
             return this.filters.GetEnumerator();
         }
 
-        public int getSize()
+        IEnumerator IEnumerable.GetEnumerator()
         {
-            return this.filters.Count;
+            return this.filters.GetEnumerator();
         }
     }
 }

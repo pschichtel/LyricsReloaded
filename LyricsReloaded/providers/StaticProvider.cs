@@ -6,16 +6,16 @@ using MusicBeePlugin;
 using YamlDotNet.RepresentationModel;
 using YamlDotNet.RepresentationModel.Serialization;
 
-namespace CubeIsland.LyricsReloaded.Providers
+namespace CubeIsland.LyricsReloaded.Loaders
 {
-    public class StaticProvider : LyricsProvider
+    public class StaticLoader : LyricsLoader
     {
         private readonly LyricsReloaded lyricsReloaded;
         private readonly string name;
         private readonly string urlTemplate;
         private readonly Pattern pattern;
 
-        public StaticProvider(LyricsReloaded lyricsReloaded, string name, string urlTemplate, Pattern pattern)
+        public StaticLoader(LyricsReloaded lyricsReloaded, string name, string urlTemplate, Pattern pattern)
         {
             this.lyricsReloaded = lyricsReloaded;
             this.name = name;
@@ -42,22 +42,22 @@ namespace CubeIsland.LyricsReloaded.Providers
         }
     }
 
-    public class StaticProviderFactory : ProviderFactory
+    public class StaticLoaderFactory : LoaderFactory
     {
         private static readonly YamlScalarNode NODE_URL = new YamlScalarNode("url");
         private static readonly YamlScalarNode NODE_PATTERN = new YamlScalarNode("pattern");
         private static readonly YamlScalarNode NODE_PATTERN_OPTIONS = new YamlScalarNode("pattern-options");
 
         private readonly LyricsReloaded lyricsReloaded;
-        private readonly LyricsLoader loader;
+        private readonly WebClient loader;
 
-        public StaticProviderFactory(LyricsReloaded lyricsReloaded)
+        public StaticLoaderFactory(LyricsReloaded lyricsReloaded)
         {
             this.lyricsReloaded = lyricsReloaded;
-            this.loader = new LyricsLoader(lyricsReloaded, 20000);
+            this.loader = new WebClient(lyricsReloaded, 20000);
         }
 
-        public LyricsProvider newProvider(string name, YamlMappingNode configuration)
+        public LyricsLoader newLoader(string name, YamlMappingNode configuration)
         {
             YamlNode node;
 
@@ -92,7 +92,7 @@ namespace CubeIsland.LyricsReloaded.Providers
 
             Pattern pattern = new Pattern(regex, regexOptions);
 
-            return new StaticProvider(this.lyricsReloaded, name, url, pattern);
+            return new StaticLoader(this.lyricsReloaded, name, url, pattern);
         }
     }
 }
