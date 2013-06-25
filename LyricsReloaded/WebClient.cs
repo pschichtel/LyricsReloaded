@@ -34,7 +34,6 @@ namespace CubeIsland.LyricsReloaded
     {
         private static readonly Regex ENCODING_REGEX = new Regex("<meta\\s+http-equiv=[\"']?content-type[\"']?\\s+content=.*?;\\s*charset\\s*=\\s*([a-z0-9-]+)[^>]*>|<\\?xml.+?encoding=\"([^\"]).*?\\?>", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-        private WebProxy proxy;
         private readonly LyricsReloaded lyricsReloaded;
         private readonly int timeout;
 
@@ -49,17 +48,7 @@ namespace CubeIsland.LyricsReloaded
             return this.timeout;
         }
 
-        public string get(string url)
-        {
-            return "";
-        }
-
-        public string post(string url, Dictionary<string, string> data)
-        {
-            return "";
-        }
-
-        public LyricsResponse loadContent(string url)
+        public Response get(string url)
         {
             HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(url);
 
@@ -69,9 +58,30 @@ namespace CubeIsland.LyricsReloaded
             request.Accept = "*/*";
             request.Headers.Add("Accept-Encoding", "gzip");
             request.ContentLength = 0;
-            if (this.proxy != null)
+
+            return this.executeRequest(request);
+        }
+
+        public Response post(string url, Dictionary<string, string> data)
+        {
+            HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(url);
+
+            request.Method = "GET";
+            request.UserAgent = this.lyricsReloaded.getUserAgent();
+            //request.ContentType = "application/x-www-form-urlencoded";
+            request.Accept = "*/*";
+            request.Headers.Add("Accept-Encoding", "gzip");
+            request.ContentLength = 0;
+
+            return this.executeRequest(request);
+        }
+
+        protected Response executeRequest(HttpWebRequest request)
+        {
+            WebProxy proxy = this.lyricsReloaded.getProxy();
+            if (proxy != null)
             {
-                request.Proxy = this.proxy;
+                request.Proxy = proxy;
             }
 
             IAsyncResult result;
@@ -90,10 +100,9 @@ namespace CubeIsland.LyricsReloaded
                     request.Abort();
                 }
                 catch
-                {}
+                { }
                 throw;
             }
-
             String contentString = null;
             Encoding encoding = Encoding.ASCII;
             using (HttpWebResponse response = (HttpWebResponse)request.EndGetResponse(result))
@@ -139,26 +148,21 @@ namespace CubeIsland.LyricsReloaded
                         }
                     }
                     catch (ArgumentException)
-                    {}
+                    { }
                 }
                 content.Close();
             }
-            
-            return new LyricsResponse(contentString, encoding);
-        }
 
-        public void setProxy(WebProxy proxy)
-        {
-            this.proxy = proxy;
+            return new Response(contentString, encoding);
         }
     }
 
-    public class LyricsResponse
+    public class Response
     {
         private readonly string content;
         private readonly Encoding encoding;
 
-        public LyricsResponse(string content, Encoding encoding)
+        public Response(string content, Encoding encoding)
         {
             this.content = content;
             this.encoding = encoding;

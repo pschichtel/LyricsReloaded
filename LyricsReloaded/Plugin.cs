@@ -37,7 +37,6 @@ namespace MusicBeePlugin
 {
     public partial class Plugin
     {
-
         private MusicBeeApiInterface musicBee;
         private PluginInfo info = new PluginInfo();
         private LyricsReloaded lyricsReloaded;
