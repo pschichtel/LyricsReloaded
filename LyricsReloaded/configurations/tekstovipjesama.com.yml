@@ -1,0 +1,10 @@
+name: "tekstovipjesama.com"
+url: "http://tekstovipjesama.com/{artist:lower,name}/{title:lower,name}"
+    
+expressions:
+- '<div\s+class="entry"[^>]*>\s*<div[^>]*>\s*(?<lyrics>.*?)</div>'
+
+filters:
+- strip_html
+- entity_decode
+- utf8_encode
