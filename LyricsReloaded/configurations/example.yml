@@ -11,9 +11,7 @@ variables:
 		type: artist # the source of the value
 		filters:
 		- normalize
-		- name: stripdown
-		  args:
-		  - _
+		- [stripdown, _]
 		- urlencode
 
 	# filters to apply to the album
