@@ -57,7 +57,6 @@ namespace CubeIsland.LyricsReloaded
         {
             RegexOptions options = RegexOptions.None;
 
-            char lc;
             foreach (char c in optionString)
             {
                 if (regexOptionMap.ContainsKey(c))
