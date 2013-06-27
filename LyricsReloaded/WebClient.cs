@@ -48,42 +48,45 @@ namespace CubeIsland.LyricsReloaded
             return this.timeout;
         }
 
-        public Response get(string url)
+        public WebResponse get(string url)
         {
             HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(url);
 
             request.Method = "GET";
-            request.UserAgent = this.lyricsReloaded.getUserAgent();
-            //request.ContentType = "application/x-www-form-urlencoded";
-            request.Accept = "*/*";
-            request.Headers.Add("Accept-Encoding", "gzip");
             request.ContentLength = 0;
 
             return this.executeRequest(request);
         }
 
-        public Response post(string url, Dictionary<string, string> data)
+        public WebResponse post(string url, Dictionary<string, string> data)
         {
             HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(url);
 
-            request.Method = "GET";
-            request.UserAgent = this.lyricsReloaded.getUserAgent();
-            //request.ContentType = "application/x-www-form-urlencoded";
-            request.Accept = "*/*";
-            request.Headers.Add("Accept-Encoding", "gzip");
+            request.Method = "POST";
+            request.ContentType = "application/x-www-form-urlencoded";
             request.ContentLength = 0;
 
             return this.executeRequest(request);
         }
 
-        protected Response executeRequest(HttpWebRequest request)
+        protected WebResponse executeRequest(HttpWebRequest request)
         {
+            // request confugration
+            if (request.Headers.GetValues("Accept-Encoding").Length == 0)
+            {
+                // we support gzip if nothing else was specified.
+                request.Headers.Add("Accept-Encoding", "gzip");
+            }
+            request.UserAgent = this.lyricsReloaded.getUserAgent();
+            request.Accept = "*/*";
+            request.Headers.Add("Accept-Encoding", "gzip");
             WebProxy proxy = this.lyricsReloaded.getProxy();
             if (proxy != null)
             {
                 request.Proxy = proxy;
             }
 
+            // send the request and wait for the response
             IAsyncResult result;
             try
             {
@@ -100,21 +103,25 @@ namespace CubeIsland.LyricsReloaded
                     request.Abort();
                 }
                 catch
-                { }
+                {}
                 throw;
             }
+
+            // load the response
+            WebResponse webResponse = null;
             String contentString = null;
-            Encoding encoding = Encoding.ASCII;
+            Encoding encoding = Encoding.ASCII; // default encoding as the last fallback
             using (HttpWebResponse response = (HttpWebResponse)request.EndGetResponse(result))
             {
                 if (response.CharacterSet != null)
                 {
-                    encoding = Encoding.GetEncoding(response.CharacterSet);
+                    encoding = Encoding.GetEncoding(response.CharacterSet); // the response encoding specified by the server. this should enough
                 }
 
                 Stream responsesStream = response.GetResponseStream();
                 if (String.Compare(response.ContentEncoding, "gzip", StringComparison.OrdinalIgnoreCase) == 0)
                 {
+                    // gzip compression detected, wrap the stream with a decompressing gzip stream
                     this.lyricsReloaded.getLogger().debug("gzip compression detected");
                     responsesStream = new GZipStream(responsesStream, CompressionMode.Decompress);
                 }
@@ -131,41 +138,44 @@ namespace CubeIsland.LyricsReloaded
                     }
                     content.Write(buffer, 0, bytesRead);
                 }
-                while (true);
+                while (bytesRead > 0);
                 responsesStream.Close();
 
-                contentString = encoding.GetString(content.GetBuffer(), 0, Convert.ToInt32(content.Length));
-                Match match = ENCODING_REGEX.Match(contentString);
+                contentString = encoding.GetString(content.GetBuffer(), 0, Convert.ToInt32(content.Length)); //  TODO this doesn't seem solid; decode the the data with the currently known encoding
+                Match match = ENCODING_REGEX.Match(contentString); // search for a encoding specified in the content
                 if (match.Success)
                 {
                     try
                     {
-                        Encoding tmp = Encoding.GetEncoding(match.Groups[1].ToString());
+                        Encoding tmp = Encoding.GetEncoding(match.Groups[1].ToString()); // try to get a encoding from the name
                         if (tmp != null && encoding != tmp)
                         {
                             encoding = tmp;
-                            contentString = encoding.GetString(content.GetBuffer(), 0, Convert.ToInt32(content.Length));
+                            contentString = encoding.GetString(content.GetBuffer(), 0, Convert.ToInt32(content.Length)); // TODO this doesn't seem solid; decode again with the newly found encoding
                         }
                     }
                     catch (ArgumentException)
-                    { }
+                    {}
                 }
                 content.Close();
+                webResponse = new WebResponse(contentString, encoding, response.Headers);
             }
 
-            return new Response(contentString, encoding);
+            return webResponse;
         }
     }
 
-    public class Response
+    public class WebResponse
     {
         private readonly string content;
         private readonly Encoding encoding;
+        private readonly WebHeaderCollection headers;
 
-        public Response(string content, Encoding encoding)
+        public WebResponse(string content, Encoding encoding, WebHeaderCollection headers)
         {
             this.content = content;
             this.encoding = encoding;
+            this.headers = headers;
         }
 
         public string getContent()
@@ -176,6 +186,11 @@ namespace CubeIsland.LyricsReloaded
         public Encoding getEncoding()
         {
             return this.encoding;
+        }
+
+        public WebHeaderCollection getHeaders()
+        {
+            return this.headers;
         }
     }
 }
