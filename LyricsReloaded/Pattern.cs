@@ -60,10 +60,9 @@ namespace CubeIsland.LyricsReloaded
             char lc;
             foreach (char c in optionString)
             {
-                lc = Char.ToLower(c);
-                if (regexOptionMap.ContainsKey(lc))
+                if (regexOptionMap.ContainsKey(c))
                 {
-                    options |= regexOptionMap[lc];
+                    options |= regexOptionMap[c];
                 }
             }
 
