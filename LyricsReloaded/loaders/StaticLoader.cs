@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Text;
+using System.Collections.Generic;
 using YamlDotNet.RepresentationModel;
 
 namespace CubeIsland.LyricsReloaded.Provider.Loader
@@ -9,8 +11,9 @@ namespace CubeIsland.LyricsReloaded.Provider.Loader
         private readonly string name;
         private readonly string urlTemplate;
         private readonly Pattern pattern;
+        private readonly WebClient client;
 
-        public StaticLoader(LyricsReloaded lyricsReloaded, string name, string urlTemplate, Pattern pattern)
+        public StaticLoader(LyricsReloaded lyricsReloaded, WebClient client, string name, string urlTemplate, Pattern pattern)
         {
             this.lyricsReloaded = lyricsReloaded;
             this.name = name;
@@ -23,17 +26,25 @@ namespace CubeIsland.LyricsReloaded.Provider.Loader
             return this.name;
         }
 
-        private string constructUrl(String artist, String title, String album)
+        private string constructUrl(Dictionary<string, string> variables)
         {
-            return this.urlTemplate
-                .Replace("{artist}", artist)
-                .Replace("{title}", title)
-                .Replace("{album}", album);
+            string url = this.urlTemplate;
+
+            foreach (KeyValuePair<string, string> entry in variables)
+            {
+                url.Replace("{" + entry.Key + "}", entry.Value);
+            }
+
+            return url;
         }
 
-        public String getLyrics(String artist, String title, String album)
+        public Lyrics getLyrics(Dictionary<string, string> variables)
         {
-            return null;
+            string url = this.constructUrl(variables);
+            WebResponse response = this.client.get(url);
+            string lyrics = this.pattern.apply(response.getContent());
+
+            return new Lyrics(lyrics, response.getEncoding());
         }
     }
 
@@ -52,12 +63,12 @@ namespace CubeIsland.LyricsReloaded.Provider.Loader
         }
 
         private readonly LyricsReloaded lyricsReloaded;
-        private readonly WebClient loader;
+        private readonly WebClient webClient;
 
         public StaticLoaderFactory(LyricsReloaded lyricsReloaded)
         {
             this.lyricsReloaded = lyricsReloaded;
-            this.loader = new WebClient(lyricsReloaded, 20000);
+            this.webClient = new WebClient(lyricsReloaded, 20000);
         }
 
         public string getName()
@@ -88,6 +99,24 @@ namespace CubeIsland.LyricsReloaded.Provider.Loader
             {
                 regex = ((YamlScalarNode)node).Value;
             }
+            else if (node is YamlSequenceNode)
+            {
+                IEnumerator<YamlNode> it = ((YamlSequenceNode)node).Children.GetEnumerator();
+                if (!it.MoveNext())
+                {
+                    throw new InvalidConfigurationException("The pattern needs at least the regex defined!");
+                }
+                if (!(it.Current is YamlScalarNode))
+                {
+                    throw new InvalidConfigurationException("The pattern may only contain string value!");
+                }
+                regex = ((YamlScalarNode)it.Current).Value;
+
+                if (it.MoveNext() && it.Current is YamlScalarNode)
+                {
+                    regexOptions = ((YamlScalarNode)it.Current).Value;
+                }
+            }
             else if (node is YamlMappingNode)
             {
                 YamlMappingNode patternConfig = (YamlMappingNode)node;
@@ -109,7 +138,7 @@ namespace CubeIsland.LyricsReloaded.Provider.Loader
                 throw new InvalidConfigurationException("No pattern specified!");
             }
 
-            return new StaticLoader(this.lyricsReloaded, name, url, new Pattern(regex, regexOptions));
+            return new StaticLoader(this.lyricsReloaded, this.webClient, name, url, new Pattern(regex, regexOptions));
         }
     }
 }

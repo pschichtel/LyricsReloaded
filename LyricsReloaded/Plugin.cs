@@ -36,8 +36,6 @@ namespace MusicBeePlugin
         private PluginInfo info = new PluginInfo();
         private LyricsReloaded lyricsReloaded;
 
-        private bool initialized = false;
-
         // Called from MusicBee
         public PluginInfo Initialise(IntPtr apiPtr)
         {
@@ -61,7 +59,7 @@ namespace MusicBeePlugin
 
             try
             {
-                this.lyricsReloaded = new LyricsReloaded(this.musicBee);
+                this.lyricsReloaded = new LyricsReloaded(this.musicBee.Setting_GetPersistentStoragePath());
             }
             catch (Exception e)
             {
@@ -111,17 +109,7 @@ namespace MusicBeePlugin
         public void Close(PluginCloseReason reason)
         {
             //MessageBox.Show("Close(" + reason + ")");
-            this.lyricsReloaded.getLogger().info("Closing ...");
-            this.initialized = false;
-        }
-
-        public void init()
-        {
-            if (!this.initialized)
-            {
-                this.initialized = true;
-                this.lyricsReloaded.getLogger().info("Plugin initialized!");
-            }
+            this.lyricsReloaded.getLogger().info("Plugin disabled");
         }
 
         public String[] GetProviders()
@@ -142,24 +130,17 @@ namespace MusicBeePlugin
                 return null;
             }
 
-            string lyricsContent = provider.getLyrics(artist, title, album);
+            String lyrics = provider.getLyrics(artist, title, album);
 
-            // this.logger.debug("{0} constructed this URL: {1}", provider.getName(), url);
+            if (String.IsNullOrWhiteSpace(lyrics))
+            {
+                this.lyricsReloaded.getLogger().debug("no lyrics found");
+                return null;
+            }
 
-            // LyricsResponse response = this.loader.loadContent(url, "USER_AGENT");
+            this.lyricsReloaded.getLogger().debug("lyrics found");
 
-            // String content = provider.processContent(response.getContent(), response.getEncoding());
-
-            // if (String.IsNullOrWhiteSpace(content))
-            // {
-            //     this.logger.debug("no lyrics found");
-            //     return null;
-            // }
-
-            // this.logger.debug("lyrics found");
-
-            // return content;
-            return null;
+            return lyrics;
         }
 
         #region "MusicBee implementations"
@@ -175,24 +156,5 @@ namespace MusicBeePlugin
         {}
 
         #endregion
-
-        // used for testing only
-        public static IntPtr mockApi()
-        {
-            MusicBeeApiInterface api = new Plugin.MusicBeeApiInterface();
-
-            api.Setting_GetWebProxy = delegate() {
-                return "";
-            };
-
-            api.Setting_GetPersistentStoragePath = delegate() {
-                return Path.GetDirectoryName(Assembly.GetAssembly(typeof(Plugin)).Location);
-            };
-
-            IntPtr ptr = Marshal.AllocHGlobal(Marshal.SizeOf(api));
-            Marshal.StructureToPtr(api, ptr, true);
-
-            return ptr;
-        }
     }
 }

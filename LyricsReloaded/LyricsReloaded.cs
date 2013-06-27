@@ -16,11 +16,11 @@ namespace CubeIsland.LyricsReloaded
         private string userAgent;
         private WebProxy proxy;
 
-        public LyricsReloaded(Plugin.MusicBeeApiInterface musicBee)
+        public LyricsReloaded(string configurationPath)
         {
             Assembly asm = Assembly.GetAssembly(this.GetType());
             this.name = asm.GetName().Name;
-            this.pluginDirectory = Path.Combine(musicBee.Setting_GetPersistentStoragePath(), this.name);
+            this.pluginDirectory = Path.Combine(configurationPath, this.name);
             Directory.CreateDirectory(this.pluginDirectory);
             this.logger = new Logger(Path.Combine(this.pluginDirectory, this.name + ".log"));
 
@@ -103,8 +103,5 @@ namespace CubeIsland.LyricsReloaded
 
 
         #endregion
-
-
-
     }
 }

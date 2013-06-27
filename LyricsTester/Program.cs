@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MusicBeePlugin;
+using CubeIsland.LyricsReloaded;
+using CubeIsland.LyricsReloaded.Provider;
 
 namespace LyricsTester
 {
@@ -12,15 +13,10 @@ namespace LyricsTester
     {
         static void Main(string[] args)
         {
-            MusicBeePlugin.Plugin plugin = new Plugin();
-
-            IntPtr structPointer = Plugin.mockApi();
-
-            plugin.Initialise(structPointer);
-            plugin.ReceiveNotification("tester", Plugin.NotificationType.PluginStartup);
+            LyricsReloaded lyricsReloaded = new LyricsReloaded(".");
 
             Console.WriteLine("The providers:");
-            foreach (String provider in plugin.GetProviders())
+            foreach (String provider in lyricsReloaded.getProviderManager().getProviders().Keys)
             {
                 Console.WriteLine(" - " + provider);
             }
@@ -35,13 +31,14 @@ namespace LyricsTester
             //string album = def(Console.ReadLine(), "Roit!");
 
             String lyrics;
-            foreach (String provider in plugin.GetProviders())
+            foreach (String providerName in lyricsReloaded.getProviderManager().getProviders().Keys)
             {
-                Console.Write("Provider " + provider + ": ");
+                Console.Write("Provider " + providerName + ": ");
                 try
                 {
-                    lyrics = plugin.RetrieveLyrics("abc.mp3", artist, title, "", false, provider);
-                    if (string.IsNullOrWhiteSpace(lyrics))
+                    Provider provider = lyricsReloaded.getProviderManager().getProvider(providerName);
+                    lyrics = provider.getLyrics(artist, title, "");
+                    if (String.IsNullOrWhiteSpace(lyrics))
                     {
                         Console.WriteLine("failed (not found)");
                     }
@@ -59,9 +56,6 @@ namespace LyricsTester
 
             Console.WriteLine("\nPress any key to exit...");
             Console.ReadKey();
-
-            plugin.Close(Plugin.PluginCloseReason.MusicBeeClosing);
-            Marshal.FreeHGlobal(structPointer);
         }
 
         private static string def(String str, string value)

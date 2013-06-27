@@ -19,17 +19,41 @@
 */
 
 using YamlDotNet.RepresentationModel;
+using System.Collections.Generic;
+using System.Text;
 
 namespace CubeIsland.LyricsReloaded.Provider.Loader
 {
     public interface LyricsLoader
     {
-        string getLyrics(string artist, string title, string album);
+        Lyrics getLyrics(Dictionary<string, string> variables);
     }
 
     public interface LyricsLoaderFactory
     {
         string getName();
         LyricsLoader newLoader(string name, YamlMappingNode configuration);
+    }
+
+    public class Lyrics
+    {
+        private readonly string content;
+        private readonly Encoding encoding;
+
+        public Lyrics(string content, Encoding encoding)
+        {
+            this.content = content;
+            this.encoding = encoding;
+        }
+
+        public string getContent()
+        {
+            return this.content;
+        }
+
+        public Encoding getEncoding()
+        {
+            return this.encoding;
+        }
     }
 }

@@ -3,93 +3,31 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MusicBeePlugin;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using CubeIsland.LyricsReloaded;
+using CubeIsland.LyricsReloaded.Provider;
 
 namespace LyricsUnitTests
 {
     [TestClass]
     public class LyricsTests
     {
-        private Plugin plugin;
-        private IntPtr api;
+        private static LyricsReloaded lyricsReloaded = null;
 
-        [TestInitialize]
-        public void init()
+        [ClassInitialize]
+        public static void init(TestContext context)
         {
-            plugin = new Plugin();
-            api = Plugin.mockApi();
+            lyricsReloaded = new LyricsReloaded(".");
         }
 
-        [TestCleanup]
-        public void cleanup()
+        [ClassCleanup]
+        public static void cleanup()
         {
-            plugin = null;
-            Marshal.FreeHGlobal(api);
-        }
-
-        private void startup()
-        {
-            this.plugin.Initialise(this.api);
-            this.plugin.ReceiveNotification("test", Plugin.NotificationType.PluginStartup);
-        }
-
-        private void disable()
-        {
-            this.plugin.Close(Plugin.PluginCloseReason.UserDisabled);
-        }
-
-        private void shutdown()
-        {
-            this.plugin.Close(Plugin.PluginCloseReason.MusicBeeClosing);
+            lyricsReloaded = null;
         }
 
         [TestMethod]
         public void testEnabling()
         {
-            this.startup();
-
-            this.disable();
-
-            this.startup();
-
-            this.disable();
-
-            this.startup();
-
-            this.disable();
-
-            this.startup();
-
-            this.shutdown();
-        }
-
-        [TestMethod]
-        public void testBuildInProviders()
-        {
-            this.startup();
-
-            Assert.AreEqual(10, plugin.GetProviders().Length);
-
-            this.shutdown();
-        }
-
-        [TestMethod]
-        public void testSimpleSearch()
-        {
-            this.startup();
-
-            String lyrics = null;
-            foreach (String provider in plugin.GetProviders())
-            {
-                lyrics = plugin.RetrieveLyrics("", "Paramore", "Misery Business", "Roit!", false, provider);
-                if (lyrics != null)
-                {
-                    break;
-                }
-            }
-
-            Assert.IsNotNull(lyrics);
-
-            this.shutdown();
         }
     }
 }

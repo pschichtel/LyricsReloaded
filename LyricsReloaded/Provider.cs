@@ -1,6 +1,7 @@
 ﻿using CubeIsland.LyricsReloaded.Filters;
 using CubeIsland.LyricsReloaded.Provider.Loader;
 using System;
+using System.Text;
 using System.Collections.Generic;
 
 namespace CubeIsland.LyricsReloaded.Provider
@@ -42,7 +43,34 @@ namespace CubeIsland.LyricsReloaded.Provider
 
         public String getLyrics(String artist, String title, String album)
         {
-            return null;
+            Dictionary<string, string> variableValues = new Dictionary<string, string>(this.variables.Count);
+
+            Variable var;
+            foreach (KeyValuePair<string, Variable> entry in this.variables)
+            {
+                var = entry.Value;
+                switch (var.getType())
+                {
+                    case Variable.Type.ARTIST:
+                        variableValues.Add(entry.Key, var.process(artist, Encoding.UTF8));
+                        break;
+                    case Variable.Type.TITLE:
+                        variableValues.Add(entry.Key, var.process(title, Encoding.UTF8));
+                        break;
+                    case Variable.Type.ALBUM:
+                        variableValues.Add(entry.Key, var.process(album, Encoding.UTF8));
+                        break;
+                }
+            }
+
+            Lyrics lyrics = this.loader.getLyrics(variableValues);
+
+            if (lyrics == null)
+            {
+                return null;
+            }
+
+            return this.postFilters.applyFilters(lyrics.getContent(), lyrics.getEncoding());
         }
     }
 }
