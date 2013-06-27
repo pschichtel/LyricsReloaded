@@ -1,30 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
-using System.Text;
-using CubeIsland.LyricsReloaded.Loaders;
-using CubeIsland.LyricsReloaded.Filters;
+﻿using CubeIsland.LyricsReloaded.Provider;
+using CubeIsland.LyricsReloaded.Provider.Loader;
 using MusicBeePlugin;
-using YamlDotNet.RepresentationModel;
+using System.IO;
 using System.Net;
+using System.Reflection;
 
 namespace CubeIsland.LyricsReloaded
 {
     public class LyricsReloaded
     {
-        private static readonly YamlScalarNode NODE_NAME = new YamlScalarNode("name");
-        private static readonly YamlScalarNode NODE_TYPE = new YamlScalarNode("type");
-        private static readonly YamlScalarNode NODE_PREPARATION = new YamlScalarNode("preparation");
-        private static readonly YamlScalarNode NODE_POST_FILTERS = new YamlScalarNode("post-filters");
-        private static readonly YamlScalarNode NODE_CONFIG = new YamlScalarNode("config");
-
         private readonly string name;
         private readonly string pluginDirectory;
         private readonly Logger logger;
-        private readonly Dictionary<string, LoaderFactory> loaderFactories;
-        private readonly Dictionary<string, Provider> providers;
-        private readonly Dictionary<string, Filter> filters;
+        private readonly ProviderManager providerManager;
         private string userAgent;
         private WebProxy proxy;
 
@@ -36,15 +24,9 @@ namespace CubeIsland.LyricsReloaded
             Directory.CreateDirectory(this.pluginDirectory);
             this.logger = new Logger(Path.Combine(this.pluginDirectory, this.name + ".log"));
 
-            this.loaderFactories = new Dictionary<string, LoaderFactory>()
-            {
-                {"static", new StaticLoaderFactory(this)}
-            };
+            this.providerManager = new ProviderManager(this);
 
-            this.providers = new Dictionary<string, Provider>();
-
-            this.filters = new Dictionary<string, Filter>();
-            this.loadFilters();
+            this.providerManager.registerLoaderFactory(new StaticLoaderFactory(this));
 
             this.userAgent = "Firefox XY";
             this.proxy = null;
@@ -55,29 +37,9 @@ namespace CubeIsland.LyricsReloaded
             return this.logger;
         }
 
-        public Filter getFilter(string name)
+        public ProviderManager getProviderManager()
         {
-            name = name.ToLower();
-            if (filters.ContainsKey(name))
-            {
-                return filters[name];
-            }
-            return null;
-        }
-
-        public Provider getProvider(string providerName)
-        {
-            providerName = providerName.ToLower();
-            if (this.providers.ContainsKey(providerName))
-            {
-                return this.providers[providerName];
-            }
-            return null;
-        }
-
-        public Dictionary<string, Provider> getProviders()
-        {
-            return new Dictionary<string, Provider>(this.providers);
+            return this.providerManager;
         }
 
         public void setUserAgent(string userAgent)
@@ -101,23 +63,6 @@ namespace CubeIsland.LyricsReloaded
         }
 
         #region "internal helpers"
-        private void loadFilters()
-        {
-            Type filterType = typeof(Filter);
-            foreach (Type type in Assembly.GetAssembly(this.GetType()).GetTypes())
-            {
-                if (filterType.IsAssignableFrom(type) && !type.IsAbstract && !type.IsInterface)
-                {
-                    try
-                    {
-                        Filter filter = (Filter)Activator.CreateInstance(type);
-                        this.filters.Add(filter.getName(), filter);
-                    }
-                    catch
-                    { }
-                }
-            }
-        }
 
         public void loadConfigurations()
         {
@@ -126,15 +71,19 @@ namespace CubeIsland.LyricsReloaded
             DirectoryInfo di = new DirectoryInfo(Path.Combine(this.pluginDirectory, "providers"));
             if (!di.Exists)
             {
-                di.Create();
+                try
+                {
+                    di.Create();
+                }
+                catch (IOException e)
+                {
+                    this.logger.warn("Failed to create the providers folder: {0}", e.Message);
+                }
             }
 
             foreach (FileInfo fi in di.GetFiles("*.yml", SearchOption.TopDirectoryOnly))
             {
-                using (StreamReader reader = fi.OpenText())
-                {
-                    this.loadProvider(reader);
-                }
+                this.providerManager.loadProvider(fi);
             }
         }
 
@@ -153,144 +102,9 @@ namespace CubeIsland.LyricsReloaded
         }
 
 
-        private void loadProvider(byte[] resourceData)
-        {
-            this.loadProvider(new StreamReader(new MemoryStream(resourceData), Encoding.UTF8));
-        }
-
-        public void loadProvider(TextReader configReader)
-        {
-            YamlStream yaml = new YamlStream();
-            yaml.Load(configReader);
-
-            YamlNode node;
-            YamlMappingNode root = (YamlMappingNode)yaml.Documents[0].RootNode;
-
-            node = root.Children[NODE_TYPE];
-            if (!(node is YamlScalarNode))
-            {
-                throw new InvalidConfigurationException("Invalid configuration");
-            }
-            string type = ((YamlScalarNode)node).Value.ToLower();
-            if (!this.loaderFactories.ContainsKey(type))
-            {
-                this.logger.warn("Unknown provider type {0}, skipping", type);
-            }
-            LoaderFactory factory = this.loaderFactories[type];
-
-            node = root.Children[NODE_NAME];
-            if (!(node is YamlScalarNode))
-            {
-                throw new InvalidConfigurationException("Invalid configuration");
-            }
-            string name = ((YamlScalarNode)node).Value;
-
-            node = root.Children[NODE_PREPARATION];
-            Dictionary<string, FilterCollection> preparation = new Dictionary<string, FilterCollection>();
-            if (node != null && node is YamlMappingNode)
-            {
-                string filterCollectionName;
-                foreach (KeyValuePair<YamlNode, YamlNode> preparationEntry in ((YamlMappingNode)node).Children)
-                {
-                    node = preparationEntry.Key;
-                    if (node is YamlScalarNode)
-                    {
-                        filterCollectionName = ((YamlScalarNode)node).Value.ToLower();
-
-                        node = preparationEntry.Value;
-                        if (node is YamlScalarNode)
-                        {
-                            string filterReference = ((YamlScalarNode)node).Value.ToLower();
-                            if (preparation.ContainsKey(filterReference))
-                            {
-                                preparation.Add(filterCollectionName, preparation[filterReference]);
-                            }
-                            else if (filterReference.Equals("skip", StringComparison.OrdinalIgnoreCase))
-                            {
-                                this.logger.debug("Instead of using the skip reference, just omit it.");
-                            }
-                            else
-                            {
-                                this.logger.warn("Invalid preparation reference, skipping the section.");
-                            }
-                        }
-                        else if (node is YamlSequenceNode)
-                        {
-                            FilterCollection filterCollection = new FilterCollection();
-                            foreach (YamlNode listEntry in ((YamlSequenceNode)node).Children)
-                            {
-                                if (listEntry is YamlScalarNode)
-                                {
-                                    KeyValuePair<string, string[]> parsedEntry = FilterUtil.parse(((YamlScalarNode)listEntry).Value);
-
-                                    if (this.filters.ContainsKey(parsedEntry.Key))
-                                    {
-                                        filterCollection.Add(this.filters[parsedEntry.Key], parsedEntry.Value);
-                                    }
-                                }
-                                else
-                                {
-                                    this.logger.warn("The filter lists may only contain strings");
-                                }
-                            }
-                            if (filterCollection.getSize() > 0)
-                            {
-                                preparation.Add(filterCollectionName, filterCollection);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        this.logger.warn("Invalid configration, skipping a preparation section.");
-                    }
-                }
-            }
-
-            node = root.Children[NODE_POST_FILTERS];
-            FilterCollection postFilters = new FilterCollection();
-            if (node is YamlSequenceNode)
-            {
-                FilterCollection filterCollection = new FilterCollection();
-                foreach (YamlNode listEntry in ((YamlSequenceNode)node).Children)
-                {
-                    if (listEntry is YamlScalarNode)
-                    {
-                        KeyValuePair<string, string[]> parsedEntry = FilterUtil.parse(((YamlScalarNode)listEntry).Value);
-
-                        if (this.filters.ContainsKey(parsedEntry.Key))
-                        {
-                            filterCollection.Add(this.filters[parsedEntry.Key], parsedEntry.Value);
-                        }
-                    }
-                    else
-                    {
-                        this.logger.warn("The filter lists may only contain strings");
-                    }
-                }
-            }
-
-            node = root.Children[NODE_CONFIG];
-            if (!(node is YamlMappingNode))
-            {
-                this.logger.warn("The config node must be a map");
-                return;
-            }
-
-            LyricsLoader loader = factory.newLoader(name, (YamlMappingNode)node);
-
-            Provider provider = new Provider(name, new object(), postFilters, loader);
-            this.logger.info("Provider loaded: " + provider.getName());
-
-            lock (this.providers)
-            {
-                if (this.providers.ContainsKey(provider.getName()))
-                {
-                    this.logger.info("The provider {0} does already exist and will be replaced.", provider.getName());
-                    this.loaderFactories.Remove(provider.getName());
-                }
-                this.providers.Add(provider.getName(), provider);
-            }
-        }
         #endregion
+
+
+
     }
 }

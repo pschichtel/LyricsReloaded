@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using MusicBeePlugin;
 using YamlDotNet.RepresentationModel;
-using YamlDotNet.RepresentationModel.Serialization;
 
-namespace CubeIsland.LyricsReloaded.Loaders
+namespace CubeIsland.LyricsReloaded.Provider.Loader
 {
     public class StaticLoader : LyricsLoader
     {
@@ -42,11 +37,19 @@ namespace CubeIsland.LyricsReloaded.Loaders
         }
     }
 
-    public class StaticLoaderFactory : LoaderFactory
+    public class StaticLoaderFactory : LyricsLoaderFactory
     {
-        private static readonly YamlScalarNode NODE_URL = new YamlScalarNode("url");
-        private static readonly YamlScalarNode NODE_PATTERN = new YamlScalarNode("pattern");
-        private static readonly YamlScalarNode NODE_PATTERN_OPTIONS = new YamlScalarNode("pattern-options");
+        private static class Node
+        {
+            public static readonly YamlScalarNode URL = new YamlScalarNode("url");
+            public static readonly YamlScalarNode PATTERN = new YamlScalarNode("pattern");
+
+            public static class Pattern
+            {
+                public static readonly YamlScalarNode REGEX = new YamlScalarNode("regex");
+                public static readonly YamlScalarNode OPTIONS = new YamlScalarNode("options");
+            }
+        }
 
         private readonly LyricsReloaded lyricsReloaded;
         private readonly WebClient loader;
@@ -57,12 +60,17 @@ namespace CubeIsland.LyricsReloaded.Loaders
             this.loader = new WebClient(lyricsReloaded, 20000);
         }
 
+        public string getName()
+        {
+            return "static";
+        }
+
         public LyricsLoader newLoader(string name, YamlMappingNode configuration)
         {
             YamlNode node;
 
             string url;
-            node = configuration.Children[NODE_URL];
+            node = configuration.Children[Node.URL];
             if (node != null && node is YamlScalarNode)
             {
                 url = ((YamlScalarNode)node).Value;
@@ -73,26 +81,35 @@ namespace CubeIsland.LyricsReloaded.Loaders
             }
 
             string regex;
-            node = configuration.Children[NODE_PATTERN];
-            if (node != null && node is YamlScalarNode)
+            string regexOptions = "";
+
+            node = configuration.Children[Node.PATTERN];
+            if (node is YamlScalarNode)
             {
                 regex = ((YamlScalarNode)node).Value;
+            }
+            else if (node is YamlMappingNode)
+            {
+                YamlMappingNode patternConfig = (YamlMappingNode)node;
+                node = patternConfig.Children[Node.Pattern.REGEX];
+                if (node == null || !(node is YamlScalarNode))
+                {
+                    throw new InvalidConfigurationException("Invalid regex value!");
+                }
+                regex = ((YamlScalarNode)node).Value;
+
+                node = patternConfig.Children[Node.Pattern.OPTIONS];
+                if (node != null && node is YamlScalarNode)
+                {
+                    regexOptions = ((YamlScalarNode)node).Value;
+                }
             }
             else
             {
                 throw new InvalidConfigurationException("No pattern specified!");
             }
 
-            string regexOptions = "";
-            node = configuration.Children[NODE_PATTERN_OPTIONS];
-            if (node != null && node is YamlScalarNode)
-            {
-                regexOptions = ((YamlScalarNode)node).Value;
-            }
-
-            Pattern pattern = new Pattern(regex, regexOptions);
-
-            return new StaticLoader(this.lyricsReloaded, name, url, pattern);
+            return new StaticLoader(this.lyricsReloaded, name, url, new Pattern(regex, regexOptions));
         }
     }
 }

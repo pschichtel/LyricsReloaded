@@ -59,6 +59,8 @@
     <Compile Include="FilterCollection.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Provider.cs" />
+    <Compile Include="ProviderManager.cs" />
+    <Compile Include="Variable.cs" />
     <Compile Include="WebClient.cs" />
     <Compile Include="LyricsLoader.cs" />
     <Compile Include="Plugin.cs" />
@@ -74,8 +76,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="ProviderFactory.cs" />
-    <Compile Include="providers\StaticProvider.cs" />
+    <Compile Include="loaders\StaticLoader.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

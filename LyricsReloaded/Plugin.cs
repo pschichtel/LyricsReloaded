@@ -18,20 +18,15 @@
 
 */
 
-using System;
-using System.Windows.Forms;
-using System.IO;
-using System.Collections;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
-using System.Runtime.InteropServices;
-using System.Net;
 using CubeIsland.LyricsReloaded;
-using CubeIsland.LyricsReloaded.Filters;
+using CubeIsland.LyricsReloaded.Provider;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Net;
 using System.Reflection;
-using YamlDotNet.RepresentationModel;
-using System.Resources;
+using System.Runtime.InteropServices;
+using System.Windows.Forms;
 
 namespace MusicBeePlugin
 {
@@ -131,7 +126,7 @@ namespace MusicBeePlugin
 
         public String[] GetProviders()
         {
-            Dictionary<string, Provider> providers = this.lyricsReloaded.getProviders();
+            Dictionary<string, Provider> providers = this.lyricsReloaded.getProviderManager().getProviders();
             string[] providerNames = new string[providers.Count];
             providers.Keys.CopyTo(providerNames, 0);
             return providerNames;
@@ -140,7 +135,7 @@ namespace MusicBeePlugin
         public String RetrieveLyrics(String source, String artist, String title, String album, bool preferSynced, String providerName)
         {
             this.lyricsReloaded.getLogger().debug("Lyrics request: {0} - {1} - {2} - {3} - {4} - {5}", source, artist, title, album, (preferSynced ? "synced" : "unsynced"), providerName);
-            Provider provider = this.lyricsReloaded.getProvider(providerName);
+            Provider provider = this.lyricsReloaded.getProviderManager().getProvider(providerName);
             if (provider == null)
             {
                 this.lyricsReloaded.getLogger().warn("The provider {0} was not found!", providerName);

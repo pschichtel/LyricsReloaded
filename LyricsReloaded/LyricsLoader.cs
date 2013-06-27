@@ -18,21 +18,18 @@
 
 */
 
-using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Text;
-using System.Web;
 using YamlDotNet.RepresentationModel;
-using System.Text.RegularExpressions;
-using System.Globalization;
-using MusicBeePlugin;
-using CubeIsland.LyricsReloaded.Filters;
 
-namespace CubeIsland.LyricsReloaded
+namespace CubeIsland.LyricsReloaded.Provider.Loader
 {
     public interface LyricsLoader
     {
         string getLyrics(string artist, string title, string album);
+    }
+
+    public interface LyricsLoaderFactory
+    {
+        string getName();
+        LyricsLoader newLoader(string name, YamlMappingNode configuration);
     }
 }

@@ -20,10 +20,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
-using System.Globalization;
 
 namespace CubeIsland.LyricsReloaded.Filters
 {
@@ -31,27 +31,6 @@ namespace CubeIsland.LyricsReloaded.Filters
     {
         string getName();
         string filter(string content, string[] args, Encoding encoding);
-    }
-
-    public class FilterUtil
-    {
-        private FilterUtil()
-        {}
-
-        public static KeyValuePair<string, string[]> parse(string str)
-        {
-            string[] parts = str.Split(new char[] { ':' }, 2);
-
-            string name = HttpUtility.UrlDecode(parts[0].ToLower(), Encoding.ASCII);
-
-            string[] args = parts[1].Split(',');
-            for (int i = 0; i < args.Length; ++i)
-            {
-                args[i] = HttpUtility.UrlDecode(args[i], Encoding.ASCII);
-            }
-
-            return new KeyValuePair<string, string[]>(name, args);
-        }
     }
 
     public class HtmlStripper : Filter

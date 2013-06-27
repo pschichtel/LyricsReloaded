@@ -1,17 +1,19 @@
 # the name of the provider. this will be shown in MusicBee's settings
 name: 'Example'
 
-# the type of provider: static, search, api
-type: static
+# the loader for this provider: static, search, api
+loader: static
 
 # prepare the input
 variables:
 	# filters to apply to the artist
 	artist:
-		value: artist # the source of the 
+		type: artist # the source of the value
 		filters:
 		- normalize
-		- 'stripdown:_'
+		- name: stripdown
+		  args:
+		  - _
 		- urlencode
 
 	# filters to apply to the album
@@ -19,7 +21,7 @@ variables:
 
 	# filters to apply to the title
 	title:
-		value: title
+		type: title
 		filters: artist # reference the filters of artist    
 
 post-filters:
