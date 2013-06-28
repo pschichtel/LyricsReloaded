@@ -121,12 +121,16 @@ namespace CubeIsland.LyricsReloaded.Provider
             YamlNode node;
             YamlMappingNode root = (YamlMappingNode)yaml.Documents[0].RootNode;
 
+            string loaderName;
             node = root.Children[Node.LOADER];
-            if (!(node is YamlScalarNode))
+            if (node != null && node is YamlScalarNode)
             {
-                throw new InvalidConfigurationException("Invalid configuration");
+                loaderName = ((YamlScalarNode)node).Value.ToLower();
             }
-            string loaderName = ((YamlScalarNode)node).Value.ToLower();
+            else
+            {
+                loaderName = "static";
+            }
             if (!this.loaderFactories.ContainsKey(loaderName))
             {
                 this.logger.warn("Unknown provider type {0}, skipping", loaderName);
@@ -142,6 +146,11 @@ namespace CubeIsland.LyricsReloaded.Provider
 
             node = root.Children[Node.VARIABLES];
             Dictionary<string, Variable> variables = new Dictionary<string, Variable>();
+            foreach (KeyValuePair<string, Variable.Type> entry in VARIABLE_TYPES)
+            {
+                variables.Add(entry.Key, new Variable(entry.Key, entry.Value));
+            }
+
             if (node != null && node is YamlMappingNode)
             {
                 string variableName;
@@ -244,14 +253,18 @@ namespace CubeIsland.LyricsReloaded.Provider
                 FilterCollection.parseList((YamlSequenceNode)node, this.filters);
             }
 
+            YamlMappingNode configNode;
             node = root.Children[Node.CONFIG];
-            if (!(node is YamlMappingNode))
+            if (node != null && node is YamlMappingNode)
             {
-                this.logger.warn("The config node must be a map");
-                return;
+                configNode = (YamlMappingNode)node;
+            }
+            else
+            {
+                configNode = new YamlMappingNode();
             }
 
-            LyricsLoader loader = factory.newLoader(name, (YamlMappingNode)node);
+            LyricsLoader loader = factory.newLoader(name, configNode);
 
             Provider provider = new Provider(name, variables, postFilters, loader);
             this.logger.info("Provider loaded: " + provider.getName());

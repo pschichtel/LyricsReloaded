@@ -30,6 +30,8 @@ namespace CubeIsland.LyricsReloaded
 
             this.userAgent = "Firefox XY";
             this.proxy = null;
+
+            this.loadConfigurations();
         }
 
         public Logger getLogger()
