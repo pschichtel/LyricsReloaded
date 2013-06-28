@@ -89,12 +89,29 @@ namespace CubeIsland.LyricsReloaded.Properties {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Ressource vom Typ System.Byte[].
+        ///   Sucht eine lokalisierte Zeichenfolge, die name: &quot;cuspajz.com&quot;
+        ///
+        ///variables:
+        ///    artist:
+        ///        type: artist
+        ///        filters:
+        ///        - lowercase
+        ///        - [strip_nonascii, -]
+        ///    title:
+        ///        type: title
+        ///        filters: artist
+        ///
+        ///config:
+        ///    url: &quot;http://cuspajz.com/tekstovi-pjesama/pjesma/{artist}/{title}.html&quot;
+        ///    pattern: [&quot;&lt;p\sclass=&quot;text\sclearfix&quot;&gt;\s*(?&lt;lyrics&gt;.*?)&lt;/p&gt;&quot;, s]
+        ///    
+        ///post-filters:
+        ///- strip_html
+        ///- entity_decode ähnelt.
         /// </summary>
-        public static byte[] provider_cuspajz_com {
+        public static string provider_cuspajz_com {
             get {
-                object obj = ResourceManager.GetObject("provider_cuspajz_com", resourceCulture);
-                return ((byte[])(obj));
+                return ResourceManager.GetString("provider_cuspajz_com", resourceCulture);
             }
         }
         
@@ -188,12 +205,30 @@ namespace CubeIsland.LyricsReloaded.Properties {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Ressource vom Typ System.Byte[].
+        ///   Sucht eine lokalisierte Zeichenfolge, die name: &quot;pinkradio.com&quot;
+        ///
+        ///variables:
+        ///    artist:
+        ///        type: artist
+        ///        filters:
+        ///        - lowercase
+        ///        - [strip_nonascii, -]
+        ///    title:
+        ///        type: title
+        ///        filters: artist
+        ///
+        ///config:
+        ///    url: &quot;http://pinkradio.com/naslov/{title}&quot;
+        ///    pattern: [&quot;&lt;span class=&quot;Stil9&quot;&gt;\s*(?&lt;lyrics&gt;.*?)&lt;/span&gt;&quot;, s]
+        ///    
+        ///post-filters:
+        ///- strip_html
+        ///- entity_decode
+        ///- br2nl ähnelt.
         /// </summary>
-        public static byte[] provider_pinkradio_com {
+        public static string provider_pinkradio_com {
             get {
-                object obj = ResourceManager.GetObject("provider_pinkradio_com", resourceCulture);
-                return ((byte[])(obj));
+                return ResourceManager.GetString("provider_pinkradio_com", resourceCulture);
             }
         }
         
