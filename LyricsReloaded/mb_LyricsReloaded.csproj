@@ -55,14 +55,16 @@
   <ItemGroup>
     <Compile Include="LyricsReloaded.cs" />
     <Compile Include="Pattern.cs" />
-    <Compile Include="Filter.cs" />
-    <Compile Include="FilterCollection.cs" />
+    <Compile Include="Filter\Filter.cs" />
+    <Compile Include="Filter\FilterCollection.cs" />
     <Compile Include="Logger.cs" />
-    <Compile Include="Provider.cs" />
-    <Compile Include="ProviderManager.cs" />
-    <Compile Include="Variable.cs" />
+    <Compile Include="Provider\Provider.cs" />
+    <Compile Include="Provider\ProviderManager.cs" />
+    <Compile Include="Validation\ValidationCollection.cs" />
+    <Compile Include="Validation\Validator.cs" />
+    <Compile Include="Provider\Variable.cs" />
     <Compile Include="WebClient.cs" />
-    <Compile Include="LyricsLoader.cs" />
+    <Compile Include="Provider\Loader\LyricsLoader.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="MusicBeeInterface.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -76,7 +78,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Loader\StaticLoader.cs" />
+    <Compile Include="Provider\Loader\StaticLoader.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -105,6 +107,7 @@
     <None Include="Configs\urbanlyrics.com.yml" />
     <None Include="Configs\plyrics.com.yml" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>if "$(ConfigurationName)"=="Release" (

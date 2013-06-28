@@ -1,7 +1,7 @@
 ﻿using CubeIsland.LyricsReloaded.Filters;
 using System.Text;
 
-namespace CubeIsland.LyricsReloaded
+namespace CubeIsland.LyricsReloaded.Provider
 {
     public class Variable
     {
