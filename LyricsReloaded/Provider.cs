@@ -1,4 +1,5 @@
 ﻿using CubeIsland.LyricsReloaded.Filters;
+using CubeIsland.LyricsReloaded.Validation;
 using CubeIsland.LyricsReloaded.Provider.Loader;
 using System;
 using System.Text;
@@ -11,16 +12,18 @@ namespace CubeIsland.LyricsReloaded.Provider
         private readonly string name;
         private readonly Dictionary<string, Variable> variables = new Dictionary<string, Variable>();
         private readonly FilterCollection postFilters;
+        private readonly ValidationCollection validations;
         private readonly LyricsLoader loader;
 
         private volatile int counter;
         private readonly int maxCount;
 
-        public Provider(string name, Dictionary<string, Variable> variables, FilterCollection postFilters, LyricsLoader loader, int maxCount = -1)
+        public Provider(string name, Dictionary<string, Variable> variables, FilterCollection postFilters, ValidationCollection validations, LyricsLoader loader, int maxCount = -1)
         {
             this.name = name;
             this.variables = variables;
             this.postFilters = postFilters;
+            this.validations = validations;
             this.loader = loader;
 
             this.counter = 0;
@@ -40,6 +43,11 @@ namespace CubeIsland.LyricsReloaded.Provider
         public FilterCollection getPostFilters()
         {
             return this.postFilters;
+        }
+
+        public ValidationCollection getValidations()
+        {
+            return this.validations;
         }
 
         public LyricsLoader getLoader()
@@ -82,7 +90,14 @@ namespace CubeIsland.LyricsReloaded.Provider
                 return null;
             }
 
-            return this.postFilters.applyFilters(lyrics.getContent(), lyrics.getEncoding());
+            string filteredLyrics = this.postFilters.applyFilters(lyrics.getContent(), lyrics.getEncoding());
+
+            if (!this.validations.executeValidations(filteredLyrics))
+            {
+                return null;
+            }
+
+            return filteredLyrics;
         }
     }
 }

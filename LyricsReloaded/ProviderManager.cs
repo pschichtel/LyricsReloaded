@@ -1,5 +1,6 @@
 ﻿using CubeIsland.LyricsReloaded.Filters;
 using CubeIsland.LyricsReloaded.Provider.Loader;
+using CubeIsland.LyricsReloaded.Validation;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -16,6 +17,7 @@ namespace CubeIsland.LyricsReloaded.Provider
             public static readonly YamlScalarNode NAME = new YamlScalarNode("name");
             public static readonly YamlScalarNode LOADER = new YamlScalarNode("loader");
             public static readonly YamlScalarNode POST_FILTERS = new YamlScalarNode("post-filters");
+            public static readonly YamlScalarNode VALIDATIONS = new YamlScalarNode("validations");
             public static readonly YamlScalarNode CONFIG = new YamlScalarNode("config");
 
             public static readonly YamlScalarNode VARIABLES = new YamlScalarNode("variables");
@@ -31,6 +33,7 @@ namespace CubeIsland.LyricsReloaded.Provider
         private readonly Dictionary<string, Provider> providers;
         private readonly Dictionary<string, LyricsLoaderFactory> loaderFactories;
         private readonly Dictionary<string, Filter> filters;
+        private readonly Dictionary<string, Validator> validators;
 
         private static readonly Dictionary<string, Variable.Type> VARIABLE_TYPES = new Dictionary<string, Variable.Type>() {
             {"artist", Variable.Type.ARTIST},
@@ -45,8 +48,10 @@ namespace CubeIsland.LyricsReloaded.Provider
             this.providers = new Dictionary<string, Provider>();
             this.loaderFactories = new Dictionary<string, LyricsLoaderFactory>();
             this.filters = new Dictionary<string, Filter>();
+            this.validators = new Dictionary<string, Validator>();
 
             this.loadFilters();
+            this.loadValidators();
         }
 
         private void loadFilters()
@@ -60,6 +65,24 @@ namespace CubeIsland.LyricsReloaded.Provider
                     {
                         Filter filter = (Filter)Activator.CreateInstance(type);
                         this.filters.Add(filter.getName(), filter);
+                    }
+                    catch (Exception)
+                    {}
+                }
+            }
+        }
+
+        private void loadValidators()
+        {
+            Type filterType = typeof(Validator);
+            foreach (Type type in Assembly.GetAssembly(filterType).GetTypes())
+            {
+                if (filterType.IsAssignableFrom(type) && !type.IsAbstract && !type.IsInterface)
+                {
+                    try
+                    {
+                        Validator validator = (Validator)Activator.CreateInstance(type);
+                        this.validators.Add(validator.getName(), validator);
                     }
                     catch (Exception)
                     {}
@@ -261,6 +284,17 @@ namespace CubeIsland.LyricsReloaded.Provider
                 postFilters = new FilterCollection();
             }
 
+            node = (rootNodes.ContainsKey(Node.VALIDATIONS) ? rootNodes[Node.VALIDATIONS] : null);
+            ValidationCollection validations;
+            if (node is YamlSequenceNode)
+            {
+                validations = ValidationCollection.parseList((YamlSequenceNode)node, this.validators);
+            }
+            else
+            {
+                validations = new ValidationCollection();
+            }
+
             YamlMappingNode configNode;
             node = (rootNodes.ContainsKey(Node.CONFIG) ? rootNodes[Node.CONFIG] : null);
             if (node is YamlMappingNode)
@@ -274,7 +308,7 @@ namespace CubeIsland.LyricsReloaded.Provider
 
             LyricsLoader loader = factory.newLoader(name, configNode);
 
-            Provider provider = new Provider(name, variables, postFilters, loader);
+            Provider provider = new Provider(name, variables, postFilters, validations, loader);
             this.logger.info("Provider loaded: " + provider.getName());
 
             lock (this.providers)

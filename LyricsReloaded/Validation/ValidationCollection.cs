@@ -1,12 +1,11 @@
-﻿using CubeIsland.LyricsReloaded.Provider;
-using System.Collections;
+﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using CubeIsland.LyricsReloaded.Provider;
 using YamlDotNet.RepresentationModel;
 
-namespace CubeIsland.LyricsReloaded.Filters
+namespace CubeIsland.LyricsReloaded.Validation
 {
-    public class FilterCollection
+    public class ValidationCollection
     {
         private static class Node
         {
@@ -14,52 +13,55 @@ namespace CubeIsland.LyricsReloaded.Filters
             public static readonly YamlScalarNode ARGS = new YamlScalarNode("args");
         }
 
-        private readonly LinkedList<KeyValuePair<Filter, string[]>> filters;
+        private readonly LinkedList<Validation> validations;
 
-        public FilterCollection()
+        public ValidationCollection()
         {
-            this.filters = new LinkedList<KeyValuePair<Filter,string[]>>();
+            this.validations = new LinkedList<Validation>();
         }
 
-        public void Add(KeyValuePair<Filter, string[]> filter)
+        public void Add(Validation validation)
         {
-            this.filters.AddLast(filter);
+            this.validations.AddLast(validation);
         }
 
-        public void Add(Filter filter, string[] args)
+        public void Add(Validator validator, bool inverted, string[] args)
         {
-            this.Add(new KeyValuePair<Filter, string[]>(filter, args));
+            this.Add(new Validation(validator, inverted, args));
         }
 
         public int getSize()
         {
-            return this.filters.Count;
+            return this.validations.Count;
         }
 
-        public string applyFilters(string content, Encoding encoding)
+        public bool executeValidations(string content)
         {
-            foreach (KeyValuePair<Filter, string[]> entry in this.filters)
+            foreach (Validation validation in this.validations)
             {
-                content = entry.Key.filter(content, entry.Value, encoding);
+                if (!validation.execute(content))
+                {
+                    return false;
+                }
             }
-            return content;
+            return true;
         }
 
-        public static FilterCollection parseList(YamlSequenceNode list, Dictionary<string, Filter> filterMap)
+        public static ValidationCollection parseList(YamlSequenceNode list, Dictionary<string, Validator> validatorMap)
         {
-            FilterCollection collection = new FilterCollection();
+            ValidationCollection collection = new ValidationCollection();
 
             if (list != null)
             {
                 foreach (YamlNode node in list.Children)
                 {
-                    parseFilterNode(collection, filterMap, node);
+                    parseFilterNode(collection, validatorMap, node);
                 }
             }
 
             return collection;
         }
-        private static void parseFilterNode(FilterCollection filterCollection, Dictionary<string, Filter> filterMap, YamlNode node)
+        private static void parseFilterNode(ValidationCollection filterCollection, Dictionary<string, Validator> validatorMap, YamlNode node)
         {
             string name;
             string[] args;
@@ -106,16 +108,24 @@ namespace CubeIsland.LyricsReloaded.Filters
             }
             else
             {
-                throw new InvalidConfigurationException("Invalid filter configuration");
+                throw new InvalidConfigurationException("Invalid validator configuration");
             }
 
-            if (!filterMap.ContainsKey(name))
+            bool inverted = false;
+            int spaceIndex = name.IndexOf(" ", System.StringComparison.Ordinal);
+            if (spaceIndex == 3 && name.Substring(0, 3).Equals("not", StringComparison.OrdinalIgnoreCase))
             {
-                throw new InvalidConfigurationException("Unknown filter " + name);
+                inverted = true;
+                name = name.Substring(4).Trim();
+            }
+
+            if (!validatorMap.ContainsKey(name))
+            {
+                throw new InvalidConfigurationException("Unknown validator " + name);
             }
 
 
-            filterCollection.Add(filterMap[name], args);
+            filterCollection.Add(validatorMap[name], inverted, args);
         }
 
         private static string[] readFilterArgs(IEnumerator<YamlNode> it)
