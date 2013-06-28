@@ -118,13 +118,14 @@ namespace CubeIsland.LyricsReloaded
         {
             foreach (PropertyInfo propInfo in typeof (Properties.Resources).GetProperties(BindingFlags.Public | BindingFlags.Static))
             {
-                if (propInfo.Name.StartsWith("provider_", StringComparison.OrdinalIgnoreCase))
+                if (!propInfo.Name.StartsWith("provider_", StringComparison.OrdinalIgnoreCase))
                 {
-                    object value = propInfo.GetValue(null, null);
-                    if (value is String)
-                    {
-                        this.providerManager.loadProvider(value as String);
-                    }
+                    continue;
+                }
+                object value = propInfo.GetValue(null, null);
+                if (value is String)
+                {
+                    this.providerManager.loadProvider(value as String);
                 }
             }
         }

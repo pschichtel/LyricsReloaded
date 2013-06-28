@@ -1,12 +1,22 @@
 name: "oldielyrics.com"
-url: "http://oldielyrics.com/lyrics/{artist:lower,uscore}/{title:lower,uscore}.html"
+
+variables:
+    artist:
+        type: artist
+        filters:
+        - lowercase
+        - [strip_nonascii, _]
+    title:
+        type: title
+        filters: artist
+
+config:
+    url: "http://oldielyrics.com/lyrics/{artist}/{title}.html"
+    pattern: ["<div\s+class="lyrics"[^>]*>\s*<p>(?<lyrics>.+)</p>\s*</div>", s]
     
-expressions:
-- '<div\s+class="lyrics"[^>]*>\s*<p>(?<lyrics>.+)</p>\s*</div>'
-    
-filters:
-- br2nl
-- p2break
+post-filters:
 - strip_html
+- strip_links
 - entity_decode
+- clean_spaces
 - utf8_encode

@@ -1,4 +1,4 @@
-name: "metrolyrics.com"
+name: "cuspajz.com"
 
 variables:
     artist:
@@ -11,11 +11,9 @@ variables:
         filters: artist
 
 config:
-    url: "http://www.songlyrics.com/{artist}/{title}-lyrics/"
-    pattern: ["<div id="songLyricsDiv-outer">(?<lyrics>.*?)</div>", s]
+    url: "http://cuspajz.com/tekstovi-pjesama/pjesma/{artist}/{title}.html"
+    pattern: ["<p\sclass="text\sclearfix">\s*(?<lyrics>.*?)</p>", s]
     
 post-filters:
 - strip_html
 - entity_decode
-- clean_spaces
-- utf8_encode

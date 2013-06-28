@@ -62,15 +62,25 @@ namespace CubeIsland.LyricsReloaded.Properties {
         
         /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die name: &quot;azlyrics.com&quot;
-        ///url: &quot;http://www.azlyrics.com/lyrics/{artist:lower,alpha}/{title:lower,alpha}.html&quot;
+        ///
+        ///variables:
+        ///    artist:
+        ///        type: artist
+        ///        filters:
+        ///        - lowercase
+        ///        - [strip_nonascii, &quot;&quot;]
+        ///    title:
+        ///        type: title
+        ///        filters: artist
+        ///
+        ///config:
+        ///    url: &quot;http://www.azlyrics.com/lyrics/{artist}/{title}.html&quot;
+        ///    pattern: [&quot;&lt;!-- start of lyrics --&gt;(?&lt;lyrics&gt;.+?)&lt;!-- end of lyrics --&gt;&quot;, s]
         ///    
-        ///expressions:
-        ///- &apos;&lt;!-- start of lyrics --&gt;(?&lt;lyrics&gt;.+?)&lt;!-- end of lyrics --&gt;&apos;
-        ///    
-        ///filters:
+        ///post-filters:
         ///- strip_html
-        ///- utf8_encode
-        ///- trim ähnelt.
+        ///- trim
+        ///- utf8_encode ähnelt.
         /// </summary>
         public static string provider_azlyrics_com {
             get {
@@ -79,13 +89,33 @@ namespace CubeIsland.LyricsReloaded.Properties {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Ressource vom Typ System.Byte[].
+        /// </summary>
+        public static byte[] provider_cuspajz_com {
+            get {
+                object obj = ResourceManager.GetObject("provider_cuspajz_com", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die name: &quot;letras.mus.br&quot;
-        ///url: &quot;http://letras.mus.br/{artist:lower,name}/{title:lower,name}/&quot;
+        ///
+        ///variables:
+        ///    artist:
+        ///        type: artist
+        ///        filters:
+        ///        - lowercase
+        ///        - [strip_nonascii, -]
+        ///    title:
+        ///        type: title
+        ///        filters: artist
+        ///
+        ///config:
+        ///    url: &quot;http://letras.mus.br/{artist}/{title}/&quot;
+        ///    pattern: [&quot;&lt;div id=&quot;div_letra&quot;[^&gt;]*&gt;(?&lt;lyrics&gt;.*?)&lt;/div&gt;&quot;, s]
         ///    
-        ///expressions:
-        ///- &apos;&lt;div id=&quot;div_letra&quot;[^&gt;]*&gt;(?&lt;lyrics&gt;.*?)&lt;/div&gt;&apos;
-        ///    
-        ///filters:
+        ///post-filters:
         ///- p2break
         ///- strip_html
         ///- clean_spaces
@@ -99,12 +129,22 @@ namespace CubeIsland.LyricsReloaded.Properties {
         
         /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die name: &quot;metrolyrics.com&quot;
-        ///url: &quot;http://www.metrolyrics.com/{title:lower,name}-lyrics-{artist:lower,name}.html&quot;
+        ///
+        ///variables:
+        ///    artist:
+        ///        type: artist
+        ///        filters:
+        ///        - lowercase
+        ///        - [strip_nonascii, -]
+        ///    title:
+        ///        type: title
+        ///        filters: artist
+        ///
+        ///config:
+        ///    url: &quot;http://www.metrolyrics.com/{title}-lyrics-{artist}.html&quot;
+        ///    pattern: [&quot;&lt;div id=\&quot;lyrics-body\&quot;&gt;(?&lt;lyrics&gt;.*?)&lt;/div&gt;&quot;, s]
         ///    
-        ///expressions:
-        ///- &apos;&lt;div id=&quot;lyrics-body&quot;&gt;(?&lt;lyrics&gt;.*?)&lt;/div&gt;&apos;
-        ///    
-        ///filters:
+        ///post-filters:
         ///- strip_html
         ///- strip_links
         ///- entity_decode
@@ -119,16 +159,26 @@ namespace CubeIsland.LyricsReloaded.Properties {
         
         /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die name: &quot;oldielyrics.com&quot;
-        ///url: &quot;http://oldielyrics.com/lyrics/{artist:lower,uscore}/{title:lower,uscore}.html&quot;
+        ///
+        ///variables:
+        ///    artist:
+        ///        type: artist
+        ///        filters:
+        ///        - lowercase
+        ///        - [strip_nonascii, _]
+        ///    title:
+        ///        type: title
+        ///        filters: artist
+        ///
+        ///config:
+        ///    url: &quot;http://oldielyrics.com/lyrics/{artist}/{title}.html&quot;
+        ///    pattern: [&quot;&lt;div\s+class=&quot;lyrics&quot;[^&gt;]*&gt;\s*&lt;p&gt;(?&lt;lyrics&gt;.+)&lt;/p&gt;\s*&lt;/div&gt;&quot;, s]
         ///    
-        ///expressions:
-        ///- &apos;&lt;div\s+class=&quot;lyrics&quot;[^&gt;]*&gt;\s*&lt;p&gt;(?&lt;lyrics&gt;.+)&lt;/p&gt;\s*&lt;/div&gt;&apos;
-        ///    
-        ///filters:
-        ///- br2nl
-        ///- p2break
+        ///post-filters:
         ///- strip_html
+        ///- strip_links
         ///- entity_decode
+        ///- clean_spaces
         ///- utf8_encode ähnelt.
         /// </summary>
         public static string provider_oldielyrics_com {
@@ -138,15 +188,36 @@ namespace CubeIsland.LyricsReloaded.Properties {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Ressource vom Typ System.Byte[].
+        /// </summary>
+        public static byte[] provider_pinkradio_com {
+            get {
+                object obj = ResourceManager.GetObject("provider_pinkradio_com", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die name: &quot;plyrics.com&quot;
-        ///url: &quot;http://www.plyrics.com/lyrics/{artist:lower,alpha}/{title:lower,alpha}.html&quot;
+        ///
+        ///variables:
+        ///    artist:
+        ///        type: artist
+        ///        filters:
+        ///        - lowercase
+        ///        - [strip_nonascii, &quot;&quot;]
+        ///    title:
+        ///        type: title
+        ///        filters: artist
+        ///
+        ///config:
+        ///    url: &quot;http://www.plyrics.com/lyrics/{artist}/{title}.html&quot;
+        ///    pattern: [&quot;&lt;div id=\&quot;lyrics-body\&quot;&gt;(?&lt;lyrics&gt;.*?)&lt;/div&gt;&quot;, s]
         ///    
-        ///expressions:
-        ///- &apos;&lt;!-- start of lyrics --&gt;(?&lt;lyrics&gt;.+?)&lt;!-- end of lyrics --&gt;&apos;
-        ///    
-        ///filters:
+        ///post-filters:
         ///- strip_html
-        ///- utf8_encode ähnelt.
+        ///- utf8_encode
+        /// ähnelt.
         /// </summary>
         public static string provider_plyrics_com {
             get {
@@ -156,12 +227,22 @@ namespace CubeIsland.LyricsReloaded.Properties {
         
         /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die name: &quot;rapgenius.com&quot;
-        ///url: &quot;http://rapgenius.com/{artist:lower,name}-{title:lower,name}-lyrics&quot;
+        ///
+        ///variables:
+        ///    artist:
+        ///        type: artist
+        ///        filters:
+        ///        - lowercase
+        ///        - [strip_nonascii, -]
+        ///    title:
+        ///        type: title
+        ///        filters: artist
+        ///
+        ///config:
+        ///    url: &quot;http://rapgenius.com/{artist}-{title}-lyrics&quot;
+        ///    pattern: [&quot;&lt;div\s+class=&quot;lyrics&quot;[^&gt;]*?&gt;(?&lt;lyrics&gt;.*?)&lt;/div&gt;&quot;, s]
         ///    
-        ///expressions:
-        ///- &apos;&lt;div\s+class=&quot;lyrics&quot;[^&gt;]*?&gt;(?&lt;lyrics&gt;.*?)&lt;/div&gt;&apos;
-        ///    
-        ///filters:
+        ///post-filters:
         ///- strip_html
         ///- clean_spaces
         ///- utf8_encode ähnelt.
@@ -173,13 +254,23 @@ namespace CubeIsland.LyricsReloaded.Properties {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die name: &quot;songlyrics.com&quot;
-        ///url: &quot;http://www.songlyrics.com/{artist:lower,name}/{title:lower,name}-lyrics/&quot;
+        ///   Sucht eine lokalisierte Zeichenfolge, die name: &quot;metrolyrics.com&quot;
+        ///
+        ///variables:
+        ///    artist:
+        ///        type: artist
+        ///        filters:
+        ///        - lowercase
+        ///        - [strip_nonascii, -]
+        ///    title:
+        ///        type: title
+        ///        filters: artist
+        ///
+        ///config:
+        ///    url: &quot;http://www.songlyrics.com/{artist}/{title}-lyrics/&quot;
+        ///    pattern: [&quot;&lt;div id=&quot;songLyricsDiv-outer&quot;&gt;(?&lt;lyrics&gt;.*?)&lt;/div&gt;&quot;, s]
         ///    
-        ///expressions:
-        ///- &apos;&lt;div id=&quot;songLyricsDiv-outer&quot;&gt;(?&lt;lyrics&gt;.*?)&lt;/div&gt;&apos;
-        ///    
-        ///filters:
+        ///post-filters:
         ///- strip_html
         ///- entity_decode
         ///- clean_spaces
@@ -193,12 +284,24 @@ namespace CubeIsland.LyricsReloaded.Properties {
         
         /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die name: &quot;tekstovipjesama.com&quot;
-        ///url: &quot;http://tekstovipjesama.com/{artist:lower,name}/{title:lower,name}&quot;
-        ///    
-        ///expressions:
-        ///- &apos;&lt;div\s+class=&quot;entry&quot;[^&gt;]*&gt;\s*&lt;div[^&gt;]*&gt;\s*(?&lt;lyrics&gt;.*?)&lt;/div&gt;&apos;
         ///
-        ///filters:
+        ///variables:
+        ///    artist:
+        ///        type: artist
+        ///        filters:
+        ///        - lowercase
+        ///        - [strip_nonascii, -]
+        ///    title:
+        ///        type: title
+        ///        filters: artist
+        ///
+        ///config:
+        ///    url: &quot;http://tekstovipjesama.com/{artist}/{title}&quot;
+        ///    pattern: [&quot;&lt;div\s+class=&quot;entry&quot;[^&gt;]*&gt;\s*&lt;div[^&gt;]*&gt;\s*(?&lt;lyrics&gt;.*?)&lt;/div&gt;&quot;, s]
+        ///    
+        ///post-filters:
+        ///- p2break
+        ///- br2nl
         ///- strip_html
         ///- entity_decode
         ///- utf8_encode ähnelt.
@@ -211,12 +314,22 @@ namespace CubeIsland.LyricsReloaded.Properties {
         
         /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die name: &quot;tekstowo.pl&quot;
-        ///url: &quot;http://www.tekstowo.pl/piosenka,{artist:lower,uscore},{title:lower,uscore}.html&quot;
+        ///
+        ///variables:
+        ///    artist:
+        ///        type: artist
+        ///        filters:
+        ///        - lowercase
+        ///        - [strip_nonascii, _]
+        ///    title:
+        ///        type: title
+        ///        filters: artist
+        ///
+        ///config:
+        ///    url: &quot;http://www.tekstowo.pl/piosenka,{artist},{title}.html&quot;
+        ///    pattern: [&quot;&lt;div\s+class=&quot;song-text&quot;[^&gt;]*&gt;(?&lt;lyrics&gt;.*?)&lt;p&gt;&amp;nbsp;&lt;/p&gt;&quot;, s]
         ///    
-        ///expressions:
-        ///- &apos;&lt;div\s+class=&quot;song-text&quot;[^&gt;]*&gt;(?&lt;lyrics&gt;.*?)&lt;p&gt;&amp;nbsp;&lt;/p&gt;&apos;
-        ///    
-        ///filters:
+        ///post-filters:
         ///- strip_html
         ///- utf8_encode ähnelt.
         /// </summary>
@@ -228,12 +341,22 @@ namespace CubeIsland.LyricsReloaded.Properties {
         
         /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die name: &quot;teksty.org&quot;
-        ///url: &quot;http://teksty.org/{artist:lower,name},{title:lower,name},tekst-piosenki&quot;
+        ///
+        ///variables:
+        ///    artist:
+        ///        type: artist
+        ///        filters:
+        ///        - lowercase
+        ///        - [strip_nonascii, -]
+        ///    title:
+        ///        type: title
+        ///        filters: artist
+        ///
+        ///config:
+        ///    url: &quot;http://teksty.org/{artist},{title},tekst-piosenki&quot;
+        ///    pattern: [&quot;&lt;div\s+class=&quot;songText&quot;[^&gt;]*&gt;(?&lt;lyrics&gt;.*?)&lt;/div&gt;&quot;, s]
         ///    
-        ///expressions:
-        ///- &apos;&lt;div\s+class=&quot;songText&quot;[^&gt;]*&gt;(?&lt;lyrics&gt;.*?)&lt;/div&gt;&apos;
-        ///    
-        ///filters:
+        ///post-filters:
         ///- strip_html
         ///- clean_spaces
         ///- utf8_encode ähnelt.
@@ -246,12 +369,22 @@ namespace CubeIsland.LyricsReloaded.Properties {
         
         /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die name: &quot;urbanlyrics.com&quot;
-        ///url: &quot;http://www.urbanlyrics.com/lyrics/{artist:lower,alpha}/{title:lower,alpha}.html&quot;
+        ///
+        ///variables:
+        ///    artist:
+        ///        type: artist
+        ///        filters:
+        ///        - lowercase
+        ///        - [strip_nonascii, &quot;&quot;]
+        ///    title:
+        ///        type: title
+        ///        filters: artist
+        ///
+        ///config:
+        ///    url: &quot;http://www.urbanlyrics.com/lyrics/{artist}/{title}.html&quot;
+        ///    pattern: [&quot;&lt;!-- start of lyrics --&gt;(?&lt;lyrics&gt;.+?)&lt;!-- end of lyrics --&gt;&quot;, s]
         ///    
-        ///expressions:
-        ///- &apos;&lt;!-- start of lyrics --&gt;(?&lt;lyrics&gt;.+?)&lt;!-- end of lyrics --&gt;&apos;
-        ///    
-        ///filters:
+        ///post-filters:
         ///- strip_html
         ///- utf8_encode ähnelt.
         /// </summary>

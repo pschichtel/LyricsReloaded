@@ -1,9 +1,19 @@
 name: "plyrics.com"
-url: "http://www.plyrics.com/lyrics/{artist:lower,alpha}/{title:lower,alpha}.html"
+
+variables:
+    artist:
+        type: artist
+        filters:
+        - lowercase
+        - [strip_nonascii, ""]
+    title:
+        type: title
+        filters: artist
+
+config:
+    url: "http://www.plyrics.com/lyrics/{artist}/{title}.html"
+    pattern: ["<div id=\"lyrics-body\">(?<lyrics>.*?)</div>", s]
     
-expressions:
-- '<!-- start of lyrics -->(?<lyrics>.+?)<!-- end of lyrics -->'
-    
-filters:
+post-filters:
 - strip_html
 - utf8_encode

@@ -1,10 +1,20 @@
 name: "letras.mus.br"
-url: "http://letras.mus.br/{artist:lower,name}/{title:lower,name}/"
+
+variables:
+    artist:
+        type: artist
+        filters:
+        - lowercase
+        - [strip_nonascii, -]
+    title:
+        type: title
+        filters: artist
+
+config:
+    url: "http://letras.mus.br/{artist}/{title}/"
+    pattern: ["<div id="div_letra"[^>]*>(?<lyrics>.*?)</div>", s]
     
-expressions:
-- '<div id="div_letra"[^>]*>(?<lyrics>.*?)</div>'
-    
-filters:
+post-filters:
 - p2break
 - strip_html
 - clean_spaces

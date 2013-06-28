@@ -1,10 +1,20 @@
 name: "metrolyrics.com"
-url: "http://www.metrolyrics.com/{title:lower,name}-lyrics-{artist:lower,name}.html"
+
+variables:
+    artist:
+        type: artist
+        filters:
+        - lowercase
+        - [strip_nonascii, -]
+    title:
+        type: title
+        filters: artist
+
+config:
+    url: "http://www.metrolyrics.com/{title}-lyrics-{artist}.html"
+    pattern: ["<div id=\"lyrics-body\">(?<lyrics>.*?)</div>", s]
     
-expressions:
-- '<div id="lyrics-body">(?<lyrics>.*?)</div>'
-    
-filters:
+post-filters:
 - strip_html
 - strip_links
 - entity_decode

@@ -1,4 +1,4 @@
-name: "tekstovipjesama.com"
+name: "pinkradio.com"
 
 variables:
     artist:
@@ -11,12 +11,10 @@ variables:
         filters: artist
 
 config:
-    url: "http://tekstovipjesama.com/{artist}/{title}"
-    pattern: ["<div\s+class="entry"[^>]*>\s*<div[^>]*>\s*(?<lyrics>.*?)</div>", s]
+    url: "http://pinkradio.com/naslov/{title}"
+    pattern: ["<span class="Stil9">\s*(?<lyrics>.*?)</span>", s]
     
 post-filters:
-- p2break
-- br2nl
 - strip_html
 - entity_decode
-- utf8_encode
+- br2nl

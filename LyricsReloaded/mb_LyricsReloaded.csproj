@@ -81,6 +81,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="Configs\cuspajz.com.yml" />
+    <None Include="Configs\pinkradio.com.yml" />
     <None Include="Configs\tekstovipjesama.com.yml" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

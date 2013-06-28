@@ -1,10 +1,20 @@
 name: "rapgenius.com"
-url: "http://rapgenius.com/{artist:lower,name}-{title:lower,name}-lyrics"
+
+variables:
+    artist:
+        type: artist
+        filters:
+        - lowercase
+        - [strip_nonascii, -]
+    title:
+        type: title
+        filters: artist
+
+config:
+    url: "http://rapgenius.com/{artist}-{title}-lyrics"
+    pattern: ["<div\s+class="lyrics"[^>]*?>(?<lyrics>.*?)</div>", s]
     
-expressions:
-- '<div\s+class="lyrics"[^>]*?>(?<lyrics>.*?)</div>'
-    
-filters:
+post-filters:
 - strip_html
 - clean_spaces
 - utf8_encode

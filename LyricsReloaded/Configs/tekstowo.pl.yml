@@ -1,9 +1,19 @@
 name: "tekstowo.pl"
-url: "http://www.tekstowo.pl/piosenka,{artist:lower,uscore},{title:lower,uscore}.html"
+
+variables:
+    artist:
+        type: artist
+        filters:
+        - lowercase
+        - [strip_nonascii, _]
+    title:
+        type: title
+        filters: artist
+
+config:
+    url: "http://www.tekstowo.pl/piosenka,{artist},{title}.html"
+    pattern: ["<div\s+class="song-text"[^>]*>(?<lyrics>.*?)<p>&nbsp;</p>", s]
     
-expressions:
-- '<div\s+class="song-text"[^>]*>(?<lyrics>.*?)<p>&nbsp;</p>'
-    
-filters:
+post-filters:
 - strip_html
 - utf8_encode

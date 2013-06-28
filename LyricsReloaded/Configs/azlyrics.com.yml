@@ -1,10 +1,20 @@
 name: "azlyrics.com"
-url: "http://www.azlyrics.com/lyrics/{artist:lower,alpha}/{title:lower,alpha}.html"
+
+variables:
+    artist:
+        type: artist
+        filters:
+        - lowercase
+        - [strip_nonascii, ""]
+    title:
+        type: title
+        filters: artist
+
+config:
+    url: "http://www.azlyrics.com/lyrics/{artist}/{title}.html"
+    pattern: ["<!-- start of lyrics -->(?<lyrics>.+?)<!-- end of lyrics -->", s]
     
-expressions:
-- '<!-- start of lyrics -->(?<lyrics>.+?)<!-- end of lyrics -->'
-    
-filters:
+post-filters:
 - strip_html
-- utf8_encode
 - trim
+- utf8_encode
