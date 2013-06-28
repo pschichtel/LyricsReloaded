@@ -18,6 +18,7 @@
 
 */
 
+using System;
 using CubeIsland.LyricsReloaded.Provider;
 using CubeIsland.LyricsReloaded.Provider.Loader;
 using System.IO;
@@ -115,18 +116,18 @@ namespace CubeIsland.LyricsReloaded
 
         private void loadDefaultConfiguration()
         {
-            this.providerManager.loadProvider(Properties.Resources.songlyrics_com);
-            this.providerManager.loadProvider(Properties.Resources.metrolyrics_com);
-            this.providerManager.loadProvider(Properties.Resources.letras_mus_br);
-            this.providerManager.loadProvider(Properties.Resources.teksty_org);
-            this.providerManager.loadProvider(Properties.Resources.tekstowo_pl);
-            this.providerManager.loadProvider(Properties.Resources.azlyrics_com);
-            this.providerManager.loadProvider(Properties.Resources.plyrics_com);
-            this.providerManager.loadProvider(Properties.Resources.urbanlyrics_com);
-            this.providerManager.loadProvider(Properties.Resources.rapgenius_com);
-            this.providerManager.loadProvider(Properties.Resources.oldielyrics_com);
+            foreach (PropertyInfo propInfo in typeof (Properties.Resources).GetProperties(BindingFlags.Public | BindingFlags.Static))
+            {
+                if (propInfo.Name.StartsWith("provider_", StringComparison.OrdinalIgnoreCase))
+                {
+                    object value = propInfo.GetValue(null, null);
+                    if (value is String)
+                    {
+                        this.providerManager.loadProvider(value as String);
+                    }
+                }
+            }
         }
-
 
         #endregion
     }

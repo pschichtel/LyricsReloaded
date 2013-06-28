@@ -72,9 +72,9 @@ namespace CubeIsland.LyricsReloaded.Properties {
         ///- utf8_encode
         ///- trim ähnelt.
         /// </summary>
-        public static string azlyrics_com {
+        public static string provider_azlyrics_com {
             get {
-                return ResourceManager.GetString("azlyrics_com", resourceCulture);
+                return ResourceManager.GetString("provider_azlyrics_com", resourceCulture);
             }
         }
         
@@ -91,9 +91,9 @@ namespace CubeIsland.LyricsReloaded.Properties {
         ///- clean_spaces
         ///- utf8_encode ähnelt.
         /// </summary>
-        public static string letras_mus_br {
+        public static string provider_letras_mus_br {
             get {
-                return ResourceManager.GetString("letras_mus_br", resourceCulture);
+                return ResourceManager.GetString("provider_letras_mus_br", resourceCulture);
             }
         }
         
@@ -111,9 +111,9 @@ namespace CubeIsland.LyricsReloaded.Properties {
         ///- clean_spaces
         ///- utf8_encode ähnelt.
         /// </summary>
-        public static string metrolyrics_com {
+        public static string provider_metrolyrics_com {
             get {
-                return ResourceManager.GetString("metrolyrics_com", resourceCulture);
+                return ResourceManager.GetString("provider_metrolyrics_com", resourceCulture);
             }
         }
         
@@ -131,9 +131,9 @@ namespace CubeIsland.LyricsReloaded.Properties {
         ///- entity_decode
         ///- utf8_encode ähnelt.
         /// </summary>
-        public static string oldielyrics_com {
+        public static string provider_oldielyrics_com {
             get {
-                return ResourceManager.GetString("oldielyrics_com", resourceCulture);
+                return ResourceManager.GetString("provider_oldielyrics_com", resourceCulture);
             }
         }
         
@@ -148,9 +148,9 @@ namespace CubeIsland.LyricsReloaded.Properties {
         ///- strip_html
         ///- utf8_encode ähnelt.
         /// </summary>
-        public static string plyrics_com {
+        public static string provider_plyrics_com {
             get {
-                return ResourceManager.GetString("plyrics_com", resourceCulture);
+                return ResourceManager.GetString("provider_plyrics_com", resourceCulture);
             }
         }
         
@@ -166,9 +166,9 @@ namespace CubeIsland.LyricsReloaded.Properties {
         ///- clean_spaces
         ///- utf8_encode ähnelt.
         /// </summary>
-        public static string rapgenius_com {
+        public static string provider_rapgenius_com {
             get {
-                return ResourceManager.GetString("rapgenius_com", resourceCulture);
+                return ResourceManager.GetString("provider_rapgenius_com", resourceCulture);
             }
         }
         
@@ -185,9 +185,9 @@ namespace CubeIsland.LyricsReloaded.Properties {
         ///- clean_spaces
         ///- utf8_encode ähnelt.
         /// </summary>
-        public static string songlyrics_com {
+        public static string provider_songlyrics_com {
             get {
-                return ResourceManager.GetString("songlyrics_com", resourceCulture);
+                return ResourceManager.GetString("provider_songlyrics_com", resourceCulture);
             }
         }
         
@@ -203,9 +203,9 @@ namespace CubeIsland.LyricsReloaded.Properties {
         ///- entity_decode
         ///- utf8_encode ähnelt.
         /// </summary>
-        public static string tekstovipjesama_com {
+        public static string provider_tekstovipjesama_com {
             get {
-                return ResourceManager.GetString("tekstovipjesama_com", resourceCulture);
+                return ResourceManager.GetString("provider_tekstovipjesama_com", resourceCulture);
             }
         }
         
@@ -220,9 +220,9 @@ namespace CubeIsland.LyricsReloaded.Properties {
         ///- strip_html
         ///- utf8_encode ähnelt.
         /// </summary>
-        public static string tekstowo_pl {
+        public static string provider_tekstowo_pl {
             get {
-                return ResourceManager.GetString("tekstowo_pl", resourceCulture);
+                return ResourceManager.GetString("provider_tekstowo_pl", resourceCulture);
             }
         }
         
@@ -238,9 +238,9 @@ namespace CubeIsland.LyricsReloaded.Properties {
         ///- clean_spaces
         ///- utf8_encode ähnelt.
         /// </summary>
-        public static string teksty_org {
+        public static string provider_teksty_org {
             get {
-                return ResourceManager.GetString("teksty_org", resourceCulture);
+                return ResourceManager.GetString("provider_teksty_org", resourceCulture);
             }
         }
         
@@ -255,9 +255,9 @@ namespace CubeIsland.LyricsReloaded.Properties {
         ///- strip_html
         ///- utf8_encode ähnelt.
         /// </summary>
-        public static string urbanlyrics_com {
+        public static string provider_urbanlyrics_com {
             get {
-                return ResourceManager.GetString("urbanlyrics_com", resourceCulture);
+                return ResourceManager.GetString("provider_urbanlyrics_com", resourceCulture);
             }
         }
     }
