@@ -115,16 +115,16 @@ namespace CubeIsland.LyricsReloaded
 
         private void loadDefaultConfiguration()
         {
-            //this.loadProvider(Properties.Resources.songlyrics_com);
-            //this.loadProvider(Properties.Resources.metrolyrics_com);
-            //this.loadProvider(Properties.Resources.letras_mus_br);
-            //this.loadProvider(Properties.Resources.teksty_org);
-            //this.loadProvider(Properties.Resources.tekstowo_pl);
-            //this.loadProvider(Properties.Resources.azlyrics_com);
-            //this.loadProvider(Properties.Resources.plyrics_com);
-            //this.loadProvider(Properties.Resources.urbanlyrics_com);
-            //this.loadProvider(Properties.Resources.rapgenius_com);
-            //this.loadProvider(Properties.Resources.oldielyrics_com);
+            this.providerManager.loadProvider(Properties.Resources.songlyrics_com);
+            this.providerManager.loadProvider(Properties.Resources.metrolyrics_com);
+            this.providerManager.loadProvider(Properties.Resources.letras_mus_br);
+            this.providerManager.loadProvider(Properties.Resources.teksty_org);
+            this.providerManager.loadProvider(Properties.Resources.tekstowo_pl);
+            this.providerManager.loadProvider(Properties.Resources.azlyrics_com);
+            this.providerManager.loadProvider(Properties.Resources.plyrics_com);
+            this.providerManager.loadProvider(Properties.Resources.urbanlyrics_com);
+            this.providerManager.loadProvider(Properties.Resources.rapgenius_com);
+            this.providerManager.loadProvider(Properties.Resources.oldielyrics_com);
         }
 
 

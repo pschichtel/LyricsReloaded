@@ -61,122 +61,203 @@ namespace CubeIsland.LyricsReloaded.Properties {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Ressource vom Typ System.Byte[].
+        ///   Sucht eine lokalisierte Zeichenfolge, die name: &quot;azlyrics.com&quot;
+        ///url: &quot;http://www.azlyrics.com/lyrics/{artist:lower,alpha}/{title:lower,alpha}.html&quot;
+        ///    
+        ///expressions:
+        ///- &apos;&lt;!-- start of lyrics --&gt;(?&lt;lyrics&gt;.+?)&lt;!-- end of lyrics --&gt;&apos;
+        ///    
+        ///filters:
+        ///- strip_html
+        ///- utf8_encode
+        ///- trim ähnelt.
         /// </summary>
-        public static byte[] azlyrics_com {
+        public static string azlyrics_com {
             get {
-                object obj = ResourceManager.GetObject("azlyrics_com", resourceCulture);
-                return ((byte[])(obj));
+                return ResourceManager.GetString("azlyrics_com", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Ressource vom Typ System.Byte[].
+        ///   Sucht eine lokalisierte Zeichenfolge, die name: &quot;letras.mus.br&quot;
+        ///url: &quot;http://letras.mus.br/{artist:lower,name}/{title:lower,name}/&quot;
+        ///    
+        ///expressions:
+        ///- &apos;&lt;div id=&quot;div_letra&quot;[^&gt;]*&gt;(?&lt;lyrics&gt;.*?)&lt;/div&gt;&apos;
+        ///    
+        ///filters:
+        ///- p2break
+        ///- strip_html
+        ///- clean_spaces
+        ///- utf8_encode ähnelt.
         /// </summary>
-        public static byte[] example {
+        public static string letras_mus_br {
             get {
-                object obj = ResourceManager.GetObject("example", resourceCulture);
-                return ((byte[])(obj));
+                return ResourceManager.GetString("letras_mus_br", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Ressource vom Typ System.Byte[].
+        ///   Sucht eine lokalisierte Zeichenfolge, die name: &quot;metrolyrics.com&quot;
+        ///url: &quot;http://www.metrolyrics.com/{title:lower,name}-lyrics-{artist:lower,name}.html&quot;
+        ///    
+        ///expressions:
+        ///- &apos;&lt;div id=&quot;lyrics-body&quot;&gt;(?&lt;lyrics&gt;.*?)&lt;/div&gt;&apos;
+        ///    
+        ///filters:
+        ///- strip_html
+        ///- strip_links
+        ///- entity_decode
+        ///- clean_spaces
+        ///- utf8_encode ähnelt.
         /// </summary>
-        public static byte[] letras_mus_br {
+        public static string metrolyrics_com {
             get {
-                object obj = ResourceManager.GetObject("letras_mus_br", resourceCulture);
-                return ((byte[])(obj));
+                return ResourceManager.GetString("metrolyrics_com", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Ressource vom Typ System.Byte[].
+        ///   Sucht eine lokalisierte Zeichenfolge, die name: &quot;oldielyrics.com&quot;
+        ///url: &quot;http://oldielyrics.com/lyrics/{artist:lower,uscore}/{title:lower,uscore}.html&quot;
+        ///    
+        ///expressions:
+        ///- &apos;&lt;div\s+class=&quot;lyrics&quot;[^&gt;]*&gt;\s*&lt;p&gt;(?&lt;lyrics&gt;.+)&lt;/p&gt;\s*&lt;/div&gt;&apos;
+        ///    
+        ///filters:
+        ///- br2nl
+        ///- p2break
+        ///- strip_html
+        ///- entity_decode
+        ///- utf8_encode ähnelt.
         /// </summary>
-        public static byte[] metrolyrics_com {
+        public static string oldielyrics_com {
             get {
-                object obj = ResourceManager.GetObject("metrolyrics_com", resourceCulture);
-                return ((byte[])(obj));
+                return ResourceManager.GetString("oldielyrics_com", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Ressource vom Typ System.Byte[].
+        ///   Sucht eine lokalisierte Zeichenfolge, die name: &quot;plyrics.com&quot;
+        ///url: &quot;http://www.plyrics.com/lyrics/{artist:lower,alpha}/{title:lower,alpha}.html&quot;
+        ///    
+        ///expressions:
+        ///- &apos;&lt;!-- start of lyrics --&gt;(?&lt;lyrics&gt;.+?)&lt;!-- end of lyrics --&gt;&apos;
+        ///    
+        ///filters:
+        ///- strip_html
+        ///- utf8_encode ähnelt.
         /// </summary>
-        public static byte[] oldielyrics_com {
+        public static string plyrics_com {
             get {
-                object obj = ResourceManager.GetObject("oldielyrics_com", resourceCulture);
-                return ((byte[])(obj));
+                return ResourceManager.GetString("plyrics_com", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Ressource vom Typ System.Byte[].
+        ///   Sucht eine lokalisierte Zeichenfolge, die name: &quot;rapgenius.com&quot;
+        ///url: &quot;http://rapgenius.com/{artist:lower,name}-{title:lower,name}-lyrics&quot;
+        ///    
+        ///expressions:
+        ///- &apos;&lt;div\s+class=&quot;lyrics&quot;[^&gt;]*?&gt;(?&lt;lyrics&gt;.*?)&lt;/div&gt;&apos;
+        ///    
+        ///filters:
+        ///- strip_html
+        ///- clean_spaces
+        ///- utf8_encode ähnelt.
         /// </summary>
-        public static byte[] plyrics_com {
+        public static string rapgenius_com {
             get {
-                object obj = ResourceManager.GetObject("plyrics_com", resourceCulture);
-                return ((byte[])(obj));
+                return ResourceManager.GetString("rapgenius_com", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Ressource vom Typ System.Byte[].
+        ///   Sucht eine lokalisierte Zeichenfolge, die name: &quot;songlyrics.com&quot;
+        ///url: &quot;http://www.songlyrics.com/{artist:lower,name}/{title:lower,name}-lyrics/&quot;
+        ///    
+        ///expressions:
+        ///- &apos;&lt;div id=&quot;songLyricsDiv-outer&quot;&gt;(?&lt;lyrics&gt;.*?)&lt;/div&gt;&apos;
+        ///    
+        ///filters:
+        ///- strip_html
+        ///- entity_decode
+        ///- clean_spaces
+        ///- utf8_encode ähnelt.
         /// </summary>
-        public static byte[] rapgenius_com {
+        public static string songlyrics_com {
             get {
-                object obj = ResourceManager.GetObject("rapgenius_com", resourceCulture);
-                return ((byte[])(obj));
+                return ResourceManager.GetString("songlyrics_com", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Ressource vom Typ System.Byte[].
+        ///   Sucht eine lokalisierte Zeichenfolge, die name: &quot;tekstovipjesama.com&quot;
+        ///url: &quot;http://tekstovipjesama.com/{artist:lower,name}/{title:lower,name}&quot;
+        ///    
+        ///expressions:
+        ///- &apos;&lt;div\s+class=&quot;entry&quot;[^&gt;]*&gt;\s*&lt;div[^&gt;]*&gt;\s*(?&lt;lyrics&gt;.*?)&lt;/div&gt;&apos;
+        ///
+        ///filters:
+        ///- strip_html
+        ///- entity_decode
+        ///- utf8_encode ähnelt.
         /// </summary>
-        public static byte[] songlyrics_com {
+        public static string tekstovipjesama_com {
             get {
-                object obj = ResourceManager.GetObject("songlyrics_com", resourceCulture);
-                return ((byte[])(obj));
+                return ResourceManager.GetString("tekstovipjesama_com", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Ressource vom Typ System.Byte[].
+        ///   Sucht eine lokalisierte Zeichenfolge, die name: &quot;tekstowo.pl&quot;
+        ///url: &quot;http://www.tekstowo.pl/piosenka,{artist:lower,uscore},{title:lower,uscore}.html&quot;
+        ///    
+        ///expressions:
+        ///- &apos;&lt;div\s+class=&quot;song-text&quot;[^&gt;]*&gt;(?&lt;lyrics&gt;.*?)&lt;p&gt;&amp;nbsp;&lt;/p&gt;&apos;
+        ///    
+        ///filters:
+        ///- strip_html
+        ///- utf8_encode ähnelt.
         /// </summary>
-        public static byte[] tekstovipjesama_com {
+        public static string tekstowo_pl {
             get {
-                object obj = ResourceManager.GetObject("tekstovipjesama_com", resourceCulture);
-                return ((byte[])(obj));
+                return ResourceManager.GetString("tekstowo_pl", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Ressource vom Typ System.Byte[].
+        ///   Sucht eine lokalisierte Zeichenfolge, die name: &quot;teksty.org&quot;
+        ///url: &quot;http://teksty.org/{artist:lower,name},{title:lower,name},tekst-piosenki&quot;
+        ///    
+        ///expressions:
+        ///- &apos;&lt;div\s+class=&quot;songText&quot;[^&gt;]*&gt;(?&lt;lyrics&gt;.*?)&lt;/div&gt;&apos;
+        ///    
+        ///filters:
+        ///- strip_html
+        ///- clean_spaces
+        ///- utf8_encode ähnelt.
         /// </summary>
-        public static byte[] tekstowo_pl {
+        public static string teksty_org {
             get {
-                object obj = ResourceManager.GetObject("tekstowo_pl", resourceCulture);
-                return ((byte[])(obj));
+                return ResourceManager.GetString("teksty_org", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Ressource vom Typ System.Byte[].
+        ///   Sucht eine lokalisierte Zeichenfolge, die name: &quot;urbanlyrics.com&quot;
+        ///url: &quot;http://www.urbanlyrics.com/lyrics/{artist:lower,alpha}/{title:lower,alpha}.html&quot;
+        ///    
+        ///expressions:
+        ///- &apos;&lt;!-- start of lyrics --&gt;(?&lt;lyrics&gt;.+?)&lt;!-- end of lyrics --&gt;&apos;
+        ///    
+        ///filters:
+        ///- strip_html
+        ///- utf8_encode ähnelt.
         /// </summary>
-        public static byte[] teksty_org {
+        public static string urbanlyrics_com {
             get {
-                object obj = ResourceManager.GetObject("teksty_org", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Sucht eine lokalisierte Ressource vom Typ System.Byte[].
-        /// </summary>
-        public static byte[] urbanlyrics_com {
-            get {
-                object obj = ResourceManager.GetObject("urbanlyrics_com", resourceCulture);
-                return ((byte[])(obj));
+                return ResourceManager.GetString("urbanlyrics_com", resourceCulture);
             }
         }
     }

@@ -55,7 +55,7 @@ namespace CubeIsland.LyricsReloaded.Provider
         private readonly Dictionary<string, Filter> filters;
         private readonly Dictionary<string, Validator> validators;
 
-        private static readonly Dictionary<string, Variable.Type> VARIABLE_TYPES = new Dictionary<string, Variable.Type>() {
+        private static readonly Dictionary<string, Variable.Type> VARIABLE_TYPES = new Dictionary<string, Variable.Type> {
             {"artist", Variable.Type.ARTIST},
             {"title", Variable.Type.TITLE},
             {"album", Variable.Type.ALBUM}
@@ -149,6 +149,11 @@ namespace CubeIsland.LyricsReloaded.Provider
             {
                 this.loadProvider(new StreamReader(stream));
             }
+        }
+
+        public void loadProvider(String resourceText)
+        {
+            this.loadProvider(new StringReader(resourceText));
         }
 
         public void loadProvider(byte[] resourceData)
