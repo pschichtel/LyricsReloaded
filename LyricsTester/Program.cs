@@ -50,7 +50,8 @@ namespace LyricsTester
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine("failed (" + e.Message + ")");
+                    Console.WriteLine("failed (internal error)");
+                    Console.WriteLine(e.ToString());
                 }
             }
 

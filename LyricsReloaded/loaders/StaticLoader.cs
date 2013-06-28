@@ -19,6 +19,7 @@ namespace CubeIsland.LyricsReloaded.Provider.Loader
             this.name = name;
             this.urlTemplate = urlTemplate;
             this.pattern = pattern;
+            this.client = client;
         }
 
         public string getName()
@@ -32,7 +33,7 @@ namespace CubeIsland.LyricsReloaded.Provider.Loader
 
             foreach (KeyValuePair<string, string> entry in variables)
             {
-                url.Replace("{" + entry.Key + "}", entry.Value);
+                url = url.Replace("{" + entry.Key + "}", entry.Value);
             }
 
             return url;
@@ -41,6 +42,9 @@ namespace CubeIsland.LyricsReloaded.Provider.Loader
         public Lyrics getLyrics(Dictionary<string, string> variables)
         {
             string url = this.constructUrl(variables);
+
+            this.lyricsReloaded.getLogger().debug("The constructed URL: {0}", url);
+
             WebResponse response = this.client.get(url);
             string lyrics = this.pattern.apply(response.getContent());
 
@@ -79,10 +83,11 @@ namespace CubeIsland.LyricsReloaded.Provider.Loader
         public LyricsLoader newLoader(string name, YamlMappingNode configuration)
         {
             YamlNode node;
+            IDictionary<YamlNode, YamlNode> configNodes = configuration.Children;
 
             string url;
-            node = configuration.Children[Node.URL];
-            if (node != null && node is YamlScalarNode)
+            node = (configNodes.ContainsKey(Node.URL) ? configNodes[Node.URL] : null);
+            if (node is YamlScalarNode)
             {
                 url = ((YamlScalarNode)node).Value;
             }
@@ -94,7 +99,7 @@ namespace CubeIsland.LyricsReloaded.Provider.Loader
             string regex;
             string regexOptions = "";
 
-            node = configuration.Children[Node.PATTERN];
+            node = (configNodes.ContainsKey(Node.PATTERN) ? configNodes[Node.PATTERN] : null);
             if (node is YamlScalarNode)
             {
                 regex = ((YamlScalarNode)node).Value;
@@ -120,15 +125,15 @@ namespace CubeIsland.LyricsReloaded.Provider.Loader
             else if (node is YamlMappingNode)
             {
                 YamlMappingNode patternConfig = (YamlMappingNode)node;
-                node = patternConfig.Children[Node.Pattern.REGEX];
-                if (node == null || !(node is YamlScalarNode))
+                node = (configNodes.ContainsKey(Node.Pattern.REGEX) ? configNodes[Node.Pattern.REGEX] : null);
+                if (!(node is YamlScalarNode))
                 {
                     throw new InvalidConfigurationException("Invalid regex value!");
                 }
                 regex = ((YamlScalarNode)node).Value;
 
-                node = patternConfig.Children[Node.Pattern.OPTIONS];
-                if (node != null && node is YamlScalarNode)
+                node = (configNodes.ContainsKey(Node.Pattern.OPTIONS) ? configNodes[Node.Pattern.OPTIONS] : null);
+                if (node is YamlScalarNode)
                 {
                     regexOptions = ((YamlScalarNode)node).Value;
                 }

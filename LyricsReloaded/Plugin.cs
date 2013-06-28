@@ -110,6 +110,8 @@ namespace MusicBeePlugin
         {
             //MessageBox.Show("Close(" + reason + ")");
             this.lyricsReloaded.getLogger().info("Plugin disabled");
+            this.lyricsReloaded.getProviderManager().clean();
+            this.lyricsReloaded = null;
         }
 
         public String[] GetProviders()

@@ -8,7 +8,7 @@ namespace CubeIsland.LyricsReloaded.Filters
 {
     public class FilterCollection
     {
-        public static class Node
+        private static class Node
         {
             public static readonly YamlScalarNode NAME = new YamlScalarNode("name");
             public static readonly YamlScalarNode ARGS = new YamlScalarNode("args");
@@ -86,15 +86,16 @@ namespace CubeIsland.LyricsReloaded.Filters
             else if (node is YamlMappingNode)
             {
                 YamlMappingNode filterConfig = (YamlMappingNode)node;
-                node = filterConfig.Children[Node.NAME];
-                if (node == null || !(node is YamlScalarNode))
+                IDictionary<YamlNode, YamlNode> childNodes = filterConfig.Children;
+                node = (childNodes.ContainsKey(Node.NAME) ? childNodes[Node.NAME] : null);
+                if (!(node is YamlScalarNode))
                 {
                     throw new InvalidConfigurationException("The filter name is missing or invalid!");
                 }
                 name = ((YamlScalarNode)node).Value.ToLower();
 
-                node = filterConfig.Children[Node.ARGS];
-                if (node != null && node is YamlSequenceNode)
+                node = (childNodes.ContainsKey(Node.ARGS) ? childNodes[Node.ARGS] : null);
+                if (node is YamlSequenceNode)
                 {
                     args = readFilterArgs(((YamlSequenceNode)node).Children.GetEnumerator());
                 }

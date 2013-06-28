@@ -50,7 +50,7 @@ namespace CubeIsland.LyricsReloaded
 
         public WebResponse get(string url)
         {
-            HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(url);
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
 
             request.Method = "GET";
             request.ContentLength = 0;
@@ -60,19 +60,54 @@ namespace CubeIsland.LyricsReloaded
 
         public WebResponse post(string url, Dictionary<string, string> data)
         {
-            HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(url);
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
 
             request.Method = "POST";
             request.ContentType = "application/x-www-form-urlencoded";
             request.ContentLength = 0;
 
+            if (data != null)
+            {
+                using (Stream stream = request.GetRequestStream())
+                {
+                    stream.WriteTimeout = this.timeout;
+                    string queryString = generateQueryString(data);
+                    byte[] byteData = new byte[Encoding.UTF8.GetByteCount(queryString)];
+                    Encoding.UTF8.GetBytes(queryString, 0, queryString.Length, byteData, 0);
+                    stream.Write(byteData, 0, byteData.Length);
+                }
+            }
+
             return this.executeRequest(request);
+        }
+
+        public static string generateQueryString(IDictionary<string, string> data)
+        {
+            StringBuilder queryString = new StringBuilder("");
+            IEnumerator<KeyValuePair<string, string>> it = data.GetEnumerator();
+
+            if (it.MoveNext())
+            {
+                queryString.Append(HttpUtility.UrlEncode(it.Current.Key, Encoding.UTF8))
+                           .Append('=')
+                           .Append(HttpUtility.UrlEncode(it.Current.Value, Encoding.UTF8));
+
+                while (it.MoveNext())
+                {
+                    queryString.Append('&').Append(HttpUtility.UrlEncode(it.Current.Key, Encoding.UTF8))
+                               .Append('=').Append(HttpUtility.UrlEncode(it.Current.Value, Encoding.UTF8));
+                }
+            }
+
+
+            return queryString.ToString();
         }
 
         protected WebResponse executeRequest(HttpWebRequest request)
         {
-            // request confugration
-            if (request.Headers.GetValues("Accept-Encoding").Length == 0)
+            // request configration
+            string[] acceptEncodingValues = request.Headers.GetValues("Accept-Encoding");
+            if (acceptEncodingValues == null || acceptEncodingValues.Length == 0)
             {
                 // we support gzip if nothing else was specified.
                 request.Headers.Add("Accept-Encoding", "gzip");
@@ -102,7 +137,7 @@ namespace CubeIsland.LyricsReloaded
                 {
                     request.Abort();
                 }
-                catch
+                catch (Exception)
                 {}
                 throw;
             }

@@ -61,7 +61,7 @@ namespace CubeIsland.LyricsReloaded.Provider
                         Filter filter = (Filter)Activator.CreateInstance(type);
                         this.filters.Add(filter.getName(), filter);
                     }
-                    catch
+                    catch (Exception)
                     {}
                 }
             }
@@ -119,11 +119,11 @@ namespace CubeIsland.LyricsReloaded.Provider
             yaml.Load(configReader);
 
             YamlNode node;
-            YamlMappingNode root = (YamlMappingNode)yaml.Documents[0].RootNode;
+            IDictionary<YamlNode, YamlNode> rootNodes = ((YamlMappingNode)yaml.Documents[0].RootNode).Children;
 
             string loaderName;
-            node = root.Children[Node.LOADER];
-            if (node != null && node is YamlScalarNode)
+            node = (rootNodes.ContainsKey(Node.LOADER) ? rootNodes[Node.LOADER] : null);
+            if (node is YamlScalarNode)
             {
                 loaderName = ((YamlScalarNode)node).Value.ToLower();
             }
@@ -137,21 +137,17 @@ namespace CubeIsland.LyricsReloaded.Provider
             }
             LyricsLoaderFactory factory = this.loaderFactories[loaderName];
 
-            node = root.Children[Node.NAME];
+            node = (rootNodes.ContainsKey(Node.NAME) ? rootNodes[Node.NAME] : null);
             if (!(node is YamlScalarNode))
             {
                 throw new InvalidConfigurationException("Invalid configuration");
             }
             string name = ((YamlScalarNode)node).Value.ToLower();
 
-            node = root.Children[Node.VARIABLES];
+            node = (rootNodes.ContainsKey(Node.VARIABLES) ? rootNodes[Node.VARIABLES] : null);
             Dictionary<string, Variable> variables = new Dictionary<string, Variable>();
-            foreach (KeyValuePair<string, Variable.Type> entry in VARIABLE_TYPES)
-            {
-                variables.Add(entry.Key, new Variable(entry.Key, entry.Value));
-            }
 
-            if (node != null && node is YamlMappingNode)
+            if (node is YamlMappingNode)
             {
                 string variableName;
                 foreach (KeyValuePair<YamlNode, YamlNode> preparationEntry in ((YamlMappingNode)node).Children)
@@ -209,7 +205,7 @@ namespace CubeIsland.LyricsReloaded.Provider
 
                             FilterCollection filterCollection = null;
 
-                            node = variableConfig.Children[Node.Variables.FILTERS];
+                            node = (variableConfig.Children.ContainsKey(Node.Variables.FILTERS) ? variableConfig.Children[Node.Variables.FILTERS] : null);
                             // variable reference
                             if (node is YamlScalarNode)
                             {
@@ -246,16 +242,28 @@ namespace CubeIsland.LyricsReloaded.Provider
                 }
             }
 
-            node = root.Children[Node.POST_FILTERS];
-            FilterCollection postFilters = new FilterCollection();
+            foreach (KeyValuePair<string, Variable.Type> entry in VARIABLE_TYPES)
+            {
+                if (!variables.ContainsKey(entry.Key))
+                {
+                    variables.Add(entry.Key, new Variable(entry.Key, entry.Value));
+                }
+            }
+
+            node = (rootNodes.ContainsKey(Node.POST_FILTERS) ? rootNodes[Node.POST_FILTERS] : null);
+            FilterCollection postFilters;
             if (node is YamlSequenceNode)
             {
-                FilterCollection.parseList((YamlSequenceNode)node, this.filters);
+                postFilters = FilterCollection.parseList((YamlSequenceNode)node, this.filters);
+            }
+            else
+            {
+                postFilters = new FilterCollection();
             }
 
             YamlMappingNode configNode;
-            node = root.Children[Node.CONFIG];
-            if (node != null && node is YamlMappingNode)
+            node = (rootNodes.ContainsKey(Node.CONFIG) ? rootNodes[Node.CONFIG] : null);
+            if (node is YamlMappingNode)
             {
                 configNode = (YamlMappingNode)node;
             }

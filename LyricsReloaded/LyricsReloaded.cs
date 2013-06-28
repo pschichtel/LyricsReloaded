@@ -34,6 +34,11 @@ namespace CubeIsland.LyricsReloaded
             this.loadConfigurations();
         }
 
+        ~LyricsReloaded()
+        {
+            this.logger.close();
+        }
+
         public Logger getLogger()
         {
             return this.logger;

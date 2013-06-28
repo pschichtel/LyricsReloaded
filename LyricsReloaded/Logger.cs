@@ -45,7 +45,8 @@ namespace CubeIsland.LyricsReloaded
         {
             if (this.writer == null)
             {
-                this.writer = new StreamWriter(this.fileInfo.Open(FileMode.Append, FileAccess.Write));
+                this.writer = new StreamWriter(this.fileInfo.FullName, true, Encoding.UTF8);
+                this.writer.AutoFlush = false;
             }
             this.writer.WriteLine(DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss") + " [" + type.ToUpper() + "] " + string.Format(message, args));
             this.writer.Flush();
@@ -55,7 +56,12 @@ namespace CubeIsland.LyricsReloaded
         {
             if (this.writer != null)
             {
-                this.writer.Close();
+                try
+                {
+                    this.writer.Close();
+                }
+                catch (ObjectDisposedException)
+                {}
             }
         }
 
