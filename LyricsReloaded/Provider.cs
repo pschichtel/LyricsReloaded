@@ -13,12 +13,18 @@ namespace CubeIsland.LyricsReloaded.Provider
         private readonly FilterCollection postFilters;
         private readonly LyricsLoader loader;
 
-        public Provider(string name, Dictionary<string, Variable> variables, FilterCollection postFilters, LyricsLoader loader)
+        private volatile int counter;
+        private readonly int maxCount;
+
+        public Provider(string name, Dictionary<string, Variable> variables, FilterCollection postFilters, LyricsLoader loader, int maxCount = -1)
         {
             this.name = name;
             this.variables = variables;
             this.postFilters = postFilters;
             this.loader = loader;
+
+            this.counter = 0;
+            this.maxCount = maxCount;
         }
 
         public string getName()
@@ -43,6 +49,11 @@ namespace CubeIsland.LyricsReloaded.Provider
 
         public String getLyrics(String artist, String title, String album)
         {
+            if (this.counter == this.maxCount)
+            {
+                return null;
+            }
+
             Dictionary<string, string> variableValues = new Dictionary<string, string>(this.variables.Count);
 
             Variable var;
@@ -63,6 +74,7 @@ namespace CubeIsland.LyricsReloaded.Provider
                 }
             }
 
+            this.counter++;
             Lyrics lyrics = this.loader.getLyrics(variableValues);
 
             if (lyrics == null)
