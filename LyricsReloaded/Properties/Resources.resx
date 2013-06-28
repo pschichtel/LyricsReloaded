@@ -117,4 +117,41 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="azlyrics_com" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\configs\azlyrics.com.yml;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="example" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\configs\example.yml;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="letras_mus_br" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\configs\letras.mus.br.yml;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="metrolyrics_com" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\configs\metrolyrics.com.yml;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="oldielyrics_com" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\configs\oldielyrics.com.yml;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="plyrics_com" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\configs\plyrics.com.yml;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="rapgenius_com" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\configs\rapgenius.com.yml;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="songlyrics_com" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\configs\songlyrics.com.yml;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="tekstovipjesama_com" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\configs\tekstovipjesama.com.yml;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="tekstowo_pl" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\configs\tekstowo.pl.yml;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="teksty_org" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\configs\teksty.org.yml;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="urbanlyrics_com" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\configs\urbanlyrics.com.yml;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
 </root>

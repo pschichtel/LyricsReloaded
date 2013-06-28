@@ -59,5 +59,125 @@ namespace CubeIsland.LyricsReloaded.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Ressource vom Typ System.Byte[].
+        /// </summary>
+        public static byte[] azlyrics_com {
+            get {
+                object obj = ResourceManager.GetObject("azlyrics_com", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Ressource vom Typ System.Byte[].
+        /// </summary>
+        public static byte[] example {
+            get {
+                object obj = ResourceManager.GetObject("example", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Ressource vom Typ System.Byte[].
+        /// </summary>
+        public static byte[] letras_mus_br {
+            get {
+                object obj = ResourceManager.GetObject("letras_mus_br", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Ressource vom Typ System.Byte[].
+        /// </summary>
+        public static byte[] metrolyrics_com {
+            get {
+                object obj = ResourceManager.GetObject("metrolyrics_com", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Ressource vom Typ System.Byte[].
+        /// </summary>
+        public static byte[] oldielyrics_com {
+            get {
+                object obj = ResourceManager.GetObject("oldielyrics_com", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Ressource vom Typ System.Byte[].
+        /// </summary>
+        public static byte[] plyrics_com {
+            get {
+                object obj = ResourceManager.GetObject("plyrics_com", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Ressource vom Typ System.Byte[].
+        /// </summary>
+        public static byte[] rapgenius_com {
+            get {
+                object obj = ResourceManager.GetObject("rapgenius_com", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Ressource vom Typ System.Byte[].
+        /// </summary>
+        public static byte[] songlyrics_com {
+            get {
+                object obj = ResourceManager.GetObject("songlyrics_com", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Ressource vom Typ System.Byte[].
+        /// </summary>
+        public static byte[] tekstovipjesama_com {
+            get {
+                object obj = ResourceManager.GetObject("tekstovipjesama_com", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Ressource vom Typ System.Byte[].
+        /// </summary>
+        public static byte[] tekstowo_pl {
+            get {
+                object obj = ResourceManager.GetObject("tekstowo_pl", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Ressource vom Typ System.Byte[].
+        /// </summary>
+        public static byte[] teksty_org {
+            get {
+                object obj = ResourceManager.GetObject("teksty_org", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Ressource vom Typ System.Byte[].
+        /// </summary>
+        public static byte[] urbanlyrics_com {
+            get {
+                object obj = ResourceManager.GetObject("urbanlyrics_com", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
     }
 }
