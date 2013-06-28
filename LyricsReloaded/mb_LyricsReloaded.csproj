@@ -76,7 +76,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="loaders\StaticLoader.cs" />
+    <Compile Include="Loader\StaticLoader.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -87,23 +87,23 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="configurations\tekstovipjesama.com.yml" />
+    <None Include="Configs\tekstovipjesama.com.yml" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="configurations\azlyrics.com.yml" />
-    <None Include="configurations\example.yml" />
-    <None Include="configurations\songlyrics.com.yml" />
-    <None Include="configurations\metrolyrics.com.yml" />
-    <None Include="configurations\letras.mus.br.yml" />
-    <None Include="configurations\teksty.org.yml" />
-    <None Include="configurations\tekstowo.pl.yml" />
-    <None Include="configurations\oldielyrics.com.yml" />
-    <None Include="configurations\rapgenius.com.yml" />
-    <None Include="configurations\urbanlyrics.com.yml" />
-    <None Include="configurations\plyrics.com.yml" />
+    <None Include="Configs\azlyrics.com.yml" />
+    <None Include="Configs\example.yml" />
+    <None Include="Configs\songlyrics.com.yml" />
+    <None Include="Configs\metrolyrics.com.yml" />
+    <None Include="Configs\letras.mus.br.yml" />
+    <None Include="Configs\teksty.org.yml" />
+    <None Include="Configs\tekstowo.pl.yml" />
+    <None Include="Configs\oldielyrics.com.yml" />
+    <None Include="Configs\rapgenius.com.yml" />
+    <None Include="Configs\urbanlyrics.com.yml" />
+    <None Include="Configs\plyrics.com.yml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
