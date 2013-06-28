@@ -22,10 +22,7 @@ using CubeIsland.LyricsReloaded;
 using CubeIsland.LyricsReloaded.Provider;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Net;
-using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace MusicBeePlugin

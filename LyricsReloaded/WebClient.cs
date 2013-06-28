@@ -26,7 +26,6 @@ using System.Web;
 using System.Net;
 using System.IO;
 using System.IO.Compression;
-using MusicBeePlugin;
 
 namespace CubeIsland.LyricsReloaded
 {
