@@ -1,0 +1,23 @@
+name: 'lyrics.wikia.com'
+
+variables:
+	artist:
+		type: artist
+		filters:
+		- [regex, "\\s+", "_"]
+		- urlencode
+	title:
+		type: title
+		filters: artist 
+
+post-filters:
+- br2nl
+- p2break
+- strip_html
+- entity_decode
+- utf8_encode
+- trim
+
+config:
+	url: "http://lyrics.wikia.com/{artist}:{title}"
+	pattern: "'lyricbox'>.*?/></a></div>(?<lyrics>.*?)<!--"

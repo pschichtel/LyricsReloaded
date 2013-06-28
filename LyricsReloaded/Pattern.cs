@@ -46,7 +46,7 @@ namespace CubeIsland.LyricsReloaded
             }
         }
 
-        private static readonly Dictionary<char, RegexOptions> regexOptionMap = new Dictionary<char, RegexOptions>() {
+        private static readonly Dictionary<char, RegexOptions> regexOptionMap = new Dictionary<char, RegexOptions> {
             {'i', RegexOptions.IgnoreCase},
             {'s', RegexOptions.Singleline},
             {'m', RegexOptions.Multiline}

@@ -24,6 +24,7 @@ using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
+using CubeIsland.LyricsReloaded.Provider;
 
 namespace CubeIsland.LyricsReloaded.Filters
 {
@@ -237,11 +238,11 @@ namespace CubeIsland.LyricsReloaded.Filters
         {
             if (args.Length < 2)
             {
-                throw new Exception("The regex filter needs at least 2 arguments: regex:<pattern>,<replacement>[,<options>]");
+                throw new InvalidConfigurationException("The regex filter needs at least 2 arguments: regex, <pattern>, <replacement>[, <options>]");
             }
 
-            string pattern = HttpUtility.UrlDecode(args[0], Encoding.ASCII);
-            string replacement = HttpUtility.UrlDecode(args[0], Encoding.ASCII);
+            string pattern = args[0];
+            string replacement = args[1];
             string optionString = "";
             if (args.Length > 2)
             {
@@ -288,14 +289,10 @@ namespace CubeIsland.LyricsReloaded.Filters
         {
             if (args.Length < 1)
             {
-                throw new Exception("The strip_nonascii filter need at least 1 arg: strip_nonascii:<replacement>[,duplicate]");
+                throw new InvalidConfigurationException("The strip_nonascii filter need at least 1 arg: strip_nonascii, <replacement>[, duplicate]");
             }
             string replacement = args[0];
-            bool duplicate = false;
-            if (args.Length > 1)
-            {
-                duplicate = true;
-            }
+            bool duplicate = args.Length > 1;
 
             StringBuilder newString = new StringBuilder();
 
@@ -317,6 +314,23 @@ namespace CubeIsland.LyricsReloaded.Filters
             }
 
             return newString.ToString();
+        }
+    }
+
+    public class ReplaceFilter : Filter
+    {
+        public string getName()
+        {
+            return "replace";
+        }
+
+        public string filter(string content, string[] args, Encoding encoding)
+        {
+            if (args.Length < 2)
+            {
+                throw new InvalidConfigurationException("The replace filter requires 2 parameters: replace, <search>, <replacement>");
+            }
+            return content.Replace(args[0], args[1]);
         }
     }
 }

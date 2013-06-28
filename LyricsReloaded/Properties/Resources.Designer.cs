@@ -61,6 +61,64 @@ namespace CubeIsland.LyricsReloaded.Properties {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die name: &apos;lyrics.wikia.com&apos;
+        ///
+        ///variables:
+        ///	artist:
+        ///		type: artist
+        ///		filters:
+        ///		- [regex, &quot;\\s+&quot;, &quot;_&quot;]
+        ///		- urlencode
+        ///	title:
+        ///		type: title
+        ///		filters: artist 
+        ///
+        ///post-filters:
+        ///- strip_html
+        ///- utf8_encode
+        ///- trim
+        ///
+        ///config:
+        ///	url: &quot;http://lyrics.wikia.com/{artist}:{title}&quot;
+        ///	pattern: &quot;&apos;lyricbox&apos;&gt;.*?/&gt;&lt;/a&gt;&lt;/div&gt;(?&lt;lyrics&gt;.*?)&lt;!--&quot;
+        /// ähnelt.
+        /// </summary>
+        public static string lyrics_wikia_com {
+            get {
+                return ResourceManager.GetString("lyrics_wikia_com", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die name: &apos;lyrics.wikia.com Gracenote&apos;
+        ///
+        ///variables:
+        ///	artist:
+        ///		type: artist
+        ///		filters:
+        ///		- [regex, &quot;\\s+&quot;, &quot;_&quot;]
+        ///		- urlencode
+        ///	title:
+        ///		type: title
+        ///		filters: artist 
+        ///
+        ///post-filters:
+        ///- strip_html
+        ///- utf8_encode
+        ///- trim
+        ///
+        ///config:
+        ///	url: &quot;http://lyrics.wikia.com/Gracenote:{artist}:{title}&quot;
+        ///	pattern: &quot;&apos;lyricbox&apos;&gt;.*?/&gt;&lt;/a&gt;&lt;/div&gt;(?&lt;lyrics&gt;.*?)&lt;!--&quot;
+        /// ähnelt.
+        /// </summary>
+        public static string lyrics_wikia_com_gn {
+            get {
+                return ResourceManager.GetString("lyrics_wikia_com_gn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die name: &quot;azlyrics.com&quot;
         ///
         ///variables:
