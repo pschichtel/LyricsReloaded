@@ -1,0 +1,15 @@
+name: "www.hindilyrics.net"
+
+variables:
+    title:
+        type: title
+        filters:
+        - urlencode
+
+config:
+    url: "http://www.hindilyrics.net/lyrics/of-{title}.html"
+    pattern: ['<font face="verdana">(?<lyrics>.*?)</font>', s]
+    
+post-filters:
+- trim
+- utf8_encode

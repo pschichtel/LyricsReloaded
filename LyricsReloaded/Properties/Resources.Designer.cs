@@ -74,7 +74,10 @@ namespace CubeIsland.LyricsReloaded.Properties {
         ///		filters: artist 
         ///
         ///post-filters:
+        ///- br2nl
+        ///- p2break
         ///- strip_html
+        ///- entity_decode
         ///- utf8_encode
         ///- trim
         ///
@@ -103,7 +106,10 @@ namespace CubeIsland.LyricsReloaded.Properties {
         ///		filters: artist 
         ///
         ///post-filters:
+        ///- br2nl
+        ///- p2break
         ///- strip_html
+        ///- entity_decode
         ///- utf8_encode
         ///- trim
         ///
@@ -484,6 +490,31 @@ namespace CubeIsland.LyricsReloaded.Properties {
         public static string provider_urbanlyrics_com {
             get {
                 return ResourceManager.GetString("provider_urbanlyrics_com", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die name: &quot;smriti.com&quot;
+        ///
+        ///variables:
+        ///    title:
+        ///        type: title
+        ///        filters:
+        ///        - [strip_nonascii, -]
+        ///
+        ///config:
+        ///    url: &quot;http://smriti.com/hindi-songs/{title}&quot;
+        ///    pattern: [&apos;&lt;div class=&quot;songbody&quot;&gt;(?&lt;lyrics&gt;.*?)&lt;/div&gt;&apos;, s]
+        ///    
+        ///post-filters:
+        ///- br2ln
+        ///- strip_html
+        ///- trim
+        ///- utf8_encode ähnelt.
+        /// </summary>
+        public static string smriti_com {
+            get {
+                return ResourceManager.GetString("smriti_com", resourceCulture);
             }
         }
     }
