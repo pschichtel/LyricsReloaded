@@ -130,8 +130,8 @@ namespace CubeIsland.LyricsReloaded.Filters
 
     public class WhitespaceCleaner : Filter
     {
-        private static readonly Regex CLEAN_WHITESPACE_REGEX = new Regex("^\\s+|\\s+$", RegexOptions.Compiled);
         private static readonly Regex CLEAN_LINES_REGEX = new Regex("\n{3,}", RegexOptions.Compiled);
+        private static readonly Regex CLEAN_SPACES_REGEX = new Regex(" {2,}", RegexOptions.Compiled);
 
         public string getName()
         {
@@ -140,11 +140,20 @@ namespace CubeIsland.LyricsReloaded.Filters
 
         public string filter(string content, string[] args, Encoding encoding)
         {
-            content = content.Replace("\r\n", "\n").Replace('\r', '\n');
-            content = CLEAN_WHITESPACE_REGEX.Replace(content, "\n\n");
-            content = CLEAN_LINES_REGEX.Replace(content, "");
+            // tab -> space, v-tab -> newline
+            content = content.Replace("\t", " ").Replace("\v", "\n");
 
-            return content;
+            // normalize newlines to unix-style
+            content = content.Replace("\r\n", "\n").Replace('\r', '\n');
+
+            // strip unnecessary newlines
+            content = CLEAN_LINES_REGEX.Replace(content, "\n\n");
+
+            // strip unnecessary spaces
+            content = CLEAN_SPACES_REGEX.Replace(content, " ");
+
+            // trim and return
+            return content.Trim();
         }
     }
 
@@ -191,7 +200,7 @@ namespace CubeIsland.LyricsReloaded.Filters
     {
         public string getName()
         {
-            return "uni2ascii";
+            return "diacritics2ascii";
         }
 
         public string filter(string content, string[] args, Encoding encoding)
@@ -208,6 +217,30 @@ namespace CubeIsland.LyricsReloaded.Filters
             }
 
             return newString.ToString();
+        }
+    }
+
+    public class Umlauts2Ascii : Filter
+    {
+        private static readonly Dictionary<string, string> UMLAUT_MAP = new Dictionary<string, string> {
+            {"ä", "ae"},
+            {"ö", "oe"},
+            {"ü", "ue"},
+            {"ß", "ss"}
+        };
+
+        public string getName()
+        {
+            return "umlauts2ascii";
+        }
+
+        public string filter(string content, string[] args, Encoding encoding)
+        {
+            foreach (KeyValuePair<string, string> entry in UMLAUT_MAP)
+            {
+                content = content.Replace(entry.Key, entry.Value);
+            }
+            return content;
         }
     }
 
@@ -287,11 +320,11 @@ namespace CubeIsland.LyricsReloaded.Filters
 
         public string filter(string content, string[] args, Encoding encoding)
         {
-            if (args.Length < 1)
+            string replacement = "";
+            if (args.Length > 0)
             {
-                throw new InvalidConfigurationException("The strip_nonascii filter need at least 1 arg: strip_nonascii, <replacement>[, duplicate]");
+                replacement = args[0];
             }
-            string replacement = args[0];
             bool duplicate = args.Length > 1;
 
             StringBuilder newString = new StringBuilder();
