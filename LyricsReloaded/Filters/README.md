@@ -76,6 +76,10 @@ representation, so "äöüß" becomes "aeoeuess".
 
 urlencode
 ---------
+This filter URL-encodes the content where necessary, so a space becomes +.
+
+urlencode
+---------
 This filter URL-encodes the content where necessary, so a space becomes %20.
 
 

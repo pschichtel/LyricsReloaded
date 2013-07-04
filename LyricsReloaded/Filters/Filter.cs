@@ -257,6 +257,19 @@ namespace CubeIsland.LyricsReloaded.Filters
         }
     }
 
+    public class UriEscaper : Filter
+    {
+        public string getName()
+        {
+            return "uriescape";
+        }
+
+        public string filter(string content, string[] args, Encoding encoding)
+        {
+            return Uri.EscapeUriString(content);
+        }
+    }
+
     public class RegexReplacer : Filter
     {
         private readonly Dictionary<string, Regex> regexCache = new Dictionary<string, Regex>();
