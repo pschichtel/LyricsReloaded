@@ -12,7 +12,7 @@ variables:
 
 config:
     url: "http://cuspajz.com/tekstovi-pjesama/pjesma/{artist}/{title}.html"
-    pattern: ["<p\sclass="text\sclearfix">\s*(?<lyrics>.*?)</p>", s]
+    pattern: ['<p\\sclass="text\\sclearfix">\\s*(?<lyrics>.*?)</p>', s]
     
 post-filters:
 - strip_html

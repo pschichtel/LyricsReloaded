@@ -12,7 +12,7 @@ variables:
 
 config:
     url: "http://rapgenius.com/{artist}-{title}-lyrics"
-    pattern: ["<div\s+class="lyrics"[^>]*?>(?<lyrics>.*?)</div>", s]
+    pattern: ['<div\\s+class="lyrics"[^>]*?>(?<lyrics>.*?)</div>', s]
     
 post-filters:
 - strip_html

@@ -5,14 +5,14 @@ variables:
         type: artist
         filters:
         - lowercase
-        - [strip_nonascii, ""]
+        - strip_nonascii
     title:
         type: title
         filters: artist
 
 config:
     url: "http://www.azlyrics.com/lyrics/{artist}/{title}.html"
-    pattern: ["<!-- start of lyrics -->(?<lyrics>.+?)<!-- end of lyrics -->", s]
+    pattern: ['<!-- start of lyrics -->(?<lyrics>.+?)<!-- end of lyrics -->', s]
     
 post-filters:
 - strip_html

@@ -94,10 +94,10 @@ namespace CubeIsland.LyricsReloaded.Provider
 
         private void loadValidators()
         {
-            Type filterType = typeof(Validator);
-            foreach (Type type in Assembly.GetAssembly(filterType).GetTypes())
+            Type validatorType = typeof(Validator);
+            foreach (Type type in Assembly.GetAssembly(validatorType).GetTypes())
             {
-                if (filterType.IsAssignableFrom(type) && !type.IsAbstract && !type.IsInterface)
+                if (validatorType.IsAssignableFrom(type) && !type.IsAbstract && !type.IsInterface)
                 {
                     try
                     {
@@ -164,7 +164,15 @@ namespace CubeIsland.LyricsReloaded.Provider
         public void loadProvider(TextReader configReader)
         {
             YamlStream yaml = new YamlStream();
-            yaml.Load(configReader);
+            try
+            {
+                yaml.Load(configReader);
+            }
+            catch (Exception e)
+            {
+                this.logger.error("Invalid configuration: {0}", e.Message);
+                return;
+            }
 
             YamlNode node;
             IDictionary<YamlNode, YamlNode> rootNodes = ((YamlMappingNode)yaml.Documents[0].RootNode).Children;
@@ -197,13 +205,12 @@ namespace CubeIsland.LyricsReloaded.Provider
 
             if (node is YamlMappingNode)
             {
-                string variableName;
                 foreach (KeyValuePair<YamlNode, YamlNode> preparationEntry in ((YamlMappingNode)node).Children)
                 {
                     node = preparationEntry.Key;
                     if (node is YamlScalarNode)
                     {
-                        variableName = ((YamlScalarNode)node).Value.ToLower();
+                        string variableName = ((YamlScalarNode)node).Value.ToLower();
 
                         if (variables.ContainsKey(variableName))
                         {
@@ -341,7 +348,7 @@ namespace CubeIsland.LyricsReloaded.Provider
                 if (this.providers.ContainsKey(provider.getName()))
                 {
                     this.logger.info("The provider {0} does already exist and will be replaced.", provider.getName());
-                    this.loaderFactories.Remove(provider.getName());
+                    this.providers.Remove(provider.getName());
                 }
                 this.providers.Add(provider.getName(), provider);
             }

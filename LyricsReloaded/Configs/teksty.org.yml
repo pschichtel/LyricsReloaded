@@ -12,7 +12,7 @@ variables:
 
 config:
     url: "http://teksty.org/{artist},{title},tekst-piosenki"
-    pattern: ["<div\s+class="songText"[^>]*>(?<lyrics>.*?)</div>", s]
+    pattern: ['<div\\s+class="songText"[^>]*>(?<lyrics>.*?)</div>', s]
     
 post-filters:
 - strip_html

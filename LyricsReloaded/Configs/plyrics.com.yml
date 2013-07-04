@@ -5,14 +5,14 @@ variables:
         type: artist
         filters:
         - lowercase
-        - [strip_nonascii, ""]
+        - strip_nonascii
     title:
         type: title
         filters: artist
 
 config:
     url: "http://www.plyrics.com/lyrics/{artist}/{title}.html"
-    pattern: ["<div id=\"lyrics-body\">(?<lyrics>.*?)</div>", s]
+    pattern: ['<div id="lyrics-body">(?<lyrics>.*?)</div>', s]
     
 post-filters:
 - strip_html

@@ -12,7 +12,7 @@ variables:
 
 config:
     url: "http://tekstovipjesama.com/{artist}/{title}"
-    pattern: ["<div\s+class="entry"[^>]*>\s*<div[^>]*>\s*(?<lyrics>.*?)</div>", s]
+    pattern: ['<div\\s+class="entry"[^>]*>\\s*<div[^>]*>\\s*(?<lyrics>.*?)</div>', s]
     
 post-filters:
 - p2break

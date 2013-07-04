@@ -12,7 +12,7 @@ variables:
 
 config:
     url: "http://www.songlyrics.com/{artist}/{title}-lyrics/"
-    pattern: ["<div id="songLyricsDiv-outer">(?<lyrics>.*?)</div>", s]
+    pattern: ['<div id="songLyricsDiv-outer">(?<lyrics>.*?)</div>', s]
     
 post-filters:
 - strip_html

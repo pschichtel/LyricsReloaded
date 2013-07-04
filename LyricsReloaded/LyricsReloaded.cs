@@ -125,6 +125,7 @@ namespace CubeIsland.LyricsReloaded
                 object value = propInfo.GetValue(null, null);
                 if (value is String)
                 {
+                    this.logger.debug("Loading config from field {0}", propInfo.Name);
                     this.providerManager.loadProvider(value as String);
                 }
             }

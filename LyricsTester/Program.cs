@@ -11,61 +11,92 @@ namespace LyricsTester
 {
     class Program
     {
-        static void Main(string[] args)
+        static int Main(string[] args)
         {
-            LyricsReloaded lyricsReloaded = new LyricsReloaded(".");
+            String providerName = null;
+            String artist = null;
+            String title = null;
+            String album = null;
+            Boolean preferSync = false;
 
-            Console.WriteLine("The providers:");
-            foreach (String provider in lyricsReloaded.getProviderManager().getProviders().Keys)
+            int argc = args.Length;
+
+            if (argc > 0)
             {
-                Console.WriteLine(" - " + provider);
+                providerName = args[0];
+            }
+            if (argc > 1)
+            {
+                artist = args[1];
+            }
+            if (argc > 2)
+            {
+                title = args[2];
+            }
+            if (argc > 3)
+            {
+                album = args[3];
+            }
+            if (argc > 4)
+            {
+                preferSync = true;
             }
 
-            Console.Write("Enter artist: ");
-            string artist = def(Console.ReadLine(), "Paramore");
+            LyricsReloaded lyricsReloaded = new LyricsReloaded(".");
 
-            Console.Write("Enter title: ");
-            string title = def(Console.ReadLine(), "Misery Business");
+            if (String.IsNullOrWhiteSpace(providerName))
+            {
+                Console.WriteLine("The providers:");
+                foreach (String name in lyricsReloaded.getProviderManager().getProviders().Keys)
+                {
+                    Console.WriteLine(" - " + name);
+                }
+                Console.Write("Enter the provider: ");
+                providerName = Console.ReadLine();
+            }
+            if (String.IsNullOrWhiteSpace(artist))
+            {
+                Console.Write("Enter the artist: ");
+                artist = Console.ReadLine();
+            }
+            if (String.IsNullOrWhiteSpace(title))
+            {
+                Console.Write("Enter the title: ");
+                title = Console.ReadLine();
+            }
 
-            //Console.Write("Enter album: ");
-            //string album = def(Console.ReadLine(), "Roit!");
+
+            Provider provider = lyricsReloaded.getProviderManager().getProvider(providerName);
+            if (provider == null)
+            {
+                Console.Error.WriteLine("Provider {0} not found!", providerName);
+                return 1;
+            }
 
             String lyrics;
-            foreach (String providerName in lyricsReloaded.getProviderManager().getProviders().Keys)
+            Console.Write("Provider " + providerName + ": ");
+            try
             {
-                Console.Write("Provider " + providerName + ": ");
-                try
+                lyrics = provider.getLyrics(artist, title, album);
+                if (String.IsNullOrWhiteSpace(lyrics))
                 {
-                    Provider provider = lyricsReloaded.getProviderManager().getProvider(providerName);
-                    lyrics = provider.getLyrics(artist, title, "");
-                    if (String.IsNullOrWhiteSpace(lyrics))
-                    {
-                        Console.WriteLine("failed (not found)");
-                    }
-                    else
-                    {
-                        Console.WriteLine("success\n\n" + lyrics);
-                        break;
-                    }
+                    Console.WriteLine("failed (not found)");
                 }
-                catch (Exception e)
+                else
                 {
-                    Console.WriteLine("failed (internal error)");
-                    Console.WriteLine(e.ToString());
+                    Console.WriteLine("success\n\n" + lyrics);
                 }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("failed (internal error)");
+                Console.WriteLine(e.ToString());
             }
 
             Console.WriteLine("\nPress any key to exit...");
             Console.ReadKey();
-        }
 
-        private static string def(String str, string value)
-        {
-            if (string.IsNullOrWhiteSpace(str))
-            {
-                return value;
-            }
-            return str;
+            return 0;
         }
     }
 }

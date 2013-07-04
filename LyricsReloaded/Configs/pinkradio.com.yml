@@ -12,7 +12,7 @@ variables:
 
 config:
     url: "http://pinkradio.com/naslov/{title}"
-    pattern: ["<span class="Stil9">\s*(?<lyrics>.*?)</span>", s]
+    pattern: ['<span class="Stil9">\\s*(?<lyrics>.*?)</span>', s]
     
 post-filters:
 - strip_html
