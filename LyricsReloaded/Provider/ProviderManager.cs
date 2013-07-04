@@ -35,7 +35,6 @@ namespace CubeIsland.LyricsReloaded.Provider
         private static class Node
         {
             public static readonly YamlScalarNode NAME = new YamlScalarNode("name");
-            public static readonly YamlScalarNode ID = new YamlScalarNode("id");
             public static readonly YamlScalarNode LOADER = new YamlScalarNode("loader");
             public static readonly YamlScalarNode POST_FILTERS = new YamlScalarNode("post-filters");
             public static readonly YamlScalarNode VALIDATIONS = new YamlScalarNode("validations");
@@ -210,13 +209,6 @@ namespace CubeIsland.LyricsReloaded.Provider
             }
             string name = ((YamlScalarNode)node).Value.Trim();
 
-            node = (rootNodes.ContainsKey(Node.ID) ? rootNodes[Node.ID] : null);
-            if (!(node is YamlScalarNode))
-            {
-                throw new InvalidConfigurationException("No provider ID given!");
-            }
-            string id = NonAsciiStripper.strip(((YamlScalarNode)node).Value.Trim().ToLower());
-
             node = (rootNodes.ContainsKey(Node.VARIABLES) ? rootNodes[Node.VARIABLES] : null);
             Dictionary<string, Variable> variables = new Dictionary<string, Variable>();
 
@@ -350,17 +342,17 @@ namespace CubeIsland.LyricsReloaded.Provider
 
             LyricsLoader loader = loaderFactory.newLoader(name, configNode);
 
-            Provider provider = new Provider(name, id, variables, postFilters, validations, loader);
+            Provider provider = new Provider(name, variables, postFilters, validations, loader);
             this.logger.info("Provider loaded: " + provider.getName());
 
             lock (this.providers)
             {
-                if (this.providers.ContainsKey(provider.getId()))
+                if (this.providers.ContainsKey(provider.getName()))
                 {
                     this.logger.info("The provider {0} does already exist and will be replaced.", provider.getName());
-                    this.providers.Remove(provider.getId());
+                    this.providers.Remove(provider.getName());
                 }
-                this.providers.Add(provider.getId(), provider);
+                this.providers.Add(provider.getName(), provider);
             }
         }
 

@@ -1,5 +1,4 @@
 name: Rap Genius
-id: rapgenius
 
 variables:
     artist:

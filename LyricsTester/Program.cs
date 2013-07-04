@@ -50,7 +50,7 @@ namespace LyricsTester
                 Console.WriteLine("The providers:");
                 foreach (Provider p in lyricsReloaded.getProviderManager().getProviders().Values)
                 {
-                    Console.WriteLine(" - {0} [{1}]", p.getName(), p.getId());
+                    Console.WriteLine(" - {0}", p.getName());
                 }
                 Console.Write("Enter the provider: ");
                 providerName = Console.ReadLine();

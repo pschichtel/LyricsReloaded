@@ -30,7 +30,6 @@ namespace CubeIsland.LyricsReloaded.Provider
     public class Provider
     {
         private readonly string name;
-        private readonly string id;
         private readonly Dictionary<string, Variable> variables = new Dictionary<string, Variable>();
         private readonly FilterCollection postFilters;
         private readonly ValidationCollection validations;
@@ -39,10 +38,9 @@ namespace CubeIsland.LyricsReloaded.Provider
         private volatile int counter;
         private readonly int maxCount;
 
-        public Provider(string name, string id, Dictionary<string, Variable> variables, FilterCollection postFilters, ValidationCollection validations, LyricsLoader loader, int maxCount = -1)
+        public Provider(string name, Dictionary<string, Variable> variables, FilterCollection postFilters, ValidationCollection validations, LyricsLoader loader, int maxCount = -1)
         {
             this.name = name;
-            this.id = id;
             this.variables = variables;
             this.postFilters = postFilters;
             this.validations = validations;
@@ -55,11 +53,6 @@ namespace CubeIsland.LyricsReloaded.Provider
         public string getName()
         {
             return this.name;
-        }
-
-        public string getId()
-        {
-            return this.id;
         }
 
         public object getVariables()

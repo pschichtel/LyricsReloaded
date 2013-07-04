@@ -1,5 +1,4 @@
 name: Song Lyrics
-id: songlyrics
 
 variables:
     artist:

@@ -47,8 +47,8 @@
   <ItemGroup>
     <Compile Include="LyricsReloaded.cs" />
     <Compile Include="Pattern.cs" />
-    <Compile Include="Filter\Filter.cs" />
-    <Compile Include="Filter\FilterCollection.cs" />
+    <Compile Include="Filters\Filter.cs" />
+    <Compile Include="Filters\FilterCollection.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Provider\Provider.cs" />
     <Compile Include="Provider\ProviderManager.cs" />

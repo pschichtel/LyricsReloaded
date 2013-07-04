@@ -1,5 +1,4 @@
-name: 'LyricWiki Gracenote'
-id: "lyricwiki-gn"
+name: LyricWiki Gracenote
 
 variables:
 	artist:
