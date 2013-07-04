@@ -19,7 +19,6 @@
 */
 
 using System;
-using System.Collections.Generic;
 using System.Text;
 using System.IO;
 
@@ -32,33 +31,33 @@ namespace CubeIsland.LyricsReloaded
 
         public Logger(string path)
         {
-            this.fileInfo = new FileInfo(path);
-            this.writer = null;
+            fileInfo = new FileInfo(path);
+            writer = null;
         }
 
         public FileInfo getFileInfo()
         {
-            return this.fileInfo;
+            return fileInfo;
         }
 
         private void write(string type, string message, object[] args)
         {
-            if (this.writer == null)
+            if (writer == null)
             {
-                this.writer = new StreamWriter(this.fileInfo.FullName, true, Encoding.UTF8);
-                this.writer.AutoFlush = false;
+                writer = new StreamWriter(fileInfo.FullName, true, Encoding.UTF8);
+                writer.AutoFlush = false;
             }
-            this.writer.WriteLine(DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss") + " [" + type.ToUpper() + "] " + string.Format(message, args));
-            this.writer.Flush();
+            writer.WriteLine(DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss") + " [" + type.ToUpper() + "] " + string.Format(message, args));
+            writer.Flush();
         }
 
         public void close()
         {
-            if (this.writer != null)
+            if (writer != null)
             {
                 try
                 {
-                    this.writer.Close();
+                    writer.Close();
                 }
                 catch (ObjectDisposedException)
                 {}
@@ -67,22 +66,22 @@ namespace CubeIsland.LyricsReloaded
 
         public void debug(string message, params object[] args)
         {
-            this.write("debug", message, args);
+            write("debug", message, args);
         }
 
         public void info(string message, params object[] args)
         {
-            this.write("info", message, args);
+            write("info", message, args);
         }
 
         public void warn(string message, params object[] args)
         {
-            this.write("warn", message, args);
+            write("warn", message, args);
         }
 
         public void error(string message, params object[] args)
         {
-            this.write("error", message, args);
+            write("error", message, args);
         }
     }
 }

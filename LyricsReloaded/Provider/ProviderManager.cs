@@ -48,7 +48,6 @@ namespace CubeIsland.LyricsReloaded.Provider
             }
         }
 
-        private readonly LyricsReloaded lyricsReloaded;
         private readonly Logger logger;
         private readonly Dictionary<string, Provider> providers;
         private readonly Dictionary<string, LyricsLoaderFactory> loaderFactories;
@@ -63,15 +62,14 @@ namespace CubeIsland.LyricsReloaded.Provider
 
         public ProviderManager(LyricsReloaded lyricsReloaded)
         {
-            this.lyricsReloaded = lyricsReloaded;
-            this.logger = lyricsReloaded.getLogger();
-            this.providers = new Dictionary<string, Provider>();
-            this.loaderFactories = new Dictionary<string, LyricsLoaderFactory>();
-            this.filters = new Dictionary<string, Filter>();
-            this.validators = new Dictionary<string, Validator>();
+            logger = lyricsReloaded.getLogger();
+            providers = new Dictionary<string, Provider>();
+            loaderFactories = new Dictionary<string, LyricsLoaderFactory>();
+            filters = new Dictionary<string, Filter>();
+            validators = new Dictionary<string, Validator>();
 
-            this.loadFilters();
-            this.loadValidators();
+            loadFilters();
+            loadValidators();
         }
 
         private void loadFilters()
@@ -81,13 +79,8 @@ namespace CubeIsland.LyricsReloaded.Provider
             {
                 if (filterType.IsAssignableFrom(type) && !type.IsAbstract && !type.IsInterface)
                 {
-                    try
-                    {
-                        Filter filter = (Filter)Activator.CreateInstance(type);
-                        this.filters.Add(filter.getName(), filter);
-                    }
-                    catch (Exception)
-                    {}
+                    Filter filter = (Filter)Activator.CreateInstance(type);
+                    filters.Add(filter.getName(), filter);
                 }
             }
         }
@@ -99,13 +92,8 @@ namespace CubeIsland.LyricsReloaded.Provider
             {
                 if (validatorType.IsAssignableFrom(type) && !type.IsAbstract && !type.IsInterface)
                 {
-                    try
-                    {
-                        Validator validator = (Validator)Activator.CreateInstance(type);
-                        this.validators.Add(validator.getName(), validator);
-                    }
-                    catch (Exception)
-                    {}
+                    Validator validator = (Validator)Activator.CreateInstance(type);
+                    validators.Add(validator.getName(), validator);
                 }
             }
         }
@@ -114,7 +102,7 @@ namespace CubeIsland.LyricsReloaded.Provider
         {
             if (factory != null)
             {
-                this.loaderFactories.Add(factory.getName().ToLower(), factory);
+                loaderFactories.Add(factory.getName().ToLower(), factory);
             }
         }
 
@@ -134,36 +122,35 @@ namespace CubeIsland.LyricsReloaded.Provider
             {
                 return null;
             }
-            providerName = providerName.ToLower();
-            if (this.providers.ContainsKey(providerName))
+            if (providers.ContainsKey(providerName))
             {
-                return this.providers[providerName];
+                return providers[providerName];
             }
             return null;
         }
 
         public Dictionary<string, Provider> getProviders()
         {
-            return new Dictionary<string, Provider>(this.providers);
+            return new Dictionary<string, Provider>(providers);
         }
 
         public void loadProvider(FileInfo fileInfo)
         {
             using (FileStream stream = fileInfo.OpenRead())
             {
-                this.logger.debug("Loading config from file: {0}", fileInfo.FullName);
-                this.loadProvider(new StreamReader(stream));
+                logger.debug("Loading config from file: {0}", fileInfo.FullName);
+                loadProvider(new StreamReader(stream));
             }
         }
 
         public void loadProvider(String resourceText)
         {
-            this.loadProvider(new StringReader(resourceText));
+            loadProvider(new StringReader(resourceText));
         }
 
         public void loadProvider(byte[] resourceData)
         {
-            this.loadProvider(new StreamReader(new MemoryStream(resourceData), Encoding.UTF8));
+            loadProvider(new StreamReader(new MemoryStream(resourceData), Encoding.UTF8));
         }
 
         /// <summary>
@@ -196,11 +183,11 @@ namespace CubeIsland.LyricsReloaded.Provider
             {
                 loaderName = "static";
             }
-            if (!this.loaderFactories.ContainsKey(loaderName))
+            if (!loaderFactories.ContainsKey(loaderName))
             {
                 throw new InvalidConfigurationException("Unknown provider type " + loaderName + ", skipping");
             }
-            LyricsLoaderFactory loaderFactory = this.loaderFactories[loaderName];
+            LyricsLoaderFactory loaderFactory = loaderFactories[loaderName];
 
             node = (rootNodes.ContainsKey(Node.NAME) ? rootNodes[Node.NAME] : null);
             if (!(node is YamlScalarNode))
@@ -282,7 +269,7 @@ namespace CubeIsland.LyricsReloaded.Provider
                             // a list of filters
                             else if (node is YamlSequenceNode)
                             {
-                                filterCollection = FilterCollection.parseList((YamlSequenceNode)node, this.filters);
+                                filterCollection = FilterCollection.parseList((YamlSequenceNode)node, filters);
                             }
                             else
                             {
@@ -311,7 +298,7 @@ namespace CubeIsland.LyricsReloaded.Provider
             FilterCollection postFilters;
             if (node is YamlSequenceNode)
             {
-                postFilters = FilterCollection.parseList((YamlSequenceNode)node, this.filters);
+                postFilters = FilterCollection.parseList((YamlSequenceNode)node, filters);
             }
             else
             {
@@ -322,7 +309,7 @@ namespace CubeIsland.LyricsReloaded.Provider
             ValidationCollection validations;
             if (node is YamlSequenceNode)
             {
-                validations = ValidationCollection.parseList((YamlSequenceNode)node, this.validators);
+                validations = ValidationCollection.parseList((YamlSequenceNode)node, validators);
             }
             else
             {
@@ -340,27 +327,27 @@ namespace CubeIsland.LyricsReloaded.Provider
                 configNode = new YamlMappingNode();
             }
 
-            LyricsLoader loader = loaderFactory.newLoader(name, configNode);
+            LyricsLoader loader = loaderFactory.newLoader(configNode);
 
             Provider provider = new Provider(name, variables, postFilters, validations, loader);
-            this.logger.info("Provider loaded: " + provider.getName());
+            logger.info("Provider loaded: " + provider.getName());
 
-            lock (this.providers)
+            lock (providers)
             {
-                if (this.providers.ContainsKey(provider.getName()))
+                if (providers.ContainsKey(provider.getName()))
                 {
-                    this.logger.info("The provider {0} does already exist and will be replaced.", provider.getName());
-                    this.providers.Remove(provider.getName());
+                    logger.info("The provider {0} does already exist and will be replaced.", provider.getName());
+                    providers.Remove(provider.getName());
                 }
-                this.providers.Add(provider.getName(), provider);
+                providers.Add(provider.getName(), provider);
             }
         }
 
         public void clean()
         {
-            this.providers.Clear();
-            this.loaderFactories.Clear();
-            this.filters.Clear();
+            providers.Clear();
+            loaderFactories.Clear();
+            filters.Clear();
         }
     }
 

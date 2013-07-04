@@ -19,7 +19,6 @@
 */
 
 using CubeIsland.LyricsReloaded.Provider;
-using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using YamlDotNet.RepresentationModel;
@@ -38,27 +37,27 @@ namespace CubeIsland.LyricsReloaded.Filters
 
         public FilterCollection()
         {
-            this.filters = new LinkedList<KeyValuePair<Filter,string[]>>();
+            filters = new LinkedList<KeyValuePair<Filter,string[]>>();
         }
 
         public void Add(KeyValuePair<Filter, string[]> filter)
         {
-            this.filters.AddLast(filter);
+            filters.AddLast(filter);
         }
 
         public void Add(Filter filter, string[] args)
         {
-            this.Add(new KeyValuePair<Filter, string[]>(filter, args));
+            Add(new KeyValuePair<Filter, string[]>(filter, args));
         }
 
         public int getSize()
         {
-            return this.filters.Count;
+            return filters.Count;
         }
 
         public string applyFilters(string content, Encoding encoding)
         {
-            foreach (KeyValuePair<Filter, string[]> entry in this.filters)
+            foreach (KeyValuePair<Filter, string[]> entry in filters)
             {
                 content = entry.Key.filter(content, entry.Value, encoding);
             }

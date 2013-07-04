@@ -6,28 +6,21 @@ namespace CubeIsland.LyricsReloaded.Provider.Loader
     public class StaticLoader : LyricsLoader
     {
         private readonly LyricsReloaded lyricsReloaded;
-        private readonly string name;
         private readonly string urlTemplate;
         private readonly Pattern pattern;
         private readonly WebClient client;
 
-        public StaticLoader(LyricsReloaded lyricsReloaded, WebClient client, string name, string urlTemplate, Pattern pattern)
+        public StaticLoader(LyricsReloaded lyricsReloaded, WebClient client, string urlTemplate, Pattern pattern)
         {
             this.lyricsReloaded = lyricsReloaded;
-            this.name = name;
             this.urlTemplate = urlTemplate;
             this.pattern = pattern;
             this.client = client;
         }
 
-        public string getName()
-        {
-            return this.name;
-        }
-
         private string constructUrl(Dictionary<string, string> variables)
         {
-            string url = this.urlTemplate;
+            string url = urlTemplate;
 
             foreach (KeyValuePair<string, string> entry in variables)
             {
@@ -39,12 +32,12 @@ namespace CubeIsland.LyricsReloaded.Provider.Loader
 
         public Lyrics getLyrics(Dictionary<string, string> variables)
         {
-            string url = this.constructUrl(variables);
+            string url = constructUrl(variables);
 
-            this.lyricsReloaded.getLogger().debug("The constructed URL: {0}", url);
+            lyricsReloaded.getLogger().debug("The constructed URL: {0}", url);
 
-            WebResponse response = this.client.get(url);
-            string lyrics = this.pattern.apply(response.getContent());
+            WebResponse response = client.get(url);
+            string lyrics = pattern.apply(response.getContent());
 
             return new Lyrics(lyrics, response.getEncoding());
         }
@@ -70,7 +63,7 @@ namespace CubeIsland.LyricsReloaded.Provider.Loader
         public StaticLoaderFactory(LyricsReloaded lyricsReloaded)
         {
             this.lyricsReloaded = lyricsReloaded;
-            this.webClient = new WebClient(lyricsReloaded, 20000);
+            webClient = new WebClient(lyricsReloaded, 20000);
         }
 
         public string getName()
@@ -78,7 +71,7 @@ namespace CubeIsland.LyricsReloaded.Provider.Loader
             return "static";
         }
 
-        public LyricsLoader newLoader(string name, YamlMappingNode configuration)
+        public LyricsLoader newLoader(YamlMappingNode configuration)
         {
             YamlNode node;
             IDictionary<YamlNode, YamlNode> configNodes = configuration.Children;
@@ -122,15 +115,15 @@ namespace CubeIsland.LyricsReloaded.Provider.Loader
             }
             else if (node is YamlMappingNode)
             {
-                YamlMappingNode patternConfig = (YamlMappingNode)node;
-                node = (configNodes.ContainsKey(Node.Pattern.REGEX) ? configNodes[Node.Pattern.REGEX] : null);
+                IDictionary<YamlNode, YamlNode> patternConfig = ((YamlMappingNode)node).Children;
+                node = (patternConfig.ContainsKey(Node.Pattern.REGEX) ? patternConfig[Node.Pattern.REGEX] : null);
                 if (!(node is YamlScalarNode))
                 {
                     throw new InvalidConfigurationException("Invalid regex value!");
                 }
                 regex = ((YamlScalarNode)node).Value;
 
-                node = (configNodes.ContainsKey(Node.Pattern.OPTIONS) ? configNodes[Node.Pattern.OPTIONS] : null);
+                node = (patternConfig.ContainsKey(Node.Pattern.OPTIONS) ? patternConfig[Node.Pattern.OPTIONS] : null);
                 if (node is YamlScalarNode)
                 {
                     regexOptions = ((YamlScalarNode)node).Value;
@@ -141,7 +134,7 @@ namespace CubeIsland.LyricsReloaded.Provider.Loader
                 throw new InvalidConfigurationException("No pattern specified!");
             }
 
-            return new StaticLoader(this.lyricsReloaded, this.webClient, name, url, new Pattern(regex, regexOptions));
+            return new StaticLoader(lyricsReloaded, webClient, url, new Pattern(regex, regexOptions));
         }
     }
 }

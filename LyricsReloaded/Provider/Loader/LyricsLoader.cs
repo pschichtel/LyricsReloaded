@@ -32,7 +32,7 @@ namespace CubeIsland.LyricsReloaded.Provider.Loader
     public interface LyricsLoaderFactory
     {
         string getName();
-        LyricsLoader newLoader(string name, YamlMappingNode configuration);
+        LyricsLoader newLoader(YamlMappingNode configuration);
     }
 
     public class Lyrics
@@ -48,12 +48,12 @@ namespace CubeIsland.LyricsReloaded.Provider.Loader
 
         public string getContent()
         {
-            return this.content;
+            return content;
         }
 
         public Encoding getEncoding()
         {
-            return this.encoding;
+            return encoding;
         }
     }
 }

@@ -38,62 +38,62 @@ namespace CubeIsland.LyricsReloaded
 
         public LyricsReloaded(string configurationPath)
         {
-            Assembly asm = Assembly.GetAssembly(this.GetType());
-            this.name = asm.GetName().Name;
-            this.pluginDirectory = Path.Combine(configurationPath, this.name);
-            Directory.CreateDirectory(this.pluginDirectory);
-            this.logger = new Logger(Path.Combine(this.pluginDirectory, this.name + ".log"));
+            Assembly asm = Assembly.GetAssembly(GetType());
+            name = asm.GetName().Name;
+            pluginDirectory = Path.Combine(configurationPath, name);
+            Directory.CreateDirectory(pluginDirectory);
+            logger = new Logger(Path.Combine(pluginDirectory, name + ".log"));
 
-            this.providerManager = new ProviderManager(this);
+            providerManager = new ProviderManager(this);
 
-            this.providerManager.registerLoaderFactory(new StaticLoaderFactory(this));
+            providerManager.registerLoaderFactory(new StaticLoaderFactory(this));
 
-            this.userAgent = "Firefox XY";
-            this.proxy = null;
+            userAgent = "Firefox XY";
+            proxy = null;
         }
 
         ~LyricsReloaded()
         {
-            this.logger.close();
+            logger.close();
         }
 
         public Logger getLogger()
         {
-            return this.logger;
+            return logger;
         }
 
         public ProviderManager getProviderManager()
         {
-            return this.providerManager;
+            return providerManager;
         }
 
-        public void setUserAgent(string userAgent)
+        public void setUserAgent(string newUserAgent)
         {
-            this.userAgent = userAgent;
+            userAgent = newUserAgent;
         }
 
         public string getUserAgent()
         {
-            return this.userAgent;
+            return userAgent;
         }
 
-        public void setProxy(WebProxy proxy)
+        public void setProxy(WebProxy newProxy)
         {
-            this.proxy = proxy;
+            proxy = newProxy;
         }
 
         public WebProxy getProxy()
         {
-            return this.proxy;
+            return proxy;
         }
 
         #region "internal helpers"
 
         public void loadConfigurations()
         {
-            this.loadDefaultConfiguration();
+            loadDefaultConfiguration();
 
-            DirectoryInfo di = new DirectoryInfo(Path.Combine(this.pluginDirectory, "providers"));
+            DirectoryInfo di = new DirectoryInfo(Path.Combine(pluginDirectory, "providers"));
             if (!di.Exists)
             {
                 try
@@ -102,7 +102,7 @@ namespace CubeIsland.LyricsReloaded
                 }
                 catch (IOException e)
                 {
-                    this.logger.warn("Failed to create the providers folder: {0}", e.Message);
+                    logger.warn("Failed to create the providers folder: {0}", e.Message);
                 }
             }
 
@@ -110,15 +110,15 @@ namespace CubeIsland.LyricsReloaded
             {
                 try
                 {
-                    this.providerManager.loadProvider(fi);
+                    providerManager.loadProvider(fi);
                 }
                 catch (InvalidConfigurationException e)
                 {
-                    this.logger.error("Failed to load a configuration:");
-                    this.logger.error(e.Message);
+                    logger.error("Failed to load a configuration:");
+                    logger.error(e.Message);
                     if (e.InnerException != null)
                     {
-                        this.logger.error(e.InnerException.ToString());
+                        logger.error(e.InnerException.ToString());
                     }
                 }
             }
@@ -135,8 +135,8 @@ namespace CubeIsland.LyricsReloaded
                 object value = propInfo.GetValue(null, null);
                 if (value is String)
                 {
-                    this.logger.debug("Loading config from field {0}", propInfo.Name);
-                    this.providerManager.loadProvider(value as String);
+                    logger.debug("Loading config from field {0}", propInfo.Name);
+                    providerManager.loadProvider(value as String);
                 }
             }
         }

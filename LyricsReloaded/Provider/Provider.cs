@@ -46,46 +46,46 @@ namespace CubeIsland.LyricsReloaded.Provider
             this.validations = validations;
             this.loader = loader;
 
-            this.counter = 0;
+            counter = 0;
             this.maxCount = maxCount;
         }
 
         public string getName()
         {
-            return this.name;
+            return name;
         }
 
         public object getVariables()
         {
-            return this.variables;
+            return variables;
         }
 
         public FilterCollection getPostFilters()
         {
-            return this.postFilters;
+            return postFilters;
         }
 
         public ValidationCollection getValidations()
         {
-            return this.validations;
+            return validations;
         }
 
         public LyricsLoader getLoader()
         {
-            return this.loader;
+            return loader;
         }
 
         public String getLyrics(String artist, String title, String album, bool preferSynced = false)
         {
-            if (this.counter == this.maxCount)
+            if (counter == maxCount)
             {
                 return null;
             }
 
-            Dictionary<string, string> variableValues = new Dictionary<string, string>(this.variables.Count);
+            Dictionary<string, string> variableValues = new Dictionary<string, string>(variables.Count);
 
             Variable var;
-            foreach (KeyValuePair<string, Variable> entry in this.variables)
+            foreach (KeyValuePair<string, Variable> entry in variables)
             {
                 var = entry.Value;
                 switch (var.getType())
@@ -102,17 +102,17 @@ namespace CubeIsland.LyricsReloaded.Provider
                 }
             }
 
-            this.counter++;
-            Lyrics lyrics = this.loader.getLyrics(variableValues);
+            counter++;
+            Lyrics lyrics = loader.getLyrics(variableValues);
 
             if (lyrics == null)
             {
                 return null;
             }
 
-            string filteredLyrics = this.postFilters.applyFilters(lyrics.getContent(), lyrics.getEncoding());
+            string filteredLyrics = postFilters.applyFilters(lyrics.getContent(), lyrics.getEncoding());
 
-            if (!this.validations.executeValidations(filteredLyrics))
+            if (!validations.executeValidations(filteredLyrics))
             {
                 return null;
             }

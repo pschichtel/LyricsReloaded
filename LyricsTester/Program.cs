@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using CubeIsland.LyricsReloaded;
 using CubeIsland.LyricsReloaded.Provider;
 
@@ -48,39 +49,51 @@ namespace LyricsTester
             if (String.IsNullOrWhiteSpace(providerName))
             {
                 Console.WriteLine("The providers:");
-                foreach (Provider p in lyricsReloaded.getProviderManager().getProviders().Values)
+                foreach (KeyValuePair<string, Provider> entry in lyricsReloaded.getProviderManager().getProviders())
                 {
-                    Console.WriteLine(" - {0}", p.getName());
+                    Console.WriteLine(" - {0}", entry.Key);
                 }
                 Console.Write("Enter the provider: ");
                 providerName = Console.ReadLine();
+                if (providerName != null)
+                {
+                    providerName = providerName.Trim();
+                }
             }
             if (String.IsNullOrWhiteSpace(artist))
             {
                 Console.Write("Enter the artist: ");
                 artist = Console.ReadLine();
+                if (artist != null)
+                {
+                    artist = artist.Trim();
+                }
             }
             if (String.IsNullOrWhiteSpace(title))
             {
                 Console.Write("Enter the title: ");
                 title = Console.ReadLine();
+                if (title != null)
+                {
+                    title = title.Trim();
+                }
             }
 
 
             Provider provider = lyricsReloaded.getProviderManager().getProvider(providerName);
             if (provider == null)
             {
-                Console.Error.WriteLine("Provider {0} not found!", providerName);
+                lyricsReloaded.getLogger().error("Provider {0} not found!", providerName);
                 return 1;
             }
 
-            Console.Write("Provider " + providerName + ": ");
+            Console.Write("Provider {0}: ", providerName);
             try
             {
                 String lyrics = provider.getLyrics(artist, title, album, preferSynced);
                 if (String.IsNullOrWhiteSpace(lyrics))
                 {
-                    Console.WriteLine("failed (not found)");
+                    lyricsReloaded.getLogger().error("failed (not found)");
                 }
                 else
                 {

@@ -37,67 +37,67 @@ namespace MusicBeePlugin
         public PluginInfo Initialise(IntPtr apiPtr)
         {
             //MessageBox.Show("Initialised(" + apiPtr + ")");
-            this.musicBee = new MusicBeeApiInterface();
-            this.musicBee.Initialise(apiPtr);
+            musicBee = new MusicBeeApiInterface();
+            musicBee.Initialise(apiPtr);
 
-            this.info.PluginInfoVersion = PluginInfoVersion;
-            this.info.Name = "Lyrics Reloaded!";
-            this.info.Description = "Lyrics loading done properly!";
-            this.info.Author = "Phillip Schichtel <Quick_Wango>";
-            this.info.TargetApplication = "MusicBee";
-            this.info.Type = PluginType.LyricsRetrieval;
-            this.info.VersionMajor = 1;
-            this.info.VersionMinor = 0;
-            this.info.Revision = 1;
-            this.info.MinInterfaceVersion = 20;
-            this.info.MinApiRevision = 25;
-            this.info.ReceiveNotifications = ReceiveNotificationFlags.StartupOnly;
-            this.info.ConfigurationPanelHeight = 0;
+            info.PluginInfoVersion = PluginInfoVersion;
+            info.Name = "Lyrics Reloaded!";
+            info.Description = "Lyrics loading done properly!";
+            info.Author = "Phillip Schichtel <Quick_Wango>";
+            info.TargetApplication = "MusicBee";
+            info.Type = PluginType.LyricsRetrieval;
+            info.VersionMajor = 1;
+            info.VersionMinor = 0;
+            info.Revision = 1;
+            info.MinInterfaceVersion = 20;
+            info.MinApiRevision = 25;
+            info.ReceiveNotifications = ReceiveNotificationFlags.StartupOnly;
+            info.ConfigurationPanelHeight = 0;
 
             try
             {
-                this.lyricsReloaded = new LyricsReloaded(this.musicBee.Setting_GetPersistentStoragePath());
+                lyricsReloaded = new LyricsReloaded(musicBee.Setting_GetPersistentStoragePath());
             }
             catch (Exception e)
             {
                 MessageBox.Show("An error occurred during plugin startup: " + e.Message);
-                throw e;
+                throw;
             }
 
             try
             {
-                this.lyricsReloaded.loadConfigurations();
+                lyricsReloaded.loadConfigurations();
             }
             catch (Exception e)
             {
                 MessageBox.Show("An error occurred during plugin startup, send this file to the developer:\n\n" +
-                                this.lyricsReloaded.getLogger().getFileInfo().FullName);
-                this.lyricsReloaded.getLogger().error(e.Message);
-                throw e;
+                                lyricsReloaded.getLogger().getFileInfo().FullName);
+                lyricsReloaded.getLogger().error(e.Message);
+                throw;
             }
 
-            return this.info;
+            return info;
         }
 
         public void ReceiveNotification(String source, NotificationType type)
         {
             //MessageBox.Show("ReceiveNotification(" + source + ", " + type + ")");
-            this.lyricsReloaded.getLogger().debug("Received a notification of type {0}", type);
+            lyricsReloaded.getLogger().debug("Received a notification of type {0}", type);
             switch (type)
             {
                 case NotificationType.PluginStartup:
-                    String proxySetting = this.musicBee.Setting_GetWebProxy();
+                    String proxySetting = musicBee.Setting_GetWebProxy();
                     if (!string.IsNullOrEmpty(proxySetting))
                     {
-                        this.lyricsReloaded.getLogger().debug("Proxy setting found");
+                        lyricsReloaded.getLogger().debug("Proxy setting found");
                         string[] raw = proxySetting.Split(Convert.ToChar(0));
                         WebProxy proxy = new WebProxy(raw[0]);
                         if (raw.Length >= 3)
                         {
-                            this.lyricsReloaded.getLogger().debug("Proxy credentials found");
+                            lyricsReloaded.getLogger().debug("Proxy credentials found");
                             proxy.Credentials = new NetworkCredential(raw[1], raw[2]);
                         }
-                        this.lyricsReloaded.setProxy(proxy);
+                        lyricsReloaded.setProxy(proxy);
                     }
 
                     break;
@@ -107,14 +107,14 @@ namespace MusicBeePlugin
         public void Close(PluginCloseReason reason)
         {
             //MessageBox.Show("Close(" + reason + ")");
-            this.lyricsReloaded.getLogger().info("Plugin disabled");
-            this.lyricsReloaded.getProviderManager().clean();
-            this.lyricsReloaded = null;
+            lyricsReloaded.getLogger().info("Plugin disabled");
+            lyricsReloaded.getProviderManager().clean();
+            lyricsReloaded = null;
         }
 
         public String[] GetProviders()
         {
-            Dictionary<string, Provider> providers = this.lyricsReloaded.getProviderManager().getProviders();
+            Dictionary<string, Provider> providers = lyricsReloaded.getProviderManager().getProviders();
             string[] providerNames = new string[providers.Count];
             providers.Keys.CopyTo(providerNames, 0);
             return providerNames;
@@ -122,11 +122,11 @@ namespace MusicBeePlugin
 
         public String RetrieveLyrics(String source, String artist, String title, String album, bool preferSynced, String providerName)
         {
-            this.lyricsReloaded.getLogger().debug("Lyrics request: {0} - {1} - {2} - {3} - {4} - {5}", source, artist, title, album, (preferSynced ? "synced" : "unsynced"), providerName);
-            Provider provider = this.lyricsReloaded.getProviderManager().getProvider(providerName);
+            lyricsReloaded.getLogger().debug("Lyrics request: {0} - {1} - {2} - {3} - {4} - {5}", source, artist, title, album, (preferSynced ? "synced" : "unsynced"), providerName);
+            Provider provider = lyricsReloaded.getProviderManager().getProvider(providerName);
             if (provider == null)
             {
-                this.lyricsReloaded.getLogger().warn("The provider {0} was not found!", providerName);
+                lyricsReloaded.getLogger().warn("The provider {0} was not found!", providerName);
                 return null;
             }
 
@@ -134,11 +134,11 @@ namespace MusicBeePlugin
 
             if (String.IsNullOrWhiteSpace(lyrics))
             {
-                this.lyricsReloaded.getLogger().debug("no lyrics found");
+                lyricsReloaded.getLogger().debug("no lyrics found");
                 return null;
             }
 
-            this.lyricsReloaded.getLogger().debug("lyrics found");
+            lyricsReloaded.getLogger().debug("lyrics found");
 
             return lyrics;
         }

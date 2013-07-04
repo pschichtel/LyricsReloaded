@@ -45,26 +45,26 @@ namespace CubeIsland.LyricsReloaded.Provider
 
         public string getName()
         {
-            return this.name;
+            return name;
         }
 
         public Type getType()
         {
-            return this.type;
+            return type;
         }
 
         public FilterCollection getFilters()
         {
-            return this.filters;
+            return filters;
         }
 
         public string process(string input, Encoding encoding)
         {
-            if (this.filters == null)
+            if (filters == null)
             {
                 return input;
             }
-            return this.filters.applyFilters(input, encoding);
+            return filters.applyFilters(input, encoding);
         }
 
         public enum Type

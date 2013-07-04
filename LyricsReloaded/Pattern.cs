@@ -35,18 +35,15 @@ namespace CubeIsland.LyricsReloaded
 
         public string apply(string content)
         {
-            Match match = this.regex.Match(content);
+            Match match = regex.Match(content);
             if (match.Success)
             {
                 return match.Groups["lyrics"].ToString();
             }
-            else
-            {
-                throw new Exception("The pattern didn't match: " + this.regex.ToString());
-            }
+            throw new Exception("The pattern didn't match: " + regex);
         }
 
-        private static readonly Dictionary<char, RegexOptions> regexOptionMap = new Dictionary<char, RegexOptions> {
+        private static readonly Dictionary<char, RegexOptions> REGEX_OPTION_MAP = new Dictionary<char, RegexOptions> {
             {'i', RegexOptions.IgnoreCase},
             {'s', RegexOptions.Singleline},
             {'m', RegexOptions.Multiline}
@@ -58,9 +55,9 @@ namespace CubeIsland.LyricsReloaded
 
             foreach (char c in optionString)
             {
-                if (regexOptionMap.ContainsKey(c))
+                if (REGEX_OPTION_MAP.ContainsKey(c))
                 {
-                    options |= regexOptionMap[c];
+                    options |= REGEX_OPTION_MAP[c];
                 }
             }
 

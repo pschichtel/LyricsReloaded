@@ -77,7 +77,7 @@ namespace CubeIsland.LyricsReloaded.Filters
         }
     }
 
-    public class UTF8Encoder : Filter
+    public class Utf8Encoder : Filter
     {
         private static readonly Encoding UTF8 = Encoding.UTF8;
 
@@ -285,18 +285,18 @@ namespace CubeIsland.LyricsReloaded.Filters
             Regex regex;
             try
             {
-                lock (this.lockObject)
+                lock (lockObject)
                 {
-                    regex = this.regexCache[cacheKey(pattern, optionString)];
+                    regex = regexCache[cacheKey(pattern, optionString)];
                 }
             }
             catch
             {
                 RegexOptions options = RegexOptions.Compiled | Pattern.optionStringToRegexOptions(optionString);
                 regex = new Regex(pattern, options);
-                lock (this.lockObject)
+                lock (lockObject)
                 {
-                    this.regexCache.Add(cacheKey(pattern, optionString), regex);
+                    regexCache.Add(cacheKey(pattern, optionString), regex);
                 }
             }
 
