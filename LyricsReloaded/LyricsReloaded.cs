@@ -50,8 +50,6 @@ namespace CubeIsland.LyricsReloaded
 
             this.userAgent = "Firefox XY";
             this.proxy = null;
-
-            this.loadConfigurations();
         }
 
         ~LyricsReloaded()
@@ -110,7 +108,19 @@ namespace CubeIsland.LyricsReloaded
 
             foreach (FileInfo fi in di.GetFiles("*.yml", SearchOption.TopDirectoryOnly))
             {
-                this.providerManager.loadProvider(fi);
+                try
+                {
+                    this.providerManager.loadProvider(fi);
+                }
+                catch (InvalidConfigurationException e)
+                {
+                    this.logger.error("Failed to load a configuration:");
+                    this.logger.error(e.Message);
+                    if (e.InnerException != null)
+                    {
+                        this.logger.error(e.InnerException.ToString());
+                    }
+                }
             }
         }
 

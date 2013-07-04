@@ -325,8 +325,11 @@ namespace CubeIsland.LyricsReloaded.Filters
             {
                 replacement = args[0];
             }
-            bool duplicate = args.Length > 1;
+            return strip(content, replacement, args.Length > 1);
+        }
 
+        public static string strip(string content, string replacement = "", bool duplicate = false)
+        {
             StringBuilder newString = new StringBuilder();
 
             char c;

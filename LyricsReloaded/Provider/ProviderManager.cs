@@ -35,6 +35,7 @@ namespace CubeIsland.LyricsReloaded.Provider
         private static class Node
         {
             public static readonly YamlScalarNode NAME = new YamlScalarNode("name");
+            public static readonly YamlScalarNode ID = new YamlScalarNode("id");
             public static readonly YamlScalarNode LOADER = new YamlScalarNode("loader");
             public static readonly YamlScalarNode POST_FILTERS = new YamlScalarNode("post-filters");
             public static readonly YamlScalarNode VALIDATIONS = new YamlScalarNode("validations");
@@ -130,6 +131,10 @@ namespace CubeIsland.LyricsReloaded.Provider
 
         public Provider getProvider(string providerName)
         {
+            if (providerName == null)
+            {
+                return null;
+            }
             providerName = providerName.ToLower();
             if (this.providers.ContainsKey(providerName))
             {
@@ -147,6 +152,7 @@ namespace CubeIsland.LyricsReloaded.Provider
         {
             using (FileStream stream = fileInfo.OpenRead())
             {
+                this.logger.debug("Loading config from file: {0}", fileInfo.FullName);
                 this.loadProvider(new StreamReader(stream));
             }
         }
@@ -161,6 +167,11 @@ namespace CubeIsland.LyricsReloaded.Provider
             this.loadProvider(new StreamReader(new MemoryStream(resourceData), Encoding.UTF8));
         }
 
+        /// <summary>
+        /// Loads a configuration from any TextReader
+        /// </summary>
+        /// <param name="configReader">the reader</param>
+        /// <exception cref="InvalidConfigurationException">if an error occurs during configuration loading</exception>
         public void loadProvider(TextReader configReader)
         {
             YamlStream yaml = new YamlStream();
@@ -170,8 +181,7 @@ namespace CubeIsland.LyricsReloaded.Provider
             }
             catch (Exception e)
             {
-                this.logger.error("Invalid configuration: {0}", e.Message);
-                return;
+                throw new InvalidConfigurationException(e.Message, e);
             }
 
             YamlNode node;
@@ -181,7 +191,7 @@ namespace CubeIsland.LyricsReloaded.Provider
             node = (rootNodes.ContainsKey(Node.LOADER) ? rootNodes[Node.LOADER] : null);
             if (node is YamlScalarNode)
             {
-                loaderName = ((YamlScalarNode)node).Value.ToLower();
+                loaderName = ((YamlScalarNode)node).Value.Trim().ToLower();
             }
             else
             {
@@ -189,16 +199,23 @@ namespace CubeIsland.LyricsReloaded.Provider
             }
             if (!this.loaderFactories.ContainsKey(loaderName))
             {
-                this.logger.warn("Unknown provider type {0}, skipping", loaderName);
+                throw new InvalidConfigurationException("Unknown provider type " + loaderName + ", skipping");
             }
-            LyricsLoaderFactory factory = this.loaderFactories[loaderName];
+            LyricsLoaderFactory loaderFactory = this.loaderFactories[loaderName];
 
             node = (rootNodes.ContainsKey(Node.NAME) ? rootNodes[Node.NAME] : null);
             if (!(node is YamlScalarNode))
             {
-                throw new InvalidConfigurationException("Invalid configuration");
+                throw new InvalidConfigurationException("No provider name given!");
             }
-            string name = ((YamlScalarNode)node).Value.ToLower();
+            string name = ((YamlScalarNode)node).Value.Trim();
+
+            node = (rootNodes.ContainsKey(Node.ID) ? rootNodes[Node.ID] : null);
+            if (!(node is YamlScalarNode))
+            {
+                throw new InvalidConfigurationException("No provider ID given!");
+            }
+            string id = NonAsciiStripper.strip(((YamlScalarNode)node).Value.Trim().ToLower());
 
             node = (rootNodes.ContainsKey(Node.VARIABLES) ? rootNodes[Node.VARIABLES] : null);
             Dictionary<string, Variable> variables = new Dictionary<string, Variable>();
@@ -214,8 +231,7 @@ namespace CubeIsland.LyricsReloaded.Provider
 
                         if (variables.ContainsKey(variableName))
                         {
-                            this.logger.error("{0}: Variable already defined!", variableName);
-                            return;
+                            throw InvalidConfigurationException.fromFormat("{0}: Variable already defined!", variableName);
                         }
 
                         node = preparationEntry.Value;
@@ -230,8 +246,7 @@ namespace CubeIsland.LyricsReloaded.Provider
                             }
                             catch
                             {
-                                this.logger.error("{0}: Unknown variable type {1}!", variableName, typeString);
-                                return;
+                                throw InvalidConfigurationException.fromFormat("{0}: Unknown variable type {1}!", variableName, typeString);
                             }
                         }
                         // value with filters expected
@@ -242,8 +257,7 @@ namespace CubeIsland.LyricsReloaded.Provider
                             node = variableConfig.Children[Node.Variables.TYPE];
                             if (!(node is YamlScalarNode))
                             {
-                                this.logger.error("{0}: Invalid variable type!", variableName);
-                                return;
+                                throw InvalidConfigurationException.fromFormat("{0}: Invalid variable type!", variableName);
                             }
 
                             Variable.Type type;
@@ -254,11 +268,10 @@ namespace CubeIsland.LyricsReloaded.Provider
                             }
                             catch
                             {
-                                this.logger.error("{0}: Unknown variable type {1}!", variableName, typeString);
-                                return;
+                                throw InvalidConfigurationException.fromFormat("{0}: Unknown variable type {1}!", variableName, typeString);
                             }
 
-                            FilterCollection filterCollection = null;
+                            FilterCollection filterCollection;
 
                             node = (variableConfig.Children.ContainsKey(Node.Variables.FILTERS) ? variableConfig.Children[Node.Variables.FILTERS] : null);
                             // variable reference
@@ -271,8 +284,7 @@ namespace CubeIsland.LyricsReloaded.Provider
                                 }
                                 catch
                                 {
-                                    this.logger.error("{0}: Unknown variable {1} referenced!", variableName, referencedVar);
-                                    return;
+                                    throw InvalidConfigurationException.fromFormat("{0}: Unknown variable {1} referenced!", variableName, referencedVar);
                                 }
                             }
                             // a list of filters
@@ -282,8 +294,7 @@ namespace CubeIsland.LyricsReloaded.Provider
                             }
                             else
                             {
-                                this.logger.warn("Invalid filter option specified!");
-                                return;
+                                throw new InvalidConfigurationException("Invalid filter option specified!");
                             }
 
                             variables.Add(variableName, new Variable(variableName, type, filterCollection));
@@ -291,8 +302,7 @@ namespace CubeIsland.LyricsReloaded.Provider
                     }
                     else
                     {
-                        this.logger.warn("Invalid configration, aborting the configuration.");
-                        return;
+                        throw new InvalidConfigurationException("Invalid configration, aborting the configuration.");
                     }
                 }
             }
@@ -338,19 +348,19 @@ namespace CubeIsland.LyricsReloaded.Provider
                 configNode = new YamlMappingNode();
             }
 
-            LyricsLoader loader = factory.newLoader(name, configNode);
+            LyricsLoader loader = loaderFactory.newLoader(name, configNode);
 
-            Provider provider = new Provider(name, variables, postFilters, validations, loader);
+            Provider provider = new Provider(name, id, variables, postFilters, validations, loader);
             this.logger.info("Provider loaded: " + provider.getName());
 
             lock (this.providers)
             {
-                if (this.providers.ContainsKey(provider.getName()))
+                if (this.providers.ContainsKey(provider.getId()))
                 {
                     this.logger.info("The provider {0} does already exist and will be replaced.", provider.getName());
-                    this.providers.Remove(provider.getName());
+                    this.providers.Remove(provider.getId());
                 }
-                this.providers.Add(provider.getName(), provider);
+                this.providers.Add(provider.getId(), provider);
             }
         }
 
@@ -366,5 +376,13 @@ namespace CubeIsland.LyricsReloaded.Provider
     {
         public InvalidConfigurationException(String message) : base(message)
         {}
+
+        public InvalidConfigurationException(string message, Exception innerException) : base(message, innerException)
+        {}
+
+        public static InvalidConfigurationException fromFormat(string format, params object[] args)
+        {
+            return new InvalidConfigurationException(String.Format(format, args));
+        }
     }
 }

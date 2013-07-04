@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Runtime.InteropServices;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CubeIsland.LyricsReloaded;
 using CubeIsland.LyricsReloaded.Provider;
 
@@ -13,11 +8,16 @@ namespace LyricsTester
     {
         static int Main(string[] args)
         {
+            Console.Title = "LyricsReloaded!";
+            Console.CancelKeyPress += delegate(object sender, ConsoleCancelEventArgs eventArgs) {
+                Console.WriteLine("Bye!");
+            };
+
             String providerName = null;
             String artist = null;
             String title = null;
             String album = null;
-            Boolean preferSync = false;
+            Boolean preferSynced = false;
 
             int argc = args.Length;
 
@@ -39,17 +39,18 @@ namespace LyricsTester
             }
             if (argc > 4)
             {
-                preferSync = true;
+                preferSynced = true;
             }
 
             LyricsReloaded lyricsReloaded = new LyricsReloaded(".");
+            lyricsReloaded.loadConfigurations();
 
             if (String.IsNullOrWhiteSpace(providerName))
             {
                 Console.WriteLine("The providers:");
-                foreach (String name in lyricsReloaded.getProviderManager().getProviders().Keys)
+                foreach (Provider p in lyricsReloaded.getProviderManager().getProviders().Values)
                 {
-                    Console.WriteLine(" - " + name);
+                    Console.WriteLine(" - {0} [{1}]", p.getName(), p.getId());
                 }
                 Console.Write("Enter the provider: ");
                 providerName = Console.ReadLine();
@@ -73,11 +74,10 @@ namespace LyricsTester
                 return 1;
             }
 
-            String lyrics;
             Console.Write("Provider " + providerName + ": ");
             try
             {
-                lyrics = provider.getLyrics(artist, title, album);
+                String lyrics = provider.getLyrics(artist, title, album, preferSynced);
                 if (String.IsNullOrWhiteSpace(lyrics))
                 {
                     Console.WriteLine("failed (not found)");

@@ -70,7 +70,8 @@ namespace MusicBeePlugin
             }
             catch (Exception e)
             {
-                MessageBox.Show("An error occurred during plugin startup, send this file to the developer:\n\n" + this.lyricsReloaded.getLogger().getFileInfo().FullName);
+                MessageBox.Show("An error occurred during plugin startup, send this file to the developer:\n\n" +
+                                this.lyricsReloaded.getLogger().getFileInfo().FullName);
                 this.lyricsReloaded.getLogger().error(e.Message);
                 throw e;
             }
