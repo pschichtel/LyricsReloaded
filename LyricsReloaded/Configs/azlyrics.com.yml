@@ -1,4 +1,5 @@
-name: "azlyrics.com"
+name: "A-Z Lyrics Universe"
+id: azlyrics
 
 variables:
     artist:

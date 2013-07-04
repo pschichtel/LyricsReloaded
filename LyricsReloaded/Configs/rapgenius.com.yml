@@ -1,4 +1,5 @@
-name: "rapgenius.com"
+name: Rap Genius
+id: rapgenius
 
 variables:
     artist:

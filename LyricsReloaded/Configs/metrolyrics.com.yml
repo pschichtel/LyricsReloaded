@@ -1,4 +1,5 @@
-name: "metrolyrics.com"
+name: MetroLyrics
+id: metrolyrics
 
 variables:
     artist:

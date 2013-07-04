@@ -1,4 +1,5 @@
-name: 'lyrics.wikia.com Gracenote'
+name: 'LyricWiki Gracenote'
+id: "lyricwiki-gn"
 
 variables:
 	artist:

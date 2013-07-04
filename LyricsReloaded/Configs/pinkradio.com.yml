@@ -1,4 +1,5 @@
-name: "pinkradio.com"
+name: Pink Radio
+id: pinkradio
 
 variables:
     artist:

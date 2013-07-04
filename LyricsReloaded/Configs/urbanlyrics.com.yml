@@ -1,4 +1,5 @@
-name: "urbanlyrics.com"
+name: Urban Lyrics
+id: urbanlyrics
 
 variables:
     artist:

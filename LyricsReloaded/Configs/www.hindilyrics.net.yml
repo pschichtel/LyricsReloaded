@@ -1,4 +1,5 @@
-name: "www.hindilyrics.net"
+name: Hindi Lyrics
+id: hindilyrics
 
 variables:
     title:

@@ -1,4 +1,5 @@
-name: "metrolyrics.com"
+name: Song Lyrics
+id: songlyrics
 
 variables:
     artist:

@@ -1,4 +1,5 @@
-name: "plyrics.com"
+name: Punk Lyrics
+id: "plyrics"
 
 variables:
     artist:

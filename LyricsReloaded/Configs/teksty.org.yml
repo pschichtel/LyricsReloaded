@@ -1,4 +1,5 @@
-name: "teksty.org"
+name: Teksty
+id: teksty
 
 variables:
     artist:

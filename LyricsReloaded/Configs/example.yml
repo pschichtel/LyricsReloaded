@@ -1,6 +1,9 @@
 # the name of the provider. this will be shown in MusicBee's settings
 name: 'Example'
 
+# the unique name that's internally used to identify the provider
+id: "example"
+
 # the loader for this provider: static, search, api
 loader: static
 
