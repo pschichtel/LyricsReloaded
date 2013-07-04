@@ -122,7 +122,7 @@ namespace MusicBeePlugin
 
         public String RetrieveLyrics(String source, String artist, String title, String album, bool preferSynced, String providerName)
         {
-            lyricsReloaded.getLogger().debug("Lyrics request: {0} - {1} - {2} - {3} - {4} - {5}", source, artist, title, album, (preferSynced ? "synced" : "unsynced"), providerName);
+            lyricsReloaded.getLogger().debug("Lyrics request: {0} - {1} - {2} - {3} - {4}", source, artist, title, album, providerName);
             Provider provider = lyricsReloaded.getProviderManager().getProvider(providerName);
             if (provider == null)
             {

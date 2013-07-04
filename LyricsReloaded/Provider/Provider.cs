@@ -75,7 +75,7 @@ namespace CubeIsland.LyricsReloaded.Provider
             return loader;
         }
 
-        public String getLyrics(String artist, String title, String album, bool preferSynced = false)
+        public String getLyrics(String artist, String title, String album)
         {
             if (counter == maxCount)
             {

@@ -18,7 +18,6 @@ namespace LyricsTester
             String artist = null;
             String title = null;
             String album = null;
-            Boolean preferSynced = false;
 
             int argc = args.Length;
 
@@ -37,10 +36,6 @@ namespace LyricsTester
             if (argc > 3)
             {
                 album = args[3];
-            }
-            if (argc > 4)
-            {
-                preferSynced = true;
             }
 
             LyricsReloaded lyricsReloaded = new LyricsReloaded(".");
@@ -90,7 +85,7 @@ namespace LyricsTester
             Console.Write("Provider {0}: ", providerName);
             try
             {
-                String lyrics = provider.getLyrics(artist, title, album, preferSynced);
+                String lyrics = provider.getLyrics(artist, title, album);
                 if (String.IsNullOrWhiteSpace(lyrics))
                 {
                     lyricsReloaded.getLogger().error("failed (not found)");
