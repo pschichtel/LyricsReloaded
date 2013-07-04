@@ -15,6 +15,7 @@ config:
     pattern: ['<div id="lyrics-body">(?<lyrics>.*?)</div>', s]
     
 post-filters:
+- br2nl
 - strip_html
 - strip_links
 - entity_decode
