@@ -29,6 +29,12 @@ namespace CubeIsland.LyricsReloaded
 {
     public class LyricsReloaded
     {
+        public static class FolderNames
+        {
+            public const string PROVIDERS = "providers";
+            public const string DATA = "data";
+        }
+
         private readonly string name;
         private readonly string pluginDirectory;
         private readonly Logger logger;
@@ -92,13 +98,41 @@ namespace CubeIsland.LyricsReloaded
             providerManager.shutdown();
         }
 
+        public void uninstall()
+        {
+            DirectoryInfo di = new DirectoryInfo(Path.Combine(pluginDirectory, FolderNames.PROVIDERS));
+
+            if (di.GetFiles("*.yml").Length <= 0)
+            {
+                try
+                {
+                    logger.debug("Removing the providers folder...");
+                    di.Delete(true);
+                }
+                catch (Exception e)
+                {
+                    logger.warn("Failed to remove provider folder: {0}", e.Message);
+                }                  
+            }
+
+            try
+            {
+                logger.debug("Removing the data folder...");
+                (new DirectoryInfo(Path.Combine(pluginDirectory, FolderNames.DATA))).Delete(true);
+            }
+            catch (Exception e)
+            {
+                logger.warn("Failed to remove provider folder: {0}", e.Message);
+            }
+        }
+
         #region "internal helpers"
 
         public void loadConfigurations()
         {
             loadDefaultConfiguration();
 
-            DirectoryInfo di = new DirectoryInfo(Path.Combine(pluginDirectory, "providers"));
+            DirectoryInfo di = new DirectoryInfo(Path.Combine(pluginDirectory, FolderNames.PROVIDERS));
             if (!di.Exists)
             {
                 try

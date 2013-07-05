@@ -108,7 +108,7 @@ namespace MusicBeePlugin
         {
             //MessageBox.Show("Close(" + reason + ")");
             lyricsReloaded.getLogger().info("Plugin disabled");
-            lyricsReloaded.getProviderManager().shutdown();
+            lyricsReloaded.shutdown();
             lyricsReloaded = null;
         }
 
@@ -149,6 +149,11 @@ namespace MusicBeePlugin
             return lyrics;
         }
 
+        public void Uninstall()
+        {
+            lyricsReloaded.uninstall();
+        }
+
         #region "MusicBee implementations"
         public bool Configure(IntPtr panelHandle)
         {
@@ -156,9 +161,6 @@ namespace MusicBeePlugin
         }
 
         public void SaveSettings()
-        {}
-
-        public void Uninstall()
         {}
 
         #endregion

@@ -52,6 +52,7 @@
     <Compile Include="Logger.cs" />
     <Compile Include="Provider\Provider.cs" />
     <Compile Include="Provider\ProviderManager.cs" />
+    <Compile Include="Provider\RateLimit.cs" />
     <Compile Include="Validation\ValidationCollection.cs" />
     <Compile Include="Validation\Validator.cs" />
     <Compile Include="Provider\Variable.cs" />
