@@ -19,6 +19,8 @@ namespace LyricsTester
             String title = null;
             String album = null;
 
+            int result = 0;
+
             int argc = args.Length;
 
             if (argc > 0)
@@ -79,7 +81,7 @@ namespace LyricsTester
             if (provider == null)
             {
                 lyricsReloaded.getLogger().error("Provider {0} not found!", providerName);
-                return 1;
+                result = 1;
             }
 
             Console.Write("Provider {0}: ", providerName);
@@ -104,7 +106,7 @@ namespace LyricsTester
             Console.WriteLine("\nPress any key to exit...");
             Console.ReadKey();
 
-            return 0;
+            return result;
         }
     }
 }

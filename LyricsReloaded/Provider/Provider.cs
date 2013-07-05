@@ -35,11 +35,9 @@ namespace CubeIsland.LyricsReloaded.Provider
         private readonly FilterCollection postFilters;
         private readonly ValidationCollection validations;
         private readonly LyricsLoader loader;
+        private readonly RateLimit rateLimit;
 
-        private volatile int counter;
-        private readonly int maxCount;
-
-        public Provider(string name, ushort quality, IDictionary<string, Variable> variables, FilterCollection postFilters, ValidationCollection validations, LyricsLoader loader, int maxCount = -1)
+        public Provider(string name, ushort quality, IDictionary<string, Variable> variables, FilterCollection postFilters, ValidationCollection validations, LyricsLoader loader, RateLimit rateLimit = null)
         {
             this.name = name;
             this.quality = quality;
@@ -47,9 +45,7 @@ namespace CubeIsland.LyricsReloaded.Provider
             this.postFilters = postFilters;
             this.validations = validations;
             this.loader = loader;
-
-            counter = 0;
-            this.maxCount = maxCount;
+            this.rateLimit = rateLimit;
         }
 
         public string getName()
@@ -84,7 +80,7 @@ namespace CubeIsland.LyricsReloaded.Provider
 
         public String getLyrics(String artist, String title, String album)
         {
-            if (counter == maxCount)
+            if (rateLimit.tryIncrement())
             {
                 return null;
             }
@@ -109,7 +105,6 @@ namespace CubeIsland.LyricsReloaded.Provider
                 }
             }
 
-            counter++;
             Lyrics lyrics = loader.getLyrics(variableValues);
 
             if (lyrics == null)
@@ -129,7 +124,15 @@ namespace CubeIsland.LyricsReloaded.Provider
 
         public int CompareTo(Provider other)
         {
-            return quality - other.quality;
+            return other.quality - quality;
+        }
+
+        public void shutdown()
+        {
+            if (rateLimit != null)
+            {
+                rateLimit.shutdown();
+            }
         }
     }
 }

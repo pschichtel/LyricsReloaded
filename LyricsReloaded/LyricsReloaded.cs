@@ -87,6 +87,11 @@ namespace CubeIsland.LyricsReloaded
             return proxy;
         }
 
+        public void shutdown()
+        {
+            providerManager.shutdown();
+        }
+
         #region "internal helpers"
 
         public void loadConfigurations()

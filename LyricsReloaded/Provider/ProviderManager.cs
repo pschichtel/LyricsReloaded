@@ -36,6 +36,7 @@ namespace CubeIsland.LyricsReloaded.Provider
         {
             public static readonly YamlScalarNode NAME = new YamlScalarNode("name");
             public static readonly YamlScalarNode QUALITY = new YamlScalarNode("quality");
+            public static readonly YamlScalarNode RATE_LIMIT = new YamlScalarNode("rate-limit");
             public static readonly YamlScalarNode LOADER = new YamlScalarNode("loader");
             public static readonly YamlScalarNode POST_FILTERS = new YamlScalarNode("post-filters");
             public static readonly YamlScalarNode VALIDATIONS = new YamlScalarNode("validations");
@@ -50,6 +51,7 @@ namespace CubeIsland.LyricsReloaded.Provider
         }
 
         private readonly Logger logger;
+        private readonly object providerLock = new object();
         private readonly Dictionary<string, Provider> providers;
         private readonly Dictionary<string, LyricsLoaderFactory> loaderFactories;
         private readonly Dictionary<string, Filter> filters;
@@ -123,18 +125,24 @@ namespace CubeIsland.LyricsReloaded.Provider
             {
                 return null;
             }
-            if (providers.ContainsKey(providerName))
+            lock (providerLock)
             {
-                return providers[providerName];
+                if (providers.ContainsKey(providerName))
+                {
+                    return providers[providerName];
+                }
             }
             return null;
         }
 
         public IList<Provider> getProviders()
         {
-            List<Provider> providerList = new List<Provider>(providers.Values);
-            providerList.Sort();
-            return providerList;
+            lock (providerLock)
+            {
+                List<Provider> providerList = new List<Provider>(providers.Values);
+                providerList.Sort();
+                return providerList;
+            }
         }
 
         public void loadProvider(FileInfo fileInfo)
@@ -213,9 +221,15 @@ namespace CubeIsland.LyricsReloaded.Provider
                 }
             }
 
+            RateLimit rateLimit = null;
+            node = (rootNodes.ContainsKey(Node.RATE_LIMIT) ? rootNodes[Node.RATE_LIMIT] : null);
+            if (node is YamlScalarNode)
+            {
+                rateLimit = RateLimit.parse(((YamlScalarNode) node).Value.Trim());
+            }
+
             node = (rootNodes.ContainsKey(Node.VARIABLES) ? rootNodes[Node.VARIABLES] : null);
             Dictionary<string, Variable> variables = new Dictionary<string, Variable>();
-
             if (node is YamlMappingNode)
             {
                 foreach (KeyValuePair<YamlNode, YamlNode> preparationEntry in ((YamlMappingNode)node).Children)
@@ -346,10 +360,10 @@ namespace CubeIsland.LyricsReloaded.Provider
 
             LyricsLoader loader = loaderFactory.newLoader(configNode);
 
-            Provider provider = new Provider(name, quality, variables, postFilters, validations, loader);
+            Provider provider = new Provider(name, quality, variables, postFilters, validations, loader, rateLimit);
             logger.info("Provider loaded: " + provider.getName());
 
-            lock (providers)
+            lock (providerLock)
             {
                 if (providers.ContainsKey(provider.getName()))
                 {
@@ -362,9 +376,24 @@ namespace CubeIsland.LyricsReloaded.Provider
 
         public void clean()
         {
-            providers.Clear();
-            loaderFactories.Clear();
-            filters.Clear();
+            lock (providerLock)
+            {
+                providers.Clear();
+                loaderFactories.Clear();
+                filters.Clear();
+            }
+        }
+
+        public void shutdown()
+        {
+            lock (providerLock)
+            {
+                foreach (Provider provider in this.providers.Values)
+                {
+                    provider.shutdown();
+                }
+                clean();
+            }
         }
     }
 

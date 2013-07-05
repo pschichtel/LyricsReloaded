@@ -108,7 +108,7 @@ namespace MusicBeePlugin
         {
             //MessageBox.Show("Close(" + reason + ")");
             lyricsReloaded.getLogger().info("Plugin disabled");
-            lyricsReloaded.getProviderManager().clean();
+            lyricsReloaded.getProviderManager().shutdown();
             lyricsReloaded = null;
         }
 
