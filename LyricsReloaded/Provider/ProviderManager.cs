@@ -35,6 +35,7 @@ namespace CubeIsland.LyricsReloaded.Provider
         private static class Node
         {
             public static readonly YamlScalarNode NAME = new YamlScalarNode("name");
+            public static readonly YamlScalarNode QUALITY = new YamlScalarNode("quality");
             public static readonly YamlScalarNode LOADER = new YamlScalarNode("loader");
             public static readonly YamlScalarNode POST_FILTERS = new YamlScalarNode("post-filters");
             public static readonly YamlScalarNode VALIDATIONS = new YamlScalarNode("validations");
@@ -129,9 +130,11 @@ namespace CubeIsland.LyricsReloaded.Provider
             return null;
         }
 
-        public Dictionary<string, Provider> getProviders()
+        public IList<Provider> getProviders()
         {
-            return new Dictionary<string, Provider>(providers);
+            List<Provider> providerList = new List<Provider>(providers.Values);
+            providerList.Sort();
+            return providerList;
         }
 
         public void loadProvider(FileInfo fileInfo)
@@ -195,6 +198,20 @@ namespace CubeIsland.LyricsReloaded.Provider
                 throw new InvalidConfigurationException("No provider name given!");
             }
             string name = ((YamlScalarNode)node).Value.Trim();
+
+            ushort quality = 50;
+            node = (rootNodes.ContainsKey(Node.QUALITY) ? rootNodes[Node.QUALITY] : null);
+            if (node is YamlScalarNode)
+            {
+                try
+                {
+                    quality = Convert.ToUInt16(((YamlScalarNode)node).Value.Trim());
+                }
+                catch (FormatException e)
+                {
+                    throw new InvalidConfigurationException("Invalid quality value given, only positive numbers >= 0 are allowed!", e);
+                }
+            }
 
             node = (rootNodes.ContainsKey(Node.VARIABLES) ? rootNodes[Node.VARIABLES] : null);
             Dictionary<string, Variable> variables = new Dictionary<string, Variable>();
@@ -329,7 +346,7 @@ namespace CubeIsland.LyricsReloaded.Provider
 
             LyricsLoader loader = loaderFactory.newLoader(configNode);
 
-            Provider provider = new Provider(name, variables, postFilters, validations, loader);
+            Provider provider = new Provider(name, quality, variables, postFilters, validations, loader);
             logger.info("Provider loaded: " + provider.getName());
 
             lock (providers)

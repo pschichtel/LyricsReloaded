@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Text;
 using CubeIsland.LyricsReloaded;
 using CubeIsland.LyricsReloaded.Provider;
 
@@ -10,9 +10,9 @@ namespace LyricsTester
         static int Main(string[] args)
         {
             Console.Title = "LyricsReloaded!";
-            Console.CancelKeyPress += delegate(object sender, ConsoleCancelEventArgs eventArgs) {
-                Console.WriteLine("Bye!");
-            };
+            Console.OutputEncoding = Encoding.UTF8;
+            Console.InputEncoding = Encoding.UTF8;
+            Console.CancelKeyPress += (sender, eventArgs) => Console.WriteLine("Bye!");
 
             String providerName = null;
             String artist = null;
@@ -44,9 +44,9 @@ namespace LyricsTester
             if (String.IsNullOrWhiteSpace(providerName))
             {
                 Console.WriteLine("The providers:");
-                foreach (KeyValuePair<string, Provider> entry in lyricsReloaded.getProviderManager().getProviders())
+                foreach (Provider p in lyricsReloaded.getProviderManager().getProviders())
                 {
-                    Console.WriteLine(" - {0}", entry.Key);
+                    Console.WriteLine(" - {0}", p.getName());
                 }
                 Console.Write("Enter the provider: ");
                 providerName = Console.ReadLine();

@@ -114,9 +114,15 @@ namespace MusicBeePlugin
 
         public String[] GetProviders()
         {
-            Dictionary<string, Provider> providers = lyricsReloaded.getProviderManager().getProviders();
+            IList<Provider> providers = lyricsReloaded.getProviderManager().getProviders();
             string[] providerNames = new string[providers.Count];
-            providers.Keys.CopyTo(providerNames, 0);
+
+            int i = 0;
+            foreach (Provider provider in providers)
+            {
+                providerNames[i++] = provider.getName();
+            }
+
             return providerNames;
         }
 

@@ -27,10 +27,11 @@ using System.Collections.Generic;
 
 namespace CubeIsland.LyricsReloaded.Provider
 {
-    public class Provider
+    public class Provider : IComparable<Provider>
     {
         private readonly string name;
-        private readonly Dictionary<string, Variable> variables = new Dictionary<string, Variable>();
+        private readonly ushort quality;
+        private readonly IDictionary<string, Variable> variables;
         private readonly FilterCollection postFilters;
         private readonly ValidationCollection validations;
         private readonly LyricsLoader loader;
@@ -38,9 +39,10 @@ namespace CubeIsland.LyricsReloaded.Provider
         private volatile int counter;
         private readonly int maxCount;
 
-        public Provider(string name, Dictionary<string, Variable> variables, FilterCollection postFilters, ValidationCollection validations, LyricsLoader loader, int maxCount = -1)
+        public Provider(string name, ushort quality, IDictionary<string, Variable> variables, FilterCollection postFilters, ValidationCollection validations, LyricsLoader loader, int maxCount = -1)
         {
             this.name = name;
+            this.quality = quality;
             this.variables = variables;
             this.postFilters = postFilters;
             this.validations = validations;
@@ -53,6 +55,11 @@ namespace CubeIsland.LyricsReloaded.Provider
         public string getName()
         {
             return name;
+        }
+
+        public ushort getQuality()
+        {
+            return quality;
         }
 
         public object getVariables()
@@ -118,6 +125,11 @@ namespace CubeIsland.LyricsReloaded.Provider
             }
 
             return filteredLyrics;
+        }
+
+        public int CompareTo(Provider other)
+        {
+            return quality - other.quality;
         }
     }
 }
