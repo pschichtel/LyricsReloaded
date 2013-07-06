@@ -14,4 +14,10 @@ Examples:
 
 contains
 --------
-This validator checks whether the contant contains a given string (first argument).
+This validator checks whether the content contains a given string (first argument).
+
+
+Matches
+-------
+This validator checks whether the given regex matches something in the content.
+It takes a regular expression (first argument) and options for it (second argument)

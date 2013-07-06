@@ -18,6 +18,7 @@
 
 */
 
+using System.Text.RegularExpressions;
 using CubeIsland.LyricsReloaded.Provider;
 
 namespace CubeIsland.LyricsReloaded.Validation
@@ -70,6 +71,29 @@ namespace CubeIsland.LyricsReloaded.Validation
                 return content.ToLower().Contains(args[0].ToLower());
             }
             return content.Contains(args[0]);
+        }
+    }
+
+    public class MatchesValidator : Validator
+    {
+        public string getName()
+        {
+            return "matches";
+        }
+
+        public bool validate(string content, string[] args)
+        {
+            if (args.Length < 1)
+            {
+                throw new InvalidConfigurationException("The matches validator needs at least one parameter: matches, <regex>");
+            }
+            RegexOptions options = RegexOptions.None;
+            if (args.Length > 1)
+            {
+                options = Pattern.optionStringToRegexOptions(args[2].Trim());
+            }
+
+            return (new Regex(args[0], options)).Match(content).Success;
         }
     }
 }
