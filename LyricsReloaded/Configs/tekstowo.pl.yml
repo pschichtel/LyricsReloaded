@@ -12,7 +12,7 @@ variables:
 
 config:
     url: "http://www.tekstowo.pl/piosenka,{artist},{title}.html"
-    pattern: ['<div\\s+class="song-text"[^>]*>(?<lyrics>.*?)<p>&nbsp;</p>', s]
+    pattern: ['<div\s+class="song-text"[^>]*>(?<lyrics>.*?)<p>&nbsp;</p>', s]
     
 post-filters:
 - strip_html

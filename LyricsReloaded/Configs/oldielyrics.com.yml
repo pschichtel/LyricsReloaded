@@ -12,7 +12,7 @@ variables:
 
 config:
     url: "http://oldielyrics.com/lyrics/{artist}/{title}.html"
-    pattern: ['<div\\s+class="lyrics"[^>]*>\\s*<p>(?<lyrics>.+)</p>\\s*</div>', s]
+    pattern: ['<div\s+class="lyrics"[^>]*>\s*<p>(?<lyrics>.+)</p>\s*</div>', s]
     
 post-filters:
 - strip_html
