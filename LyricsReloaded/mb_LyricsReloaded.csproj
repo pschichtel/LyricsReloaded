@@ -109,9 +109,9 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>if "$(ConfigurationName)"=="Release" (
-    if not exist "$(TargetDir)merged" mkdir "$(TargetDir)\merged"
+    if not exist "$(TargetDir)merged" mkdir "$(TargetDir)merged"
 
-    "$(SolutionDir)\packages\ilmerge.2.13.0307\ILMerge.exe" "/out:$(TargetDir)\merged\$(TargetFileName)" "$(TargetPath)" "$(TargetDir)\YamlDotNet.Core.dll" "$(TargetDir)\YamlDotNet.RepresentationModel.dll"
+    "$(SolutionDir)packages\ilmerge.2.13.0307\ILMerge.exe" "/out:$(TargetDir)merged\$(TargetFileName)" "$(TargetPath)" "$(TargetDir)YamlDotNet.Core.dll" "$(TargetDir)YamlDotNet.RepresentationModel.dll"
 )</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

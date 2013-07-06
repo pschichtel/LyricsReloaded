@@ -4,6 +4,8 @@ variables:
     title:
         type: title
         filters:
+        - lowercase
+        - [regex, '[^\sa-z0-9]\s*', ""]
         - [strip_nonascii, -]
 
 config:
@@ -11,7 +13,6 @@ config:
     pattern: ['<div class="songbody">(?<lyrics>.*?)</div>', s]
     
 post-filters:
-- br2nl
 - strip_html
 - trim
 - utf8_encode

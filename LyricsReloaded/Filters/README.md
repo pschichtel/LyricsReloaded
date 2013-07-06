@@ -5,6 +5,9 @@ Filters are small functions that can modify the given content.
 Filters can currently be applied to variable values and the lyrics
 content.
 
+***Important***: The filters are executed in the specified order, so stripping HTML-tags
+                 before converting <br>s to newlines won't get you far.
+
 
 strip_html
 ----------
