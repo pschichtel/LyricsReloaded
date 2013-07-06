@@ -83,24 +83,27 @@ namespace LyricsTester
                 lyricsReloaded.getLogger().error("Provider {0} not found!", providerName);
                 result = 1;
             }
-
-            Console.Write("Provider {0}: ", providerName);
-            try
+            else
             {
-                String lyrics = provider.getLyrics(artist, title, album);
-                if (String.IsNullOrWhiteSpace(lyrics))
+                Console.Write("Provider {0}: ", providerName);
+                try
                 {
-                    lyricsReloaded.getLogger().error("failed (not found)");
+                    String lyrics = provider.getLyrics(artist, title, album);
+                    if (String.IsNullOrWhiteSpace(lyrics))
+                    {
+                        Console.WriteLine("failed (not found)");
+                        lyricsReloaded.getLogger().error("Lyrics not found!");
+                    }
+                    else
+                    {
+                        Console.WriteLine("success\n\n" + lyrics);
+                    }
                 }
-                else
+                catch (Exception e)
                 {
-                    Console.WriteLine("success\n\n" + lyrics);
+                    Console.WriteLine("failed (internal error)");
+                    Console.WriteLine(e.ToString());
                 }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("failed (internal error)");
-                Console.WriteLine(e.ToString());
             }
 
             Console.WriteLine("\nPress any key to exit...");

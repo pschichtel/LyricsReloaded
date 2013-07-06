@@ -21,3 +21,6 @@ post-filters:
 - entity_decode
 - clean_spaces
 - utf8_encode
+
+validations:
+- [not contains, Click here to submit these lyrics]

@@ -50,6 +50,7 @@ namespace CubeIsland.LyricsReloaded.Provider
             }
         }
 
+        private readonly LyricsReloaded lyricsReloaded;
         private readonly Logger logger;
         private readonly object providerLock = new object();
         private readonly Dictionary<string, Provider> providers;
@@ -65,6 +66,7 @@ namespace CubeIsland.LyricsReloaded.Provider
 
         public ProviderManager(LyricsReloaded lyricsReloaded)
         {
+            this.lyricsReloaded = lyricsReloaded;
             logger = lyricsReloaded.getLogger();
             providers = new Dictionary<string, Provider>();
             loaderFactories = new Dictionary<string, LyricsLoaderFactory>();
@@ -360,7 +362,7 @@ namespace CubeIsland.LyricsReloaded.Provider
 
             LyricsLoader loader = loaderFactory.newLoader(configNode);
 
-            Provider provider = new Provider(name, quality, variables, postFilters, validations, loader, rateLimit);
+            Provider provider = new Provider(lyricsReloaded, name, quality, variables, postFilters, validations, loader, rateLimit);
             logger.info("Provider loaded: " + provider.getName());
 
             lock (providerLock)
@@ -388,7 +390,7 @@ namespace CubeIsland.LyricsReloaded.Provider
         {
             lock (providerLock)
             {
-                foreach (Provider provider in this.providers.Values)
+                foreach (Provider provider in providers.Values)
                 {
                     provider.shutdown();
                 }

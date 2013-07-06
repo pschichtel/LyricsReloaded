@@ -29,6 +29,7 @@ namespace CubeIsland.LyricsReloaded.Provider
 {
     public class Provider : IComparable<Provider>
     {
+        private readonly LyricsReloaded lyricsReloaded;
         private readonly string name;
         private readonly ushort quality;
         private readonly IDictionary<string, Variable> variables;
@@ -37,8 +38,9 @@ namespace CubeIsland.LyricsReloaded.Provider
         private readonly LyricsLoader loader;
         private readonly RateLimit rateLimit;
 
-        public Provider(string name, ushort quality, IDictionary<string, Variable> variables, FilterCollection postFilters, ValidationCollection validations, LyricsLoader loader, RateLimit rateLimit = null)
+        public Provider(LyricsReloaded lyricsReloaded, string name, ushort quality, IDictionary<string, Variable> variables, FilterCollection postFilters, ValidationCollection validations, LyricsLoader loader, RateLimit rateLimit = null)
         {
+            this.lyricsReloaded = lyricsReloaded;
             this.name = name;
             this.quality = quality;
             this.variables = variables;
@@ -80,7 +82,7 @@ namespace CubeIsland.LyricsReloaded.Provider
 
         public String getLyrics(String artist, String title, String album)
         {
-            if (rateLimit.tryIncrement())
+            if (rateLimit != null && !rateLimit.tryIncrement())
             {
                 return null;
             }
@@ -105,10 +107,13 @@ namespace CubeIsland.LyricsReloaded.Provider
                 }
             }
 
+
+            lyricsReloaded.getLogger().info("{0} tries to load the lyrics...", name);
             Lyrics lyrics = loader.getLyrics(variableValues);
 
             if (lyrics == null)
             {
+                lyricsReloaded.getLogger().info("No lyrics found.");
                 return null;
             }
 
@@ -116,6 +121,7 @@ namespace CubeIsland.LyricsReloaded.Provider
 
             if (!validations.executeValidations(filteredLyrics))
             {
+                lyricsReloaded.getLogger().info("Validation failed.");
                 return null;
             }
 

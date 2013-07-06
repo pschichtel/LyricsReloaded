@@ -36,7 +36,7 @@ namespace CubeIsland.LyricsReloaded
         }
 
         private readonly string name;
-        private readonly string pluginDirectory;
+        private readonly string dataFolder;
         private readonly Logger logger;
         private readonly ProviderManager providerManager;
         private string userAgent;
@@ -46,9 +46,9 @@ namespace CubeIsland.LyricsReloaded
         {
             Assembly asm = Assembly.GetAssembly(GetType());
             name = asm.GetName().Name;
-            pluginDirectory = Path.Combine(configurationPath, name);
-            Directory.CreateDirectory(pluginDirectory);
-            logger = new Logger(Path.Combine(pluginDirectory, name + ".log"));
+            dataFolder = Path.Combine(configurationPath, name);
+            Directory.CreateDirectory(dataFolder);
+            logger = new Logger(Path.Combine(dataFolder, name + ".log"));
 
             providerManager = new ProviderManager(this);
 
@@ -100,7 +100,7 @@ namespace CubeIsland.LyricsReloaded
 
         public void uninstall()
         {
-            DirectoryInfo di = new DirectoryInfo(Path.Combine(pluginDirectory, FolderNames.PROVIDERS));
+            DirectoryInfo di = new DirectoryInfo(Path.Combine(dataFolder, FolderNames.PROVIDERS));
 
             if (di.GetFiles("*.yml").Length <= 0)
             {
@@ -118,7 +118,7 @@ namespace CubeIsland.LyricsReloaded
             try
             {
                 logger.debug("Removing the data folder...");
-                (new DirectoryInfo(Path.Combine(pluginDirectory, FolderNames.DATA))).Delete(true);
+                (new DirectoryInfo(Path.Combine(dataFolder, FolderNames.DATA))).Delete(true);
             }
             catch (Exception e)
             {
@@ -132,7 +132,7 @@ namespace CubeIsland.LyricsReloaded
         {
             loadDefaultConfiguration();
 
-            DirectoryInfo di = new DirectoryInfo(Path.Combine(pluginDirectory, FolderNames.PROVIDERS));
+            DirectoryInfo di = new DirectoryInfo(Path.Combine(dataFolder, FolderNames.PROVIDERS));
             if (!di.Exists)
             {
                 try

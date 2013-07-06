@@ -27,6 +27,9 @@ post-filters:
 - utf8_encode
 - trim
 
+validations:
+- [not contains, Click here to submit these lyrics]
+
 config:
 	# the URL to request. {artist}, {album} and {title} are placeholders for the values from the song.
 	url: "http://www.azlyrics.com/lyrics/{artist}/{title}.html"
