@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using YamlDotNet.RepresentationModel;
 
 namespace CubeIsland.LyricsReloaded.Provider.Loader
@@ -98,4 +99,138 @@ namespace CubeIsland.LyricsReloaded.Provider.Loader
             return new StaticLoader(lyricsReloaded, webClient, url, Pattern.fromYamlNode(configNodes[Node.PATTERN]));
         }
     }
+
+    public class Pattern
+    {
+        private static class Node
+        {
+            public static readonly YamlScalarNode REGEX = new YamlScalarNode("regex");
+            public static readonly YamlScalarNode OPTIONS = new YamlScalarNode("options");
+        }
+
+        private const RegexOptions DEFAULT_OPTIONS = RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.CultureInvariant;
+
+        private readonly Regex regex;
+
+        public Pattern(Regex regex)
+        {
+            this.regex = regex;
+        }
+
+        public Pattern(string regex, string options)
+            : this(new Regex(regex, DEFAULT_OPTIONS | regexOptionsFromString(options)))
+        { }
+
+        public String apply(string content)
+        {
+            Match match = regex.Match(content);
+            if (match.Success)
+            {
+                return match.Groups["lyrics"].ToString();
+            }
+            return null;
+        }
+
+        public static Pattern fromYamlNode(YamlNode node)
+        {
+            if (node == null)
+            {
+                return null;
+            }
+            return new Pattern(regexFromYamlNode(node, DEFAULT_OPTIONS));
+        }
+
+        public static Regex regexFromYamlNode(YamlNode node, RegexOptions options)
+        {
+            string regex;
+            string regexOptions = "";
+            if (node is YamlScalarNode)
+            {
+                regex = ((YamlScalarNode)node).Value;
+            }
+            else if (node is YamlSequenceNode)
+            {
+                IEnumerator<YamlNode> it = ((YamlSequenceNode)node).Children.GetEnumerator();
+                if (!it.MoveNext())
+                {
+                    throw new InvalidConfigurationException("The pattern needs at least the regex defined!");
+                }
+                if (!(it.Current is YamlScalarNode))
+                {
+                    throw new InvalidConfigurationException("The pattern may only contain string value!");
+                }
+                regex = ((YamlScalarNode)it.Current).Value;
+
+                if (it.MoveNext() && it.Current is YamlScalarNode)
+                {
+                    regexOptions = ((YamlScalarNode)it.Current).Value;
+                }
+            }
+            else if (node is YamlMappingNode)
+            {
+                IDictionary<YamlNode, YamlNode> patternConfig = ((YamlMappingNode)node).Children;
+                node = (patternConfig.ContainsKey(Node.REGEX) ? patternConfig[Node.REGEX] : null);
+                if (!(node is YamlScalarNode))
+                {
+                    throw new InvalidConfigurationException("Invalid regex value!");
+                }
+                regex = ((YamlScalarNode)node).Value;
+
+                node = (patternConfig.ContainsKey(Node.OPTIONS) ? patternConfig[Node.OPTIONS] : null);
+                if (node is YamlScalarNode)
+                {
+                    regexOptions = ((YamlScalarNode)node).Value;
+                }
+            }
+            else
+            {
+                throw new InvalidConfigurationException("No pattern specified!");
+            }
+
+            return new Regex(regex, options | regexOptionsFromString(regexOptions));
+        }
+
+        private static readonly Dictionary<char, RegexOptions> REGEX_OPTION_MAP = new Dictionary<char, RegexOptions> {
+            {'i', RegexOptions.IgnoreCase},
+            {'s', RegexOptions.Singleline},
+            {'m', RegexOptions.Multiline},
+            {'c', RegexOptions.Compiled},
+            {'x', RegexOptions.IgnorePatternWhitespace},
+            {'d', RegexOptions.RightToLeft},
+            {'e', RegexOptions.ExplicitCapture},
+            {'j', RegexOptions.ECMAScript},
+            {'l', RegexOptions.CultureInvariant}
+        };
+
+        public static RegexOptions regexOptionsFromString(string optionString)
+        {
+            RegexOptions options = RegexOptions.None;
+
+            char lc;
+            foreach (char c in optionString)
+            {
+                lc = Char.ToLower(c);
+                if (REGEX_OPTION_MAP.ContainsKey(lc))
+                {
+                    RegexOptions option = REGEX_OPTION_MAP[lc];
+                    if (Char.IsLower(c))
+                    {
+                        options |= option;
+                    }
+                    else
+                    {
+                        options &= ~option;
+                    }
+                }
+            }
+
+            return options;
+        }
+
+        public override string ToString()
+        {
+            return regex.ToString();
+        }
+    }
+
 }

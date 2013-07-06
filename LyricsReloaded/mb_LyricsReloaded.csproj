@@ -46,7 +46,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="LyricsReloaded.cs" />
-    <Compile Include="Pattern.cs" />
     <Compile Include="Filters\Filter.cs" />
     <Compile Include="Filters\FilterCollection.cs" />
     <Compile Include="Logger.cs" />

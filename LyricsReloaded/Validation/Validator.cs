@@ -20,6 +20,7 @@
 
 using System.Text.RegularExpressions;
 using CubeIsland.LyricsReloaded.Provider;
+using CubeIsland.LyricsReloaded.Provider.Loader;
 
 namespace CubeIsland.LyricsReloaded.Validation
 {

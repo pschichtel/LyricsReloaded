@@ -25,6 +25,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
 using CubeIsland.LyricsReloaded.Provider;
+using CubeIsland.LyricsReloaded.Provider.Loader;
 
 namespace CubeIsland.LyricsReloaded.Filters
 {
