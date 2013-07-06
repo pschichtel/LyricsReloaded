@@ -4,6 +4,7 @@ variables:
     artist:
         type: artist
         filters:
+        - diacritics2ascii
         - lowercase
         - [regex, '[^\sa-z0-9]\s*', ""]
         - [strip_nonascii, -]

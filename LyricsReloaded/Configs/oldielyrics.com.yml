@@ -4,7 +4,9 @@ variables:
     artist:
         type: artist
         filters:
+        - diacritics2ascii
         - lowercase
+        - [regex, '[^\sa-z0-9]\s*', ""]
         - [strip_nonascii, _]
     title:
         type: title
@@ -15,6 +17,8 @@ config:
     pattern: ['<div\s+class="lyrics"[^>]*>\s*<p>(?<lyrics>.+)</p>\s*</div>', s]
     
 post-filters:
+- br2nl
+- p2break
 - strip_html
 - strip_links
 - entity_decode
