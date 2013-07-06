@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using YamlDotNet.RepresentationModel;
 
 namespace CubeIsland.LyricsReloaded.Provider.Loader
@@ -34,10 +35,18 @@ namespace CubeIsland.LyricsReloaded.Provider.Loader
         {
             string url = constructUrl(variables);
 
+            Console.WriteLine("Url: " + url);
+
             lyricsReloaded.getLogger().debug("The constructed URL: {0}", url);
 
             WebResponse response = client.get(url);
-            string lyrics = pattern.apply(response.getContent());
+            Console.WriteLine("Raw content:\n" + response.getContent());
+            String lyrics = pattern.apply(response.getContent());
+            if (lyrics == null)
+            {
+                lyricsReloaded.getLogger().warn("The pattern {0} didn't match!", pattern);
+                return null;
+            }
 
             return new Lyrics(lyrics, response.getEncoding());
         }
@@ -49,12 +58,6 @@ namespace CubeIsland.LyricsReloaded.Provider.Loader
         {
             public static readonly YamlScalarNode URL = new YamlScalarNode("url");
             public static readonly YamlScalarNode PATTERN = new YamlScalarNode("pattern");
-
-            public static class Pattern
-            {
-                public static readonly YamlScalarNode REGEX = new YamlScalarNode("regex");
-                public static readonly YamlScalarNode OPTIONS = new YamlScalarNode("options");
-            }
         }
 
         private readonly LyricsReloaded lyricsReloaded;
@@ -87,54 +90,12 @@ namespace CubeIsland.LyricsReloaded.Provider.Loader
                 throw new InvalidConfigurationException("No URL specified!");
             }
 
-            string regex;
-            string regexOptions = "";
-
-            node = (configNodes.ContainsKey(Node.PATTERN) ? configNodes[Node.PATTERN] : null);
-            if (node is YamlScalarNode)
-            {
-                regex = ((YamlScalarNode)node).Value;
-            }
-            else if (node is YamlSequenceNode)
-            {
-                IEnumerator<YamlNode> it = ((YamlSequenceNode)node).Children.GetEnumerator();
-                if (!it.MoveNext())
-                {
-                    throw new InvalidConfigurationException("The pattern needs at least the regex defined!");
-                }
-                if (!(it.Current is YamlScalarNode))
-                {
-                    throw new InvalidConfigurationException("The pattern may only contain string value!");
-                }
-                regex = ((YamlScalarNode)it.Current).Value;
-
-                if (it.MoveNext() && it.Current is YamlScalarNode)
-                {
-                    regexOptions = ((YamlScalarNode)it.Current).Value;
-                }
-            }
-            else if (node is YamlMappingNode)
-            {
-                IDictionary<YamlNode, YamlNode> patternConfig = ((YamlMappingNode)node).Children;
-                node = (patternConfig.ContainsKey(Node.Pattern.REGEX) ? patternConfig[Node.Pattern.REGEX] : null);
-                if (!(node is YamlScalarNode))
-                {
-                    throw new InvalidConfigurationException("Invalid regex value!");
-                }
-                regex = ((YamlScalarNode)node).Value;
-
-                node = (patternConfig.ContainsKey(Node.Pattern.OPTIONS) ? patternConfig[Node.Pattern.OPTIONS] : null);
-                if (node is YamlScalarNode)
-                {
-                    regexOptions = ((YamlScalarNode)node).Value;
-                }
-            }
-            else
+            if (!configNodes.ContainsKey(Node.PATTERN))
             {
                 throw new InvalidConfigurationException("No pattern specified!");
             }
 
-            return new StaticLoader(lyricsReloaded, webClient, url, new Pattern(regex, regexOptions));
+            return new StaticLoader(lyricsReloaded, webClient, url, Pattern.fromYamlNode(configNodes[Node.PATTERN]));
         }
     }
 }

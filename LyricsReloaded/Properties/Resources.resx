@@ -118,20 +118,23 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="lyrics_wikia_com" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\configs\lyrics.wikia.com.yml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
-  <data name="lyrics_wikia_com_gn" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\configs\lyrics.wikia.com-gn.yml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
   <data name="provider_azlyrics_com" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\configs\azlyrics.com.yml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="provider_cuspajz_com" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\configs\cuspajz.com.yml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
+  <data name="provider_hindilyrics_net" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\configs\www.hindilyrics.net.yml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
   <data name="provider_letras_mus_br" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\configs\letras.mus.br.yml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="provider_lyrics_wikia_com" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\configs\lyrics.wikia.com.yml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="provider_lyrics_wikia_com_gn" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\configs\lyrics.wikia.com-gn.yml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="provider_metrolyrics_com" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\configs\metrolyrics.com.yml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
@@ -148,6 +151,9 @@
   <data name="provider_rapgenius_com" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\configs\rapgenius.com.yml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
+  <data name="provider_smriti_com" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\configs\smriti.com.yml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
   <data name="provider_songlyrics_com" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\configs\songlyrics.com.yml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
@@ -162,11 +168,5 @@
   </data>
   <data name="provider_urbanlyrics_com" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\configs\urbanlyrics.com.yml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
-  <data name="smriti_com" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\configs\smriti.com.yml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
-  <data name="www_hindilyrics_net" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\configs\www.hindilyrics.net.yml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
 </root>

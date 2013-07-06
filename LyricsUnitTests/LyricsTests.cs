@@ -1,33 +1,29 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MusicBeePlugin;
-using System.Reflection;
-using System.Runtime.InteropServices;
 using CubeIsland.LyricsReloaded;
 using CubeIsland.LyricsReloaded.Provider;
 
 namespace LyricsUnitTests
 {
-    [TestClass]
     public class LyricsTests
     {
-        private static LyricsReloaded lyricsReloaded = null;
+        private static LyricsReloaded lr = null;
 
-        [ClassInitialize]
-        public static void init(TestContext context)
+        public static LyricsReloaded getLyricsReloaded()
         {
-            lyricsReloaded = new LyricsReloaded(".");
+            if (lr == null)
+            {
+                lr = new LyricsReloaded(".");
+                lr.loadConfigurations();
+            }
+            return lr;
         }
 
-        [ClassCleanup]
-        public static void cleanup()
+        public static Provider getProvider(string name)
         {
-            lyricsReloaded = null;
-        }
-
-        [TestMethod]
-        public void testEnabling()
-        {
+            Provider p = getLyricsReloaded().getProviderManager().getProvider(name);
+            Assert.IsNotNull(p, "Provider '" + name + "' not found!");
+            return p;
         }
     }
 }

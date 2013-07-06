@@ -1,14 +1,14 @@
 name: LyricWiki
 
 variables:
-	artist:
-		type: artist
-		filters:
-		- [regex, "\\s+", _]
-		- urlencode
-	title:
-		type: title
-		filters: artist 
+    artist:
+        type: artist
+        filters:
+        - [regex, "\\s+", _]
+        - urlencode
+    title:
+        type: title
+        filters: artist 
 
 post-filters:
 - br2nl
@@ -19,5 +19,5 @@ post-filters:
 - trim
 
 config:
-	url: "http://lyrics.wikia.com/{artist}:{title}"
-	pattern: "'lyricbox'>.*?/></a></div>(?<lyrics>.*?)<!--"
+    url: "http://lyrics.wikia.com/{artist}:{title}"
+    pattern: "'lyricbox'>.*?/></a></div>(?<lyrics>.*?)<!--"

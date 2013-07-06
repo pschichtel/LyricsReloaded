@@ -305,7 +305,7 @@ namespace CubeIsland.LyricsReloaded.Filters
             }
             catch
             {
-                RegexOptions options = RegexOptions.Compiled | Pattern.optionStringToRegexOptions(optionString);
+                RegexOptions options = RegexOptions.Compiled | Pattern.regexOptionsFromString(optionString);
                 regex = new Regex(pattern, options);
                 lock (lockObject)
                 {

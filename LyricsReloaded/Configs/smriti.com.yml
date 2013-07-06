@@ -11,7 +11,7 @@ config:
     pattern: ['<div class="songbody">(?<lyrics>.*?)</div>', s]
     
 post-filters:
-- br2ln
+- br2nl
 - strip_html
 - trim
 - utf8_encode

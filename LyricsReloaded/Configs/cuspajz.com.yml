@@ -1,9 +1,10 @@
-name: "Cuöpajz"
+name: "Cu≈°pajz"
 
 variables:
     artist:
         type: artist
         filters:
+        - diacritics2ascii
         - lowercase
         - [strip_nonascii, -]
     title:
@@ -12,7 +13,7 @@ variables:
 
 config:
     url: "http://cuspajz.com/tekstovi-pjesama/pjesma/{artist}/{title}.html"
-    pattern: ['<p\\sclass="text\\sclearfix">\\s*(?<lyrics>.*?)</p>', s]
+    pattern: ['<p\sclass="text\sclearfix">(?<lyrics>[\s\S]*?)</p>', s]
     
 post-filters:
 - strip_html

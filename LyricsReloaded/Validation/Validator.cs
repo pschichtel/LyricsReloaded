@@ -44,8 +44,8 @@ namespace CubeIsland.LyricsReloaded.Validation
 
         public bool execute(string content)
         {
-            bool result = this.validator.validate(content, this.args);
-            if (this.inverted)
+            bool result = validator.validate(content, args);
+            if (inverted)
             {
                 result = !result;
             }
@@ -90,7 +90,7 @@ namespace CubeIsland.LyricsReloaded.Validation
             RegexOptions options = RegexOptions.None;
             if (args.Length > 1)
             {
-                options = Pattern.optionStringToRegexOptions(args[2].Trim());
+                options = Pattern.regexOptionsFromString(args[2].Trim());
             }
 
             return (new Regex(args[0], options)).Match(content).Success;
