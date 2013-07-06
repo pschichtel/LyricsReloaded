@@ -7,8 +7,9 @@ namespace LyricsUnitTests
     [TestClass]
     public class SongLyricsTests
     {
-        private static readonly Provider p = LyricsTests.getProvider("A-Z Lyrics Universe");
+        private static readonly Provider p = LyricsTests.getProvider("Song Lyrics");
 
+        //[Timeout(5000)]
         [TestMethod]
         public void songLyricsBasics()
         {

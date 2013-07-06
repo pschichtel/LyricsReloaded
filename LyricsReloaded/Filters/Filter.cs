@@ -180,7 +180,7 @@ namespace CubeIsland.LyricsReloaded.Filters
 
         public string filter(string content, string[] args, Encoding encoding)
         {
-            return content.ToLower(); // TODO culture info
+            return content.ToLower(CultureInfo.InvariantCulture);
         }
     }
 
@@ -193,7 +193,7 @@ namespace CubeIsland.LyricsReloaded.Filters
 
         public string filter(string content, string[] args, Encoding encoding)
         {
-            return content.ToUpper(); // TODO culture info
+            return content.ToUpper(CultureInfo.InvariantCulture);
         }
     }
 
@@ -381,6 +381,37 @@ namespace CubeIsland.LyricsReloaded.Filters
                 throw new InvalidConfigurationException("The replace filter requires 2 parameters: replace, <search>, <replacement>");
             }
             return content.Replace(args[0], args[1]);
+        }
+    }
+
+    public class BrokenCharFixer : Filter
+    {
+        public string getName()
+        {
+            return "fix_broken_chars";
+        }
+
+        public string filter(string content, string[] args, Encoding encoding)
+        {
+            if (args.Length < 2 || args[0].Length == 0)
+            {
+                throw new InvalidConfigurationException("The fix_broken_chars filter needs 2 arguments: fix_broken_chars, <first char>, <encoding>");
+            }
+            Encoding sourceEncoding;
+            try
+            {
+                sourceEncoding = Encoding.GetEncoding(args[1]);
+            }
+            catch (ArgumentException e)
+            {
+                throw new InvalidConfigurationException("The given encoding " + args[1] + " was not found!", e);
+            }
+            return (new Regex(args[0][0] + ".")).Replace(content, match => {
+                string brokenChar = match.Groups[0].Value;
+
+                byte[] bytes = sourceEncoding.GetBytes(brokenChar);
+                return new string(Encoding.UTF8.GetChars(bytes, 0, bytes.Length));
+            });
         }
     }
 }

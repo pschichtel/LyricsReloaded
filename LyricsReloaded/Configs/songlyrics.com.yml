@@ -20,3 +20,5 @@ post-filters:
 - entity_decode
 - clean_spaces
 - utf8_encode
+- [fix_broken_chars, 'Ã', ISO-8859-1]
+- [replace, 'þ', 'ß']
