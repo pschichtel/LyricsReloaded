@@ -46,18 +46,34 @@ namespace CubeIsland.LyricsReloaded
         private static readonly Dictionary<char, RegexOptions> REGEX_OPTION_MAP = new Dictionary<char, RegexOptions> {
             {'i', RegexOptions.IgnoreCase},
             {'s', RegexOptions.Singleline},
-            {'m', RegexOptions.Multiline}
+            {'m', RegexOptions.Multiline},
+            {'c', RegexOptions.Compiled},
+            {'x', RegexOptions.IgnorePatternWhitespace},
+            {'d', RegexOptions.RightToLeft},
+            {'e', RegexOptions.ExplicitCapture},
+            {'j', RegexOptions.ECMAScript},
+            {'l', RegexOptions.CultureInvariant}
         };
 
         public static RegexOptions optionStringToRegexOptions(string optionString)
         {
             RegexOptions options = RegexOptions.None;
 
+            char lc;
             foreach (char c in optionString)
             {
-                if (REGEX_OPTION_MAP.ContainsKey(c))
+                lc = Char.ToLower(c);
+                if (REGEX_OPTION_MAP.ContainsKey(lc))
                 {
-                    options |= REGEX_OPTION_MAP[c];
+                    RegexOptions option = REGEX_OPTION_MAP[lc];
+                    if (Char.IsLower(c))
+                    {
+                        options |= option;
+                    }
+                    else
+                    {
+                        options &= ~option;
+                    }
                 }
             }
 
