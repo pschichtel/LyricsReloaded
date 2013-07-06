@@ -4,7 +4,7 @@ Plugin documentation
 Links
 -----
 * [Filter](Filters/README.md)
-* [Validator](Validations/README.md)
+* [Validator](Validation/README.md)
 * [Example configuration](Configs/example.yml)
 
 Regular expressions
@@ -31,12 +31,12 @@ character disables the options.
 
 The options:
 
-* *i*: the regex is case insensitive
-* *s*: the input string is seen as a single line
-* *m*: the input is seen as multiple lines
-* *c*: the regex will be compiled (improves execution performance, but slows startup)
-* *x*: whitespace in the regex will be ignored (nice for complex regexes)
-* *d*: the regex will go from right to left though the string
-* *e*: only named capturing groups will be used
-* *j*: the regex will be ECMA script compatible
-* *l*: the regex will be culture invariant
+* **i**: the regex is case insensitive
+* **s**: the input string is seen as a single line
+* **m**: the input is seen as multiple lines
+* **c**: the regex will be compiled (improves execution performance, but slows startup)
+* **x**: whitespace in the regex will be ignored (nice for complex regexes)
+* **d**: the regex will go from right to left though the string
+* **e**: only named capturing groups will be used
+* **j**: the regex will be ECMA script compatible
+* **l**: the regex will be culture invariant
