@@ -41,7 +41,6 @@ namespace CubeIsland.LyricsReloaded.Provider.Loader
             lyricsReloaded.getLogger().debug("The constructed URL: {0}", url);
 
             WebResponse response = client.get(url);
-            Console.WriteLine("Raw content:\n" + response.getContent());
             String lyrics = pattern.apply(response.getContent());
             if (lyrics == null)
             {

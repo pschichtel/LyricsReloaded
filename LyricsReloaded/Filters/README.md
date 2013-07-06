@@ -87,6 +87,7 @@ regex
 -----
 This filter does a regex replace, the first argument is the regex (which will be cached)
 and the second argument is the replacement which may contain backreferences.
+Optionally a third argument can be given which specifies regex options
 
 Example usage: [regex, "\\s+?", " "]
 
