@@ -7,7 +7,7 @@ namespace LyricsUnitTests
     [TestClass]
     public class CuspajzTests
     {
-        private static Provider p = LyricsTests.getProvider("Cušpajz");
+        private static readonly Provider p = LyricsTests.getProvider("Cušpajz");
 
         [TestMethod]
         public void cuspajzBasics()
@@ -16,7 +16,7 @@ namespace LyricsUnitTests
 
             Console.WriteLine(lyr);
 
-            Assert.IsFalse(String.IsNullOrWhiteSpace(lyr));
+            Assert.IsFalse(String.IsNullOrWhiteSpace(lyr), "Lyrics not found!");
         }
     }
 }

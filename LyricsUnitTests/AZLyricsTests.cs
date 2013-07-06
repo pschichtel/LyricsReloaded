@@ -2,13 +2,12 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using CubeIsland.LyricsReloaded.Provider;
 
-
 namespace LyricsUnitTests
 {
     [TestClass]
     public class AzLyricsTests
     {
-        private static Provider p = LyricsTests.getProvider("A-Z Lyrics Universe");
+        private static readonly Provider p = LyricsTests.getProvider("A-Z Lyrics Universe");
 
         [TestMethod]
         public void azLyricsBasics()
@@ -17,7 +16,7 @@ namespace LyricsUnitTests
 
             Console.WriteLine(lyr);
 
-            Assert.IsFalse(String.IsNullOrWhiteSpace(lyr));
+            Assert.IsFalse(String.IsNullOrWhiteSpace(lyr), "Lyrics not found!");
         }
     }
 }

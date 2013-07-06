@@ -52,6 +52,8 @@
   <ItemGroup>
     <Compile Include="AzLyricsTests.cs" />
     <Compile Include="CuspajzTests.cs" />
+    <Compile Include="LyricWikiTests.cs" />
+    <Compile Include="LetrasMusBrTests.cs" />
     <Compile Include="LyricsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
