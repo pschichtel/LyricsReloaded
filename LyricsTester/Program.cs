@@ -43,6 +43,19 @@ namespace LyricsTester
             LyricsReloaded lyricsReloaded = new LyricsReloaded(".");
             lyricsReloaded.loadConfigurations();
 
+            lyricsReloaded.checkForNewVersion(newAvailable =>
+            {
+                if (newAvailable)
+                {
+                    Console.WriteLine();
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.BackgroundColor = ConsoleColor.Red;
+                    Console.Write("A new version is available!");
+                    Console.ResetColor();
+                    Console.WriteLine();
+                }
+            });
+
             if (String.IsNullOrWhiteSpace(providerName))
             {
                 Console.WriteLine("The providers:");

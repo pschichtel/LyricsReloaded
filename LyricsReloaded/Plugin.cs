@@ -100,6 +100,13 @@ namespace MusicBeePlugin
                         lyricsReloaded.setProxy(proxy);
                     }
 
+                    lyricsReloaded.checkForNewVersion(newAvailable => {
+                        if (newAvailable)
+                        {
+                            MessageBox.Show("A new version is available!", "LyricsReloaded!");
+                        }
+                    });
+
                     break;
             }
         }

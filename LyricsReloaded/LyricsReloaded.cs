@@ -19,11 +19,13 @@
 */
 
 using System;
+using System.Threading;
 using CubeIsland.LyricsReloaded.Provider;
 using CubeIsland.LyricsReloaded.Provider.Loader;
 using System.IO;
 using System.Net;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace CubeIsland.LyricsReloaded
 {
@@ -130,6 +132,50 @@ namespace CubeIsland.LyricsReloaded
             {
                 logger.warn("Failed to remove provider folder: {0}", e.Message);
             }
+        }
+
+        public delegate void UpdateCheckerCallback(bool updateAvailable);
+
+        public void checkForNewVersion(UpdateCheckerCallback callback)
+        {
+            Version local = Assembly.GetAssembly(GetType()).GetName().Version;
+
+            LyricsReloaded lr = this;
+
+            Thread updateChecker = new Thread(() => {
+                WebClient cl = new WebClient(lr, 5000);
+                try
+                {
+                    bool result = false;
+                    WebResponse respone = cl.get("https://raw.github.com/quickwango/LyricsReloaded/stable/LyricsReloaded/Properties/AssemblyInfo.cs");
+                    if (respone != null)
+                    {
+                        String content = respone.getContent();
+                        if (!String.IsNullOrWhiteSpace(content))
+                        {
+                            Regex versionRegex = new Regex("AssemblyVersion\\(\"(?<version>[^\\s]+)\"\\)", RegexOptions.Compiled | RegexOptions.Singleline);
+                            Match match = versionRegex.Match(content);
+                            if (match.Success)
+                            {
+                                Version remote = Version.Parse(match.Groups["version"].Value.Replace("*", "0.0"));
+                                result = remote.CompareTo(local) > 0;
+                            }
+                        }
+
+                    }
+
+                    callback(result);
+                }
+                catch (Exception e)
+                {
+                    lr.logger.error("Failed to check for updates: {0}", e.Message);
+                }
+            }) {
+                IsBackground = true,
+                Name = "LyricsReloaded - Version Check"
+            };
+            updateChecker.Start();
+
         }
 
         #region "internal helpers"

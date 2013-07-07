@@ -42,7 +42,8 @@ namespace CubeIsland.LyricsReloaded
 
             messageQueue = new BlockingCollection<string>();
             writerThread = new Thread(write) {
-                IsBackground = false
+                IsBackground = false,
+                Name = "LyricsReloaded - Logging"
             };
             writerThread.Start();
         }
