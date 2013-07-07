@@ -1,9 +1,12 @@
-name: Tekstowo
+﻿name: Tekstowo
 
 variables:
     artist:
         type: artist
         filters:
+        - [replace, 'ź', ' ']
+        - diacritics2ascii
+        - [replace, 'ł', l]
         - lowercase
         - [strip_nonascii, _]
     title:
@@ -12,8 +15,9 @@ variables:
 
 config:
     url: "http://www.tekstowo.pl/piosenka,{artist},{title}.html"
-    pattern: ['<div\s+class="song-text"[^>]*>(?<lyrics>.*?)<p>&nbsp;</p>', s]
+    pattern: ['<div\s+class="song-text"[^>]*>\s*<h2>Tekst piosenki:</h2>(?<lyrics>.*?)<p>&nbsp;</p>', s]
     
 post-filters:
 - strip_html
 - utf8_encode
+- clean_spaces

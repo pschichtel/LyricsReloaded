@@ -1,9 +1,11 @@
-name: Teksty
+﻿name: Teksty
 
 variables:
     artist:
         type: artist
         filters:
+        - diacritics2ascii
+        - [replace, 'ł', l]
         - lowercase
         - [strip_nonascii, -]
     title:

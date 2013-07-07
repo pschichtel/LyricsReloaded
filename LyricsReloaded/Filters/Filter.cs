@@ -37,7 +37,7 @@ namespace CubeIsland.LyricsReloaded.Filters
 
     public class HtmlStripper : Filter
     {
-        private static readonly Regex STRIP_TAG_REGEX = new Regex("<[a-z]+(\\s+[a-z-]+(=(\"[^\"]*\"|'[^']*'|[^\\s\"'/>]+))?)*\\s*/?>|</[a-z]+>", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.CultureInvariant);
+        private static readonly Regex STRIP_TAG_REGEX = new Regex("<[a-z][a-z0-9]*(\\s+[a-z-]+(=(\"[^\"]*\"|'[^']*'|[^\\s\"'/>]+))?)*\\s*/?>|</[a-z][a-z0-9]*>", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.CultureInvariant);
 
         public string getName()
         {
@@ -180,7 +180,20 @@ namespace CubeIsland.LyricsReloaded.Filters
 
         public string filter(string content, string[] args, Encoding encoding)
         {
-            return content.ToLower(CultureInfo.InvariantCulture);
+            CultureInfo culture = CultureInfo.InvariantCulture;
+            if (args.Length > 0)
+            {
+                try
+                {
+                    culture = CultureInfo.GetCultureInfo(args[0]);
+                }
+                catch (CultureNotFoundException e)
+                {
+                    throw new InvalidConfigurationException("Unknown culture " + args[0], e);
+                }
+            }
+
+            return content.ToLower(culture);
         }
     }
 
@@ -193,7 +206,20 @@ namespace CubeIsland.LyricsReloaded.Filters
 
         public string filter(string content, string[] args, Encoding encoding)
         {
-            return content.ToUpper(CultureInfo.InvariantCulture);
+            CultureInfo culture = CultureInfo.InvariantCulture;
+            if (args.Length > 0)
+            {
+                try
+                {
+                    culture = CultureInfo.GetCultureInfo(args[0]);
+                }
+                catch (CultureNotFoundException e)
+                {
+                    throw new InvalidConfigurationException("Unknown culture " + args[0], e);
+                }
+            }
+
+            return content.ToUpper(culture);
         }
     }
 
@@ -211,7 +237,7 @@ namespace CubeIsland.LyricsReloaded.Filters
 
             foreach (char c in normalized)
             {
-                if (char.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
+                if (CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
                 {
                     newString.Append(c);
                 }

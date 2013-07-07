@@ -4,6 +4,7 @@ variables:
     artist:
         type: artist
         filters:
+        - diacritics2ascii
         - lowercase
         - [strip_nonascii, -]
     title:
@@ -16,7 +17,6 @@ config:
     
 post-filters:
 - p2break
-- br2nl
 - strip_html
-- entity_decode
 - utf8_encode
+- clean_spaces
