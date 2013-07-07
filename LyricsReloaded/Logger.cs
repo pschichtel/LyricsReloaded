@@ -21,18 +21,30 @@
 using System;
 using System.Text;
 using System.IO;
+using System.Threading;
+using System.Collections.Concurrent;
 
 namespace CubeIsland.LyricsReloaded
 {
     public class Logger
     {
+        private readonly BlockingCollection<string> messageQueue;
+        private readonly Thread writerThread;
         private readonly FileInfo fileInfo;
         private StreamWriter writer;
 
         public Logger(string path)
         {
             fileInfo = new FileInfo(path);
-            writer = null;
+            writer = new StreamWriter(fileInfo.FullName, true, Encoding.UTF8) {
+                AutoFlush = false
+            };
+
+            messageQueue = new BlockingCollection<string>();
+            writerThread = new Thread(write) {
+                IsBackground = false
+            };
+            writerThread.Start();
         }
 
         public FileInfo getFileInfo()
@@ -40,48 +52,52 @@ namespace CubeIsland.LyricsReloaded
             return fileInfo;
         }
 
-        private void write(string type, string message, object[] args)
+        private void write()
         {
-            if (writer == null)
+            while (true)
             {
-                writer = new StreamWriter(fileInfo.FullName, true, Encoding.UTF8);
-                writer.AutoFlush = false;
+                writer.WriteLine(messageQueue.Take());
+                writer.Flush();
             }
-            writer.WriteLine(DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss") + " [" + type.ToUpper() + "] " + string.Format(message, args));
-            writer.Flush();
+        }
+
+        private void queueMessage(string type, string message, object[] args)
+        {
+            messageQueue.Add(DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss") + " [" + type.ToUpper() + "] " + string.Format(message, args));
         }
 
         public void close()
         {
-            if (writer != null)
+            if (!writerThread.Join(5000))
             {
-                try
-                {
-                    writer.Close();
-                }
-                catch (ObjectDisposedException)
-                {}
+                writerThread.Interrupt();
             }
+            try
+            {
+                writer.Close();
+            }
+            catch (ObjectDisposedException)
+            {}
         }
 
         public void debug(string message, params object[] args)
         {
-            write("debug", message, args);
+            queueMessage("debug", message, args);
         }
 
         public void info(string message, params object[] args)
         {
-            write("info", message, args);
+            queueMessage("info", message, args);
         }
 
         public void warn(string message, params object[] args)
         {
-            write("warn", message, args);
+            queueMessage("warn", message, args);
         }
 
         public void error(string message, params object[] args)
         {
-            write("error", message, args);
+            queueMessage("error", message, args);
         }
     }
 }
