@@ -223,11 +223,11 @@ namespace CubeIsland.LyricsReloaded.Filters
         }
     }
 
-    public class DiacriticsNormalizer : Filter
+    public class DiacriticsStripper : Filter
     {
         public string getName()
         {
-            return "diacritics2ascii";
+            return "strip_diacritics";
         }
 
         public string filter(string content, string[] args, Encoding encoding)

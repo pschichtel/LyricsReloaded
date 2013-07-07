@@ -10,7 +10,7 @@ variables:
 	artist:
 		type: artist # the source of the value
 		filters:
-		- normalize
+		- strip_diacritics
 		- [stripdown, _]
 		- urlencode
 

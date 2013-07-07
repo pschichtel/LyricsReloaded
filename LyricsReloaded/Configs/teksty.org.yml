@@ -4,7 +4,7 @@ variables:
     artist:
         type: artist
         filters:
-        - diacritics2ascii
+        - strip_diacritics
         - [replace, 'ł', l]
         - lowercase
         - [strip_nonascii, -]
