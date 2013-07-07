@@ -41,6 +41,7 @@ namespace CubeIsland.LyricsReloaded
         private readonly ProviderManager providerManager;
         private string userAgent;
         private WebProxy proxy;
+        private bool down = false;
 
         public LyricsReloaded(string configurationPath)
         {
@@ -60,7 +61,7 @@ namespace CubeIsland.LyricsReloaded
 
         ~LyricsReloaded()
         {
-            logger.close();
+            shutdown();
         }
 
         public Logger getLogger()
@@ -95,7 +96,12 @@ namespace CubeIsland.LyricsReloaded
 
         public void shutdown()
         {
-            providerManager.shutdown();
+            if (!down)
+            {
+                down = true;
+                providerManager.shutdown();
+                logger.close();
+            }
         }
 
         public void uninstall()
