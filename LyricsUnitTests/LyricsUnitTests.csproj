@@ -52,6 +52,8 @@
   <ItemGroup>
     <Compile Include="AzLyricsTests.cs" />
     <Compile Include="CuspajzTests.cs" />
+    <Compile Include="HindiLyricsTests.cs" />
+    <Compile Include="UrbanLyricsTests.cs" />
     <Compile Include="TekstyTests.cs" />
     <Compile Include="TekstowoTests.cs" />
     <Compile Include="TekstoviPjesamaTests.cs" />
