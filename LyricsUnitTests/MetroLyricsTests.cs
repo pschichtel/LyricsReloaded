@@ -9,6 +9,7 @@ namespace LyricsUnitTests
     {
         private static readonly Provider PROVIDER = LyricsTests.getProvider("MetroLyrics");
 
+        [Timeout(3000)]
         [TestMethod]
         public void metroLyricsBasics()
         {
@@ -19,6 +20,7 @@ namespace LyricsUnitTests
             Assert.IsFalse(String.IsNullOrWhiteSpace(lyr), "Lyrics not found!");
         }
 
+        [Timeout(3000)]
         [TestMethod]
         public void metroLyricsNonAsciiSpaceEdgeCase()
         {

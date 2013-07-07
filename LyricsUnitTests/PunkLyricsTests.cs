@@ -9,6 +9,7 @@ namespace LyricsUnitTests
     {
         private static readonly Provider PROVIDER = LyricsTests.getProvider("Punk Lyrics");
 
+        [Timeout(3000)]
         [TestMethod]
         public void punkLyricsBasics()
         {

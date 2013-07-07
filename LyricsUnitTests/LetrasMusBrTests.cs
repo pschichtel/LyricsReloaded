@@ -9,6 +9,7 @@ namespace LyricsUnitTests
     {
         private static readonly Provider PROVIDER = LyricsTests.getProvider("Letras de músicas");
 
+        [Timeout(3000)]
         [TestMethod]
         public void letrasMusBrBasics()
         {

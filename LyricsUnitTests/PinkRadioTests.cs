@@ -9,6 +9,7 @@ namespace LyricsUnitTests
     {
         private static readonly Provider PROVIDER = LyricsTests.getProvider("Pink Radio");
 
+        [Timeout(3000)]
         [TestMethod]
         public void pinkRadioBasics()
         {

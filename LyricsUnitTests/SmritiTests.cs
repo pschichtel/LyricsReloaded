@@ -9,6 +9,7 @@ namespace LyricsUnitTests
     {
         private static readonly Provider PROVIDER = LyricsTests.getProvider("Smriti");
 
+        [Timeout(3000)]
         [TestMethod]
         public void smritiBasics()
         {

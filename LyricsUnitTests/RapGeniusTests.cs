@@ -9,6 +9,7 @@ namespace LyricsUnitTests
     {
         private static readonly Provider PROVIDER = LyricsTests.getProvider("Rap Genius");
 
+        [Timeout(3000)]
         [TestMethod]
         public void rapGeniusBasics()
         {
