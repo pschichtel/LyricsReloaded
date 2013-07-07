@@ -80,7 +80,7 @@ namespace CubeIsland.LyricsReloaded
             return executeRequest(request);
         }
 
-        public static string generateQueryString(IDictionary<string, string> data)
+        public static string generateQueryString(IEnumerable<KeyValuePair<string, string>> data)
         {
             StringBuilder queryString = new StringBuilder("");
             IEnumerator<KeyValuePair<string, string>> it = data.GetEnumerator();
@@ -114,11 +114,7 @@ namespace CubeIsland.LyricsReloaded
             request.UserAgent = lyricsReloaded.getUserAgent();
             request.Accept = "*/*";
             request.Headers.Add("Accept-Encoding", "gzip");
-            WebProxy proxy = lyricsReloaded.getProxy();
-            if (proxy != null)
-            {
-                request.Proxy = proxy;
-            }
+            request.Proxy = lyricsReloaded.getProxy();
 
             // send the request and wait for the response
             IAsyncResult result;
@@ -160,6 +156,7 @@ namespace CubeIsland.LyricsReloaded
                     const int bufferSize = 4096;
                     byte[] buffer = new byte[bufferSize];
                     int bytesRead;
+
                     do
                     {
                         bytesRead = responsesStream.Read(buffer, 0, bufferSize);
