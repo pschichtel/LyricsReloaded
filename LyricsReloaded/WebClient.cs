@@ -154,7 +154,7 @@ namespace CubeIsland.LyricsReloaded
             {
                 if (response.CharacterSet != null)
                 {
-                    encoding = Encoding.GetEncoding(response.CharacterSet); // the response encoding specified by the server. this should enough
+                    encoding = Encoding.GetEncoding(response.CharacterSet); // the response encoding specified by the server. this should be enough
                 }
 
                 Stream responsesStream = response.GetResponseStream();
@@ -184,7 +184,7 @@ namespace CubeIsland.LyricsReloaded
                     while (bytesRead > 0);
                     responsesStream.Close();
 
-                    contentString = encoding.GetString(content.GetBuffer(), 0, Convert.ToInt32(content.Length)); //  TODO this doesn't seem solid; decode the the data with the currently known encoding
+                    contentString = encoding.GetString(content.GetBuffer()); // decode the data with the currently known encoding
                     Match match = ENCODING_REGEX.Match(contentString); // search for a encoding specified in the content
                     if (match.Success)
                     {
@@ -194,7 +194,7 @@ namespace CubeIsland.LyricsReloaded
                             if (!encoding.Equals(tmp))
                             {
                                 encoding = tmp;
-                                contentString = encoding.GetString(content.GetBuffer(), 0, Convert.ToInt32(content.Length)); // TODO this doesn't seem solid; decode again with the newly found encoding
+                                contentString = encoding.GetString(content.GetBuffer()); // decode again with the newly found encoding
                             }
                         }
                         catch (ArgumentException)
