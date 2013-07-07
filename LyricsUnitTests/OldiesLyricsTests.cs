@@ -7,12 +7,12 @@ namespace LyricsUnitTests
     [TestClass]
     public class OldiesLyrics
     {
-        private static readonly Provider p = LyricsTests.getProvider("Oldies Lyrics");
+        private static readonly Provider PROVIDER = LyricsTests.getProvider("Oldies Lyrics");
 
         [TestMethod]
         public void oldiesLyricsBasics()
         {
-            String lyr = p.getLyrics("RODNEY CROWELL", "Why Don't We Talk About It", "");
+            String lyr = PROVIDER.getLyrics("RODNEY CROWELL", "Why Don't We Talk About It", "");
 
             Console.WriteLine(lyr);
 

@@ -7,13 +7,13 @@ namespace LyricsUnitTests
     [TestClass]
     public class LyricWikiTests
     {
-        private static readonly Provider normal = LyricsTests.getProvider("LyricWiki");
-        private static readonly Provider gracenote = LyricsTests.getProvider("LyricWiki Gracenote");
+        private static readonly Provider NORMAL = LyricsTests.getProvider("LyricWiki");
+        private static readonly Provider GRACENOTE = LyricsTests.getProvider("LyricWiki Gracenote");
 
         [TestMethod]
         public void lyricWikiNormalBasics()
         {
-            String lyr = normal.getLyrics("Paramore", "Misery Business", "");
+            String lyr = NORMAL.getLyrics("Paramore", "Misery Business", "");
 
             Console.WriteLine(lyr);
 
@@ -23,7 +23,7 @@ namespace LyricsUnitTests
         [TestMethod]
         public void lyricWikiGracenoteBasics()
         {
-            String lyr = gracenote.getLyrics("Paramore", "Misery Business", "");
+            String lyr = GRACENOTE.getLyrics("Paramore", "Misery Business", "");
 
             Console.WriteLine(lyr);
 

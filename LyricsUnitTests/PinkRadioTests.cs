@@ -7,12 +7,12 @@ namespace LyricsUnitTests
     [TestClass]
     public class PinkRadioTests
     {
-        private static readonly Provider p = LyricsTests.getProvider("Pink Radio");
+        private static readonly Provider PROVIDER = LyricsTests.getProvider("Pink Radio");
 
         [TestMethod]
         public void pinkRadioBasics()
         {
-            String lyr = p.getLyrics("", "Sa tvojih usana", "");
+            String lyr = PROVIDER.getLyrics("", "Sa tvojih usana", "");
 
             Console.WriteLine(lyr);
 

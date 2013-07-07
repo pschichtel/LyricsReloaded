@@ -7,12 +7,12 @@ namespace LyricsUnitTests
     [TestClass]
     public class RapGeniusTests
     {
-        private static readonly Provider p = LyricsTests.getProvider("Rap Genius");
+        private static readonly Provider PROVIDER = LyricsTests.getProvider("Rap Genius");
 
         [TestMethod]
         public void rapGeniusBasics()
         {
-            String lyr = p.getLyrics("Nesli", "Niente Di Più", "");
+            String lyr = PROVIDER.getLyrics("Nesli", "Niente Di Più", "");
 
             Console.WriteLine(lyr);
 

@@ -7,12 +7,12 @@ namespace LyricsUnitTests
     [TestClass]
     public class PunkLyricsTests
     {
-        private static readonly Provider p = LyricsTests.getProvider("Punk Lyrics");
+        private static readonly Provider PROVIDER = LyricsTests.getProvider("Punk Lyrics");
 
         [TestMethod]
         public void punkLyricsBasics()
         {
-            String lyr = p.getLyrics("Die Ärzte", "Erklärung", "");
+            String lyr = PROVIDER.getLyrics("Die Ärzte", "Erklärung", "");
 
             Console.WriteLine(lyr);
 

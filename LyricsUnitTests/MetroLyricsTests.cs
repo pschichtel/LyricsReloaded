@@ -7,12 +7,12 @@ namespace LyricsUnitTests
     [TestClass]
     public class MetroLyricsTests
     {
-        private static readonly Provider p = LyricsTests.getProvider("MetroLyrics");
+        private static readonly Provider PROVIDER = LyricsTests.getProvider("MetroLyrics");
 
         [TestMethod]
         public void metroLyricsBasics()
         {
-            String lyr = p.getLyrics("Lil Wayne", "We Be Steady Mobbin''", "");
+            String lyr = PROVIDER.getLyrics("Lil Wayne", "We Be Steady Mobbin''", "");
 
             Console.WriteLine(lyr);
 
@@ -22,7 +22,7 @@ namespace LyricsUnitTests
         [TestMethod]
         public void metroLyricsNonAsciiSpaceEdgeCase()
         {
-            String lyr = p.getLyrics("Lil Wayne", "Mr. Carter", "");
+            String lyr = PROVIDER.getLyrics("Lil Wayne", "Mr. Carter", "");
 
             Console.WriteLine(lyr);
 

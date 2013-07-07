@@ -7,12 +7,12 @@ namespace LyricsUnitTests
     [TestClass]
     public class CuspajzTests
     {
-        private static readonly Provider p = LyricsTests.getProvider("Cušpajz");
+        private static readonly Provider PROVIDER = LyricsTests.getProvider("Cušpajz");
 
         [TestMethod]
         public void cuspajzBasics()
         {
-            String lyr = p.getLyrics("Zabranjeno pušenje", "Kada dernek utihne", "");
+            String lyr = PROVIDER.getLyrics("Zabranjeno pušenje", "Kada dernek utihne", "");
 
             Console.WriteLine(lyr);
 

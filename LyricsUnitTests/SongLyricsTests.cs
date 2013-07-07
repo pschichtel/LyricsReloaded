@@ -7,13 +7,13 @@ namespace LyricsUnitTests
     [TestClass]
     public class SongLyricsTests
     {
-        private static readonly Provider p = LyricsTests.getProvider("Song Lyrics");
+        private static readonly Provider PROVIDER = LyricsTests.getProvider("Song Lyrics");
 
         //[Timeout(5000)]
         [TestMethod]
         public void songLyricsBasics()
         {
-            String lyr = p.getLyrics("die Ärzte", "Schrei nach Liebe", "");
+            String lyr = PROVIDER.getLyrics("die Ärzte", "Schrei nach Liebe", "");
 
             Console.WriteLine(lyr);
 

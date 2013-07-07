@@ -7,12 +7,12 @@ namespace LyricsUnitTests
     [TestClass]
     public class SmritiTests
     {
-        private static readonly Provider p = LyricsTests.getProvider("Smriti");
+        private static readonly Provider PROVIDER = LyricsTests.getProvider("Smriti");
 
         [TestMethod]
         public void smritiBasics()
         {
-            String lyr = p.getLyrics("", "ba.Dii mushkil se huaa teraa meraa saath piyaa", "");
+            String lyr = PROVIDER.getLyrics("", "ba.Dii mushkil se huaa teraa meraa saath piyaa", "");
 
             Console.WriteLine(lyr);
 

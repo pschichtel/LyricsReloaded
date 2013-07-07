@@ -7,12 +7,12 @@ namespace LyricsUnitTests
     [TestClass]
     public class LetrasMusBrTests
     {
-        private static readonly Provider p = LyricsTests.getProvider("Letras de músicas");
+        private static readonly Provider PROVIDER = LyricsTests.getProvider("Letras de músicas");
 
         [TestMethod]
         public void letrasMusBrBasics()
         {
-            String lyr = p.getLyrics("Mc Anitta", "Show Das Poderosas", "");
+            String lyr = PROVIDER.getLyrics("Mc Anitta", "Show Das Poderosas", "");
 
             Console.WriteLine(lyr);
 
