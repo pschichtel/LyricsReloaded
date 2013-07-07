@@ -42,6 +42,16 @@ namespace CubeIsland.LyricsReloaded
             this.timeout = timeout;
         }
 
+        protected HttpWebRequest newRequest(string method, string url)
+        {
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            request.Method = method;
+            request.Timeout = timeout;
+            request.Proxy = lyricsReloaded.getProxy();
+
+            return request;
+        }
+
         public int getTimeout()
         {
             return timeout;
@@ -49,31 +59,39 @@ namespace CubeIsland.LyricsReloaded
 
         public WebResponse get(string url)
         {
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-
-            request.Method = "GET";
-            request.ContentLength = 0;
-
-            return executeRequest(request);
+            return executeRequest(newRequest("GET", url));
         }
 
         public WebResponse post(string url, Dictionary<string, string> data)
         {
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            HttpWebRequest request = newRequest("POST", url);
 
-            request.Method = "POST";
             request.ContentType = "application/x-www-form-urlencoded";
             request.ContentLength = 0;
 
             if (data != null)
             {
-                using (Stream stream = request.GetRequestStream())
+                Stream stream;
+                try
+                {
+                    stream = request.GetRequestStream();
+                }
+                catch (WebException e)
+                {
+                    if (e.Status == WebExceptionStatus.Timeout)
+                    {
+                        throw new WebException("The operation has timed out.");
+                    }
+                    throw;
+                }
+                using (stream)
                 {
                     stream.WriteTimeout = timeout;
                     string queryString = generateQueryString(data);
                     byte[] byteData = new byte[Encoding.UTF8.GetByteCount(queryString)];
                     Encoding.UTF8.GetBytes(queryString, 0, queryString.Length, byteData, 0);
                     stream.Write(byteData, 0, byteData.Length);
+                    request.ContentLength += byteData.Length;
                 }
             }
 
@@ -114,29 +132,25 @@ namespace CubeIsland.LyricsReloaded
             request.UserAgent = lyricsReloaded.getUserAgent();
             request.Accept = "*/*";
             request.Headers.Add("Accept-Encoding", "gzip");
-            request.Proxy = lyricsReloaded.getProxy();
-
-            // send the request and wait for the response
-            IAsyncResult result;
-            try
-            {
-                result = request.BeginGetResponse(null, null);
-                if (!result.AsyncWaitHandle.WaitOne(timeout, false))
-                {
-                    throw new WebException("The operation has timed out.", WebExceptionStatus.Timeout);
-                }
-            }
-            catch
-            {
-                request.Abort();
-                throw;
-            }
 
             // load the response
             WebResponse webResponse;
             String contentString = null;
             Encoding encoding = Encoding.ASCII; // default encoding as the last fallback
-            using (HttpWebResponse response = (HttpWebResponse)request.EndGetResponse(result))
+            HttpWebResponse response;
+            try
+            {
+                response = (HttpWebResponse) request.GetResponse();
+            }
+            catch (WebException e)
+            {
+                if (e.Status == WebExceptionStatus.Timeout)
+                {
+                    throw new WebException("The operation has timed out.");
+                }
+                throw;
+            }
+            using (response)
             {
                 if (response.CharacterSet != null)
                 {
@@ -146,6 +160,7 @@ namespace CubeIsland.LyricsReloaded
                 Stream responsesStream = response.GetResponseStream();
                 if (responsesStream != null)
                 {
+                    responsesStream.ReadTimeout = timeout;
                     if (String.Compare(response.ContentEncoding, "gzip", StringComparison.OrdinalIgnoreCase) == 0)
                     {
                         // gzip compression detected, wrap the stream with a decompressing gzip stream
