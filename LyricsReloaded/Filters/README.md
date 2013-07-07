@@ -6,7 +6,7 @@ Filters can currently be applied to variable values and the lyrics
 content.
 
 ***Important***: The filters are executed in the specified order, so stripping HTML-tags
-                 before converting <br>s to newlines won't get you far.
+                 before converting \<br\>s to newlines won't get you far.
 
 
 strip_html
@@ -16,7 +16,7 @@ This filter removes all HTML tags from the content.
 
 entity_decode
 -------------
-This filter decode HTML entity like &copy; -> ©.
+This filter decode HTML entity like \&copy; -> ©.
 
 
 strip_links
@@ -31,12 +31,12 @@ This filter converts the content's encoding to UTF-8 (without BOM).
 
 br2ln
 -----
-This filter converts <br> tags to newlines (\n).
+This filter converts \<br\> tags to newlines (\n).
 
 
 p2break
 -------
-This filter converts </p> tags to 2 newlines (\n) indicating a new paragraph.
+This filter converts \</p\> tags to 2 newlines (\n) indicating a new paragraph.
 
 
 clean_spaces
@@ -54,15 +54,17 @@ This filter removes whitespace from the beginning and the end of the content.
 lowercase
 ---------
 This filter converts the whole content to lower case.
+Optionally you can provide a culture name as the first argument.
 
-Note: The convertion is culture unaware.
+By default the conversion is culture unaware.
 
 
 uppercase
 ---------
 This filter converts the while content to upper case
+Optionally you can provide a culture name as the first argument.
 
-Note: The convertion is culture unaware.
+By default the conversion is culture unaware.
 
 
 diacritics2ascii
@@ -92,7 +94,7 @@ This filter does a regex replace, the first argument is the regex (which will be
 and the second argument is the replacement which may contain backreferences.
 Optionally a third argument can be given which specifies regex options
 
-Example usage: [regex, "\\s+?", " "]
+Example usage: [regex, '\\s+?', " "]
 
 
 strip_nonascii
