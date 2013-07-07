@@ -11,7 +11,7 @@ namespace LyricsUnitTests
 
         [Timeout(3000)]
         [TestMethod]
-        public void cuspajzBasics()
+        public void tekstoviPjesamaBasics()
         {
             String lyr = PROVIDER.getLyrics("Šaban Šaulić", "Koliko ti srece zelim", "");
 

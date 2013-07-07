@@ -36,8 +36,6 @@ namespace CubeIsland.LyricsReloaded.Provider.Loader
         {
             string url = constructUrl(variables);
 
-            Console.WriteLine("Url: " + url);
-
             lyricsReloaded.getLogger().debug("The constructed URL: {0}", url);
 
             WebResponse response = client.get(url);
