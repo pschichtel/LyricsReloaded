@@ -66,7 +66,7 @@ namespace CubeIsland.LyricsReloaded.Provider.Loader
         public StaticLoaderFactory(LyricsReloaded lyricsReloaded)
         {
             this.lyricsReloaded = lyricsReloaded;
-            webClient = new WebClient(lyricsReloaded, 20000);
+            webClient = new WebClient(lyricsReloaded, 5000);
         }
 
         public string getName()
