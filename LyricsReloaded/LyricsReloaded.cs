@@ -157,7 +157,7 @@ namespace CubeIsland.LyricsReloaded
                             Match match = versionRegex.Match(content);
                             if (match.Success)
                             {
-                                Version remote = Version.Parse(match.Groups["version"].Value.Replace("*", "0.0"));
+                                Version remote = Version.Parse(match.Groups["version"].Value.Replace("*", "0.0")); // TODO remove the replace() with the next release
                                 result = remote.CompareTo(local) > 0;
                             }
                         }
