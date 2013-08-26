@@ -6,7 +6,7 @@ Filters can currently be applied to variable values and the lyrics
 content.
 
 ***Important***: The filters are executed in the specified order, so stripping HTML-tags
-                 before converting \<br\>s to newlines won't get you far.
+                 before converting \<br\> tags to newlines won't get you far.
 
 
 strip_html
@@ -16,7 +16,7 @@ This filter removes all HTML tags from the content.
 
 entity_decode
 -------------
-This filter decode HTML entity like \&copy; -> ©.
+This filter decodes HTML entities like \&copy; -> ©.
 
 
 strip_links
