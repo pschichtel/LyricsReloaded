@@ -1,0 +1,23 @@
+Lrc123.com                              requires search
+LYRDB                                   uses an API
+chartLyrics.com                         uses an API
+AZ Lyrics                               working
+Dark Lyrics                             required title for search
+Lyrics Time                             broken
+SongMeanings.net                        required search
+LoloLyrics                              required search
+RapGenius                               working
+PLyrics.com                             working
+UrbanLyrics.com                         working
+http://www.oldielyrics.com              working
+http://www.tekstowo.pl/                 working mostly, needs parameterized filters
+http://www.teksciory.pl/                requires search
+http://teksty.org/                      working
+http://www.jpopasia.com                 requires search
+http://lyrics.wikia.com/Lyrics_Wiki     requires entity decoder
+http://www.maxilyrics.com               requires search
+http://letras.mus.br/                   working
+musica.com                              requires search
+http://www.metrolyrics.com              working
+www.songlyrics.com                      working
+tunewiki.com                            possible
