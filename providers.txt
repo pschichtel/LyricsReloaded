@@ -21,3 +21,4 @@ musica.com                              requires search
 http://www.metrolyrics.com              working
 www.songlyrics.com                      working
 tunewiki.com                            possible
+viewlyrics.com                          possible
