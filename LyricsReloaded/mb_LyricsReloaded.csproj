@@ -91,7 +91,6 @@
     <None Include="Configs\lyrics.wikia.com-gn.yml" />
     <None Include="Configs\lyrics.wikia.com.yml" />
     <None Include="Configs\pinkradio.com.yml" />
-    <None Include="Configs\tekstovipjesama.com.yml" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

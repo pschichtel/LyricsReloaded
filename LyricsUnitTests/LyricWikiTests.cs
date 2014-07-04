@@ -34,7 +34,7 @@ namespace LyricsUnitTests
         [TestMethod]
         public void lyricWikiNormalBasics()
         {
-            String lyr = NORMAL.getLyrics("Paramore", "Misery Business", "");
+            String lyr = NORMAL.getLyrics("Magic!", "Rude", "");
 
             Console.WriteLine(lyr);
 
@@ -45,7 +45,7 @@ namespace LyricsUnitTests
         [TestMethod]
         public void lyricWikiGracenoteBasics()
         {
-            String lyr = GRACENOTE.getLyrics("Paramore", "Misery Business", "");
+            String lyr = GRACENOTE.getLyrics("112", "Anywhere (Ft. Lil Zane)", "");
 
             Console.WriteLine(lyr);
 
