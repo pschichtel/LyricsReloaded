@@ -20,4 +20,4 @@ post-filters:
 
 config:
     url: "http://lyrics.wikia.com/Gracenote:{artist}:{title}"
-    pattern: "'lyricbox'>.*?/></a></div>\\s*(?<lyrics>.*?)<!--"
+    pattern: "'lyricbox'>.*?</div>\\s*(?<lyrics>.*?)<!--"

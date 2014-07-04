@@ -146,7 +146,11 @@ namespace CubeIsland.LyricsReloaded
             {
                 if (e.Status == WebExceptionStatus.Timeout)
                 {
-                    throw new WebException("The operation has timed out.");
+                    throw new WebException("The operation has timed out.", e);
+                }
+                else if (e.Status == WebExceptionStatus.ProtocolError || e.Status == WebExceptionStatus.UnknownError)
+                {
+                    throw new WebException("Ops, something went wrong. (Report this please)", e);
                 }
                 throw;
             }

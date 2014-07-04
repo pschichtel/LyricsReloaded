@@ -20,4 +20,4 @@ post-filters:
 
 config:
     url: "http://lyrics.wikia.com/{artist}:{title}"
-    pattern: "'lyricbox'>.*?/></a></div>(?<lyrics>.*?)<!--"
+    pattern: "'lyricbox'>.*?</div>(?<lyrics>.*?)<!--"
