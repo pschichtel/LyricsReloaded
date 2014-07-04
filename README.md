@@ -5,7 +5,7 @@ A rewrite of the Lyrics plugin of MusicBee
 
 Bug Tracker
 -----------
-JIRA: [LyricsReloaded](http://bugs.engine.cubeisland.de/browse/LYR)
+GitHub: [LyricsReloaded](https://github.com/pschichtel/LyricsReloaded/issues)
 
 Documentation
 -------------
