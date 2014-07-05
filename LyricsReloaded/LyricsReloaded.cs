@@ -53,6 +53,8 @@ namespace CubeIsland.LyricsReloaded
             Directory.CreateDirectory(dataFolder);
             logger = new Logger(Path.Combine(dataFolder, name + ".log"));
 
+            logger.info("{0} in version {1} started!", name, asm.GetName().Version.ToString());
+
             providerManager = new ProviderManager(this);
 
             providerManager.registerLoaderFactory(new StaticLoaderFactory(this));
