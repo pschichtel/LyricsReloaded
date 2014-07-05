@@ -10,6 +10,9 @@ variables:
         type: title
         filters: artist
 
+headers:
+    User-Agent: 'Mozilla/5.0 (Windows NT 6.3; WOW64; rv:30.0) Gecko/20100101 Firefox/30.0' # Firefox 30 Win x64 user agent
+
 config:
     url: "http://www.azlyrics.com/lyrics/{artist}/{title}.html"
     pattern: ['<!-- start of lyrics -->(?<lyrics>.+?)<!-- end of lyrics -->', s]

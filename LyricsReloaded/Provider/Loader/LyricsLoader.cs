@@ -26,7 +26,7 @@ namespace CubeIsland.LyricsReloaded.Provider.Loader
 {
     public interface LyricsLoader
     {
-        Lyrics getLyrics(Dictionary<string, string> variables);
+        Lyrics getLyrics(Provider provider, Dictionary<string, string> variables);
     }
 
     public interface LyricsLoaderFactory

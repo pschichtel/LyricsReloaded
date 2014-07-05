@@ -35,10 +35,11 @@ namespace CubeIsland.LyricsReloaded.Provider
         private readonly IDictionary<string, Variable> variables;
         private readonly FilterCollection postFilters;
         private readonly ValidationCollection validations;
+        private readonly IDictionary<String, String> headers;
         private readonly LyricsLoader loader;
         private readonly RateLimit rateLimit;
 
-        public Provider(LyricsReloaded lyricsReloaded, string name, ushort quality, IDictionary<string, Variable> variables, FilterCollection postFilters, ValidationCollection validations, LyricsLoader loader, RateLimit rateLimit = null)
+        public Provider(LyricsReloaded lyricsReloaded, string name, ushort quality, IDictionary<string, Variable> variables, FilterCollection postFilters, ValidationCollection validations, IDictionary<String, String> headers, LyricsLoader loader, RateLimit rateLimit = null)
         {
             this.lyricsReloaded = lyricsReloaded;
             this.name = name;
@@ -46,6 +47,7 @@ namespace CubeIsland.LyricsReloaded.Provider
             this.variables = variables;
             this.postFilters = postFilters;
             this.validations = validations;
+            this.headers = headers;
             this.loader = loader;
             this.rateLimit = rateLimit;
         }
@@ -73,6 +75,11 @@ namespace CubeIsland.LyricsReloaded.Provider
         public ValidationCollection getValidations()
         {
             return validations;
+        }
+
+        public IDictionary<String, String> getHeaders()
+        {
+            return headers;
         }
 
         public LyricsLoader getLoader()
@@ -109,7 +116,7 @@ namespace CubeIsland.LyricsReloaded.Provider
 
 
             lyricsReloaded.getLogger().info("{0} tries to load the lyrics...", name);
-            Lyrics lyrics = loader.getLyrics(variableValues);
+            Lyrics lyrics = loader.getLyrics(this, variableValues);
 
             if (lyrics == null)
             {
