@@ -52,13 +52,13 @@ namespace CubeIsland.LyricsReloaded.Provider.Loader
             return url;
         }
 
-        public Lyrics getLyrics(Dictionary<string, string> variables)
+        public Lyrics getLyrics(Provider provider, Dictionary<string, string> variables)
         {
             string url = constructUrl(variables);
 
             lyricsReloaded.getLogger().debug("The constructed URL: {0}", url);
 
-            WebResponse response = client.get(url);
+            WebResponse response = client.get(url, provider.getHeaders());
             String lyrics = pattern.apply(response.getContent());
             if (lyrics == null)
             {

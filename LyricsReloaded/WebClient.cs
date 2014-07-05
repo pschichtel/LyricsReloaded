@@ -26,6 +26,7 @@ using System.Web;
 using System.Net;
 using System.IO;
 using System.IO.Compression;
+using System.Reflection;
 
 namespace CubeIsland.LyricsReloaded
 {
@@ -42,14 +43,77 @@ namespace CubeIsland.LyricsReloaded
             this.timeout = timeout;
         }
 
-        protected HttpWebRequest newRequest(string method, string url)
+        protected HttpWebRequest newRequest(string method, string url, IDictionary<String, String> headers)
         {
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = method;
             request.Timeout = timeout;
             request.Proxy = lyricsReloaded.getProxy();
+            if (headers != null)
+            {
+                foreach (KeyValuePair<String, String> header in headers)
+                {
+                    this.setHeader(request, header.Key, header.Value);
+                }
+            }
 
             return request;
+        }
+
+        protected String headerToProperty(String header)
+        {
+            StringBuilder property = new StringBuilder();
+
+            bool nextUpper = true;
+            foreach (char c in header)
+            {
+                if (c == '-')
+                {
+                    nextUpper = true;
+                    continue;
+                }
+                if (nextUpper)
+                {
+                    property.Append(Char.ToUpper(c));
+                    nextUpper = false;
+                }
+                else
+                {
+                    property.Append(Char.ToLower(c));
+                }
+            }
+
+            return property.ToString();
+        }
+
+        protected void setHeader(HttpWebRequest request, String name, String value)
+        {
+            name = name.ToLower();
+            String prop = headerToProperty(name);
+            PropertyInfo propInfo = request.GetType().GetProperty(prop);
+            
+            if (propInfo.CanWrite)
+            {
+                if (propInfo.PropertyType == typeof(String))
+                {
+                    propInfo.SetValue(request, value, null);
+                    return;
+                }
+                else if (propInfo.PropertyType == typeof(DateTime))
+                {
+                    propInfo.SetValue(request, DateTime.Parse(value), null);
+                    return;
+                }
+            }
+
+            if (name.Equals("range"))
+            {
+                //    request.AddRange()
+                //    break;
+                return;
+            }
+
+            request.Headers.Set(name, value);
         }
 
         public int getTimeout()
@@ -57,14 +121,14 @@ namespace CubeIsland.LyricsReloaded
             return timeout;
         }
 
-        public WebResponse get(string url)
+        public WebResponse get(string url, IDictionary<String, String> headers = null)
         {
-            return executeRequest(newRequest("GET", url));
+            return executeRequest(newRequest("GET", url, headers));
         }
 
-        public WebResponse post(string url, Dictionary<string, string> data)
+        public WebResponse post(string url, Dictionary<string, string> data, IDictionary<String, String> headers = null)
         {
-            HttpWebRequest request = newRequest("POST", url);
+            HttpWebRequest request = newRequest("POST", url, headers);
 
             request.ContentType = "application/x-www-form-urlencoded";
             request.ContentLength = 0;
@@ -129,7 +193,11 @@ namespace CubeIsland.LyricsReloaded
                 // we support gzip if nothing else was specified.
                 request.Headers.Add("Accept-Encoding", "gzip");
             }
-            request.UserAgent = lyricsReloaded.getUserAgent();
+            if (request.UserAgent == null)
+            {
+                request.UserAgent = lyricsReloaded.getDefaultUserAgent();
+            }
+            
             request.Accept = "*/*";
             request.Headers.Add("Accept-Encoding", "gzip");
 

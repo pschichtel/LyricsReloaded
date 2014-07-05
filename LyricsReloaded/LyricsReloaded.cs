@@ -41,7 +41,7 @@ namespace CubeIsland.LyricsReloaded
         private readonly string dataFolder;
         private readonly Logger logger;
         private readonly ProviderManager providerManager;
-        private string userAgent;
+        private string defaultUserAgent;
         private WebProxy proxy;
         private bool down = false;
 
@@ -57,7 +57,7 @@ namespace CubeIsland.LyricsReloaded
 
             providerManager.registerLoaderFactory(new StaticLoaderFactory(this));
 
-            userAgent = "Firefox XY";
+            defaultUserAgent = "Firefox";
             proxy = null;
         }
 
@@ -76,14 +76,14 @@ namespace CubeIsland.LyricsReloaded
             return providerManager;
         }
 
-        public void setUserAgent(string newUserAgent)
+        public void setDefaultUserAgent(string userAgent)
         {
-            userAgent = newUserAgent;
+            defaultUserAgent = userAgent;
         }
 
-        public string getUserAgent()
+        public string getDefaultUserAgent()
         {
-            return userAgent;
+            return defaultUserAgent;
         }
 
         public void setProxy(WebProxy newProxy)

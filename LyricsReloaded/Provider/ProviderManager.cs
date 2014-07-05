@@ -48,6 +48,8 @@ namespace CubeIsland.LyricsReloaded.Provider
                 public static readonly YamlScalarNode TYPE = new YamlScalarNode("type");
                 public static readonly YamlScalarNode FILTERS = new YamlScalarNode("filters");
             }
+
+            public static readonly YamlScalarNode HEADERS = new YamlScalarNode("headers");
         }
 
         private readonly LyricsReloaded lyricsReloaded;
@@ -349,6 +351,19 @@ namespace CubeIsland.LyricsReloaded.Provider
                 validations = new ValidationCollection();
             }
 
+            IDictionary<String, String> headers = new Dictionary<String, String>();
+            node = (rootNodes.ContainsKey(Node.HEADERS) ? rootNodes[Node.HEADERS] : null);
+            if (node is YamlMappingNode)
+            {
+                foreach (KeyValuePair<YamlNode, YamlNode> entry in (YamlMappingNode)node)
+                {
+                    if (entry.Key is YamlScalarNode && entry.Value is YamlScalarNode)
+                    {
+                        headers.Add(((YamlScalarNode)entry.Key).Value.Trim(), ((YamlScalarNode)entry.Value).Value);
+                    }
+                }
+            }
+
             YamlMappingNode configNode;
             node = (rootNodes.ContainsKey(Node.CONFIG) ? rootNodes[Node.CONFIG] : null);
             if (node is YamlMappingNode)
@@ -362,7 +377,7 @@ namespace CubeIsland.LyricsReloaded.Provider
 
             LyricsLoader loader = loaderFactory.newLoader(configNode);
 
-            Provider provider = new Provider(lyricsReloaded, name, quality, variables, postFilters, validations, loader, rateLimit);
+            Provider provider = new Provider(lyricsReloaded, name, quality, variables, postFilters, validations, headers, loader, rateLimit);
             logger.info("Provider loaded: " + provider.getName());
 
             lock (providerLock)
