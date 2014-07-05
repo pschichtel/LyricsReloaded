@@ -106,7 +106,6 @@
     <None Include="Configs\oldielyrics.com.yml" />
     <None Include="Configs\rapgenius.com.yml" />
     <None Include="Configs\urbanlyrics.com.yml" />
-    <None Include="Configs\plyrics.com.yml" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

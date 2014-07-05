@@ -327,34 +327,6 @@ namespace CubeIsland.LyricsReloaded.Properties {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die name: Punk Lyrics
-        ///
-        ///variables:
-        ///    artist:
-        ///        type: artist
-        ///        filters:
-        ///        - lowercase
-        ///        - strip_nonascii
-        ///    title:
-        ///        type: title
-        ///        filters: artist
-        ///
-        ///config:
-        ///    url: &quot;http://www.plyrics.com/lyrics/{artist}/{title}.html&quot;
-        ///    pattern: [&apos;&lt;!-- start of lyrics --&gt;(?&lt;lyrics&gt;.*?)&lt;!-- end of lyrics --&gt;&apos;, s]
-        ///    
-        ///post-filters:
-        ///- strip_html
-        ///- utf8_encode
-        /// ähnelt.
-        /// </summary>
-        public static string provider_plyrics_com {
-            get {
-                return ResourceManager.GetString("provider_plyrics_com", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die name: Rap Genius
         ///
         ///variables:

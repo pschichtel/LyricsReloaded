@@ -59,7 +59,6 @@
     <Compile Include="SongLyricsTests.cs" />
     <Compile Include="SmritiTests.cs" />
     <Compile Include="RapGeniusTests.cs" />
-    <Compile Include="PunkLyricsTests.cs" />
     <Compile Include="PinkRadioTests.cs" />
     <Compile Include="OldiesLyricsTests.cs" />
     <Compile Include="MetroLyricsTests.cs" />
