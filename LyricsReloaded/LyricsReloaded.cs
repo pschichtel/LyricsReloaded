@@ -149,17 +149,17 @@ namespace CubeIsland.LyricsReloaded
                 try
                 {
                     bool result = false;
-                    WebResponse respone = cl.get("https://raw.github.com/quickwango/LyricsReloaded/stable/LyricsReloaded/Properties/AssemblyInfo.cs");
+                    WebResponse respone = cl.get("https://raw.githubusercontent.com/pschichtel/LyricsReloaded/stable/LyricsReloaded/Properties/AssemblyInfo.cs");
                     if (respone != null)
                     {
                         String content = respone.getContent();
                         if (!String.IsNullOrWhiteSpace(content))
                         {
-                            Regex versionRegex = new Regex("AssemblyVersion\\(\"(?<version>[^\\s]+)\"\\)", RegexOptions.Compiled | RegexOptions.Singleline);
+                            Regex versionRegex = new Regex("AssemblyVersion\\(\"(?<version>[^\\s\\*]+)\"\\)", RegexOptions.Compiled | RegexOptions.Singleline);
                             Match match = versionRegex.Match(content);
                             if (match.Success)
                             {
-                                Version remote = Version.Parse(match.Groups["version"].Value.Replace("*", "0.0")); // TODO remove the replace() with the next release
+                                Version remote = Version.Parse(match.Groups["version"].Value);
                                 result = remote.CompareTo(local) > 0;
                             }
                         }
