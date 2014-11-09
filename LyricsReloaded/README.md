@@ -11,8 +11,8 @@ Regular expressions
 -------------------
 This plugin relies heavily on Microsoft-flavored regular expression
 for its functionality. Tutorials and tools to write these expressions
-are all over the internet, for example [RegExr](http://gskinner.com/RegExr/)
-which is a create tool to write and test regexes.
+are all over the internet, for example [RegExr](http://www.regexr.com/)
+which is a greate tool to write and test regular expressions.
 
 Using these regexes is usually done in 2 ways:
 1. a single string, which specifies only the regex
