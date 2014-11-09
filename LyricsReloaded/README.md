@@ -20,8 +20,8 @@ Using these regexes is usually done in 2 ways:
    and regex options as its second element. Example: ["regex", is]
 
 There are 2 things to watch out for:
-* backslashes (\) must be escaped when using double quotes ("), as it is a meta character in the YAML format: \s -> \\\s
-* named capturing groups are defined like this: (?\<lyrics\>.*?)
+* backslashes (\\) must be escaped when using double quotes ("), as it is a meta character in the YAML format: \s -> \\\s
+* named capturing groups are defined like this: (?\<lyrics\>.*?) with "lyrics" being the name of the group
 
 Regex options
 -------------
