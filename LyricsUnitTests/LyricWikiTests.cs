@@ -43,6 +43,7 @@ namespace LyricsUnitTests
 
         [Timeout(3000)]
         [TestMethod]
+        [Ignore] // TODO seems not available anymore
         public void lyricWikiGracenoteBasics()
         {
             String lyr = GRACENOTE.getLyrics("112", "Anywhere (Ft. Lil Zane)", "");

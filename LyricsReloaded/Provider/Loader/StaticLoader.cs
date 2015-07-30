@@ -21,6 +21,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using System.Net;
 using YamlDotNet.RepresentationModel;
 
 namespace CubeIsland.LyricsReloaded.Provider.Loader
@@ -58,15 +59,43 @@ namespace CubeIsland.LyricsReloaded.Provider.Loader
 
             lyricsReloaded.getLogger().debug("The constructed URL: {0}", url);
 
-            WebResponse response = client.get(url, provider.getHeaders());
-            String lyrics = pattern.apply(response.getContent());
-            if (lyrics == null)
+            try
             {
-                lyricsReloaded.getLogger().warn("The pattern {0} didn't match!", pattern);
-                return null;
-            }
+                WebResponse response = client.get(url, provider.getHeaders());
+                String lyrics = pattern.apply(response.getContent());
+                if (lyrics == null)
+                {
+                    lyricsReloaded.getLogger().warn("The pattern {0} didn't match!", pattern);
+                    return null;
+                }
 
-            return new Lyrics(lyrics, response.getEncoding());
+                return new Lyrics(lyrics, response.getEncoding());
+            }
+            catch (WebException e)
+            {
+                if (isStatus(e, HttpStatusCode.NotFound))
+                {
+                    return null;
+                }
+                throw;
+            }
+        }
+
+        private static bool isStatus(WebException e, HttpStatusCode code)
+        {
+            System.Net.WebResponse r = e.Response;
+            if (r == null)
+            {
+                if (e.InnerException != null && e.InnerException is WebException)
+                {
+                    return isStatus(e.InnerException as WebException, code);
+                }
+            }
+            else if (r is HttpWebResponse && ((HttpWebResponse)r).StatusCode == code)
+            {
+                return true;
+            }
+            return false;
         }
     }
 
