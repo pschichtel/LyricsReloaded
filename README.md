@@ -1,7 +1,9 @@
 LyricsReloaded
 ==============
 
-A rewrite of the Lyrics plugin of MusicBee
+A rewrite of the Lyrics plugin of MusicBee.
+
+Contact pschichtel on github.com if you want to maintain this project.
 
 Bug Tracker
 -----------
