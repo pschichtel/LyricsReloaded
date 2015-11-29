@@ -1,4 +1,4 @@
-LyricsReloaded
+LyricsReloaded [![Build Status](https://travis-ci.org/pschichtel/LyricsReloaded.svg?branch=master)](https://travis-ci.org/pschichtel/LyricsReloaded)
 ==============
 
 A rewrite of the Lyrics plugin of MusicBee.
