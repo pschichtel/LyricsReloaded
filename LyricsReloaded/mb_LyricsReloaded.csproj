@@ -112,6 +112,7 @@
   <PropertyGroup>
     <PostBuildEvent>
     mkdir "$(TargetDir)merged"
+    chmod +x "$(SolutionDir)packages\ilmerge.2.13.0307\ILMerge.exe"
     "$(SolutionDir)packages\ilmerge.2.13.0307\ILMerge.exe" "/out:$(TargetDir)merged\$(TargetFileName)" "$(TargetPath)" "$(TargetDir)YamlDotNet.Core.dll" "$(TargetDir)YamlDotNet.RepresentationModel.dll"
     </PostBuildEvent>
   </PropertyGroup>
