@@ -1,3 +1,6 @@
 language: csharp
 solution: LyricsReloaded.sln
 sudo: false
+script:
+    - xbuild /p:Configuration=Release LyricsReloaded.sln
+    - mono ./packages/NUnit.Console.3.0.0/tools/nunit3-console.exe LyricsNUnit/bin/Release/LyricsNUnit.dll
