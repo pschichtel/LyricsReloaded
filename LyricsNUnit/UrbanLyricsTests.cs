@@ -19,21 +19,19 @@
 */
 
 using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using CubeIsland.LyricsReloaded.Provider;
 
 namespace LyricsUnitTests
 {
-    [TestClass]
-    public class TekstyTests
+    [TestFixture]
+	public class UrbanLyricsTests : BaseTest
     {
-        private static readonly Provider PROVIDER = LyricsTests.getProvider("Teksty");
-
         [Timeout(3000)]
-        [TestMethod]
-        public void tekstyBasics()
+        [Test]
+        public void urbanLyricsBasics()
         {
-            String lyr = PROVIDER.getLyrics("Daniel Olbrychski", "Wyrzeźbiłem twoją twarz", "");
+			String lyr = getProvider("Urban Lyrics").getLyrics("50 Cent", "Buzzin' (Remix)", "");
 
             Console.WriteLine(lyr);
 

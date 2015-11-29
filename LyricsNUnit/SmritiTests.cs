@@ -19,21 +19,19 @@
 */
 
 using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using CubeIsland.LyricsReloaded.Provider;
 
 namespace LyricsUnitTests
 {
-    [TestClass]
-    public class AzLyricsTests
+    [TestFixture]
+	public class SmritiTests : BaseTest
     {
-        private static readonly Provider PROVIDER = LyricsTests.getProvider("A-Z Lyrics Universe");
-
         [Timeout(3000)]
-        [TestMethod]
-        public void azLyricsBasics()
+		[Test]
+        public void smritiBasics()
         {
-            String lyr = PROVIDER.getLyrics("Skillet", "I Can", "");
+			String lyr = getProvider("Smriti").getLyrics("", "ba.Dii mushkil se huaa teraa meraa saath piyaa", "");
 
             Console.WriteLine(lyr);
 

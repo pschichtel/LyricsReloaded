@@ -19,21 +19,19 @@
 */
 
 using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using CubeIsland.LyricsReloaded.Provider;
 
 namespace LyricsUnitTests
 {
-    [TestClass]
-    public class CuspajzTests
+    [TestFixture]
+	public class AzLyricsTests : BaseTest
     {
-        private static readonly Provider PROVIDER = LyricsTests.getProvider("Cušpajz");
-
         [Timeout(3000)]
-        [TestMethod]
-        public void cuspajzBasics()
+		[Test]
+        public void azLyricsBasics()
         {
-            String lyr = PROVIDER.getLyrics("Zabranjeno pušenje", "Kada dernek utihne", "");
+			String lyr = getProvider("A-Z Lyrics Universe").getLyrics("Skillet", "I Can", "");
 
             Console.WriteLine(lyr);
 

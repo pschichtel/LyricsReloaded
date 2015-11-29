@@ -19,34 +19,19 @@
 */
 
 using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using CubeIsland.LyricsReloaded.Provider;
 
 namespace LyricsUnitTests
 {
-    [TestClass]
-    public class LyricWikiTests
+    [TestFixture]
+	public class HindiLyricsTests : BaseTest
     {
-        private static readonly Provider NORMAL = LyricsTests.getProvider("LyricWiki");
-        private static readonly Provider GRACENOTE = LyricsTests.getProvider("LyricWiki Gracenote");
-
         [Timeout(3000)]
-        [TestMethod]
-        public void lyricWikiNormalBasics()
+		[Test]
+        public void hindiLyricsBasics()
         {
-            String lyr = NORMAL.getLyrics("Magic!", "Rude", "");
-
-            Console.WriteLine(lyr);
-
-            Assert.IsFalse(String.IsNullOrWhiteSpace(lyr), "Lyrics not found!");
-        }
-
-        [Timeout(3000)]
-        [TestMethod]
-        [Ignore] // TODO seems not available anymore
-        public void lyricWikiGracenoteBasics()
-        {
-            String lyr = GRACENOTE.getLyrics("112", "Anywhere (Ft. Lil Zane)", "");
+			String lyr = getProvider("Hindi Lyrics").getLyrics("", "Raanjhna Hua Main Tera", "");
 
             Console.WriteLine(lyr);
 

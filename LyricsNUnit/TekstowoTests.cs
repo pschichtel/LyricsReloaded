@@ -19,21 +19,19 @@
 */
 
 using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using CubeIsland.LyricsReloaded.Provider;
 
 namespace LyricsUnitTests
 {
-    [TestClass]
-    public class HindiLyricsTests
+    [TestFixture]
+	public class TekstowoTests : BaseTest
     {
-        private static readonly Provider PROVIDER = LyricsTests.getProvider("Hindi Lyrics");
-
         [Timeout(3000)]
-        [TestMethod]
-        public void hindiLyricsBasics()
+		[Test]
+        public void tekstowoBasics()
         {
-            String lyr = PROVIDER.getLyrics("", "Raanjhna Hua Main Tera", "");
+			String lyr = getProvider("Tekstowo").getLyrics("Daniel Olbrychski", "Wyrzeźbiłem twoją twarz", "");
 
             Console.WriteLine(lyr);
 

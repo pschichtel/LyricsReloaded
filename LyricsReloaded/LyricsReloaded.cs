@@ -64,7 +64,8 @@ namespace CubeIsland.LyricsReloaded
         }
 
         ~LyricsReloaded()
-        {
+		{
+			Console.WriteLine("Closing log");
             shutdown();
         }
 
@@ -101,10 +102,11 @@ namespace CubeIsland.LyricsReloaded
         public void shutdown()
         {
             if (!down)
-            {
+			{
+				Console.WriteLine("Closing log");
                 down = true;
                 providerManager.shutdown();
-                logger.close();
+				logger.close();
             }
         }
 

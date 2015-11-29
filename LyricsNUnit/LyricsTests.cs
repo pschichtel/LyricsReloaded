@@ -19,25 +19,36 @@
 */
 
 using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
+using CubeIsland.LyricsReloaded;
 using CubeIsland.LyricsReloaded.Provider;
 
 namespace LyricsUnitTests
 {
-    [TestClass]
-    public class PinkRadioTests
-    {
-        private static readonly Provider PROVIDER = LyricsTests.getProvider("Pink Radio");
+	public class BaseTest
+	{
 
-        [Timeout(4000)]
-        [TestMethod]
-        public void pinkRadioBasics()
-        {
-            String lyr = PROVIDER.getLyrics("", "Sa tvojih usana", "");
+		private LyricsReloaded lr;
 
-            Console.WriteLine(lyr);
+		[SetUp]
+		public void setUp()
+		{
+			this.lr = new LyricsReloaded(".");
+			lr.loadConfigurations();
 
-            Assert.IsFalse(String.IsNullOrWhiteSpace(lyr), "Lyrics not found!");
-        }
-    }
+		}
+
+		public Provider getProvider(string name)
+		{
+			Provider p = this.lr.getProviderManager().getProvider(name);
+			Assert.IsNotNull(p, "Provider '" + name + "' not found!");
+			return p;
+		}
+
+		[TearDown]
+		public void tearDown()
+		{
+			this.lr.shutdown ();
+		}
+	}
 }

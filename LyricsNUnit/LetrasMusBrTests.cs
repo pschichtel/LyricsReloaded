@@ -19,21 +19,20 @@
 */
 
 using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using CubeIsland.LyricsReloaded.Provider;
+using NUnit.Framework;
 
 namespace LyricsUnitTests
 {
-    [TestClass]
-    public class RapGeniusTests
+    [TestFixture]
+	[Ignore("requires searching now")]
+	public class LetrasMusBrTests : BaseTest
     {
-        private static readonly Provider PROVIDER = LyricsTests.getProvider("Rap Genius");
-
         [Timeout(3000)]
-        [TestMethod]
-        public void rapGeniusBasics()
+		[Test]
+        public void letrasMusBrBasics()
         {
-            String lyr = PROVIDER.getLyrics("Nesli", "Niente Di Più", "");
+			String lyr = getProvider("Letras de músicas").getLyrics("Mc Anitta", "Show Das Poderosas", "");
 
             Console.WriteLine(lyr);
 

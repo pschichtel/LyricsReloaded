@@ -31,6 +31,15 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Package|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -44,7 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LyricsReloaded\mb_LyricsReloaded.csproj">
-      <Project>{0ebb89ee-8500-4dd9-b7e9-52d5ae85defc}</Project>
+      <Project>{0EBB89EE-8500-4DD9-B7E9-52D5AE85DEFC}</Project>
       <Name>mb_LyricsReloaded</Name>
     </ProjectReference>
   </ItemGroup>

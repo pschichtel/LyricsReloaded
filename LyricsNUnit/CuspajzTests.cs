@@ -19,22 +19,19 @@
 */
 
 using System;
+using NUnit.Framework;
 using CubeIsland.LyricsReloaded.Provider;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace LyricsUnitTests
 {
-    [TestClass]
-    [Ignore] // TODO requires searching now
-    public class LetrasMusBrTests
+    [TestFixture]
+	public class CuspajzTests : BaseTest
     {
-        private static readonly Provider PROVIDER = LyricsTests.getProvider("Letras de músicas");
-
         [Timeout(3000)]
-        [TestMethod]
-        public void letrasMusBrBasics()
-        {
-            String lyr = PROVIDER.getLyrics("Mc Anitta", "Show Das Poderosas", "");
+		[Test]
+        public void cuspajzBasics()
+		{
+			String lyr = getProvider("Cušpajz").getLyrics("Zabranjeno pušenje", "Kada dernek utihne", "");
 
             Console.WriteLine(lyr);
 

@@ -249,24 +249,17 @@ namespace CubeIsland.LyricsReloaded.Filters
 
     public class Umlauts2Ascii : Filter
     {
-        private static readonly Dictionary<string, string> UMLAUT_MAP = new Dictionary<string, string> {
-            {"ä", "ae"},
-            {"ö", "oe"},
-            {"ü", "ue"},
-            {"ß", "ss"}
-        };
-
         public string getName()
         {
             return "umlauts2ascii";
         }
 
         public string filter(string content, string[] args, Encoding encoding)
-        {
-            foreach (KeyValuePair<string, string> entry in UMLAUT_MAP)
-            {
-                content = content.Replace(entry.Key, entry.Value);
-            }
+		{
+			content = content.Replace("ä", "ae");
+			content = content.Replace("ö", "oe");
+			content = content.Replace("ü", "ue");
+			content = content.Replace("ß", "ss");
             return content;
         }
     }

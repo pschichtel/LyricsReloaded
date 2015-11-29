@@ -19,21 +19,19 @@
 */
 
 using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using CubeIsland.LyricsReloaded.Provider;
 
 namespace LyricsUnitTests
 {
-    [TestClass]
-    public class MetroLyricsTests
+    [TestFixture]
+	public class LyricWikiTests : BaseTest
     {
-        private static readonly Provider PROVIDER = LyricsTests.getProvider("MetroLyrics");
-
         [Timeout(3000)]
-        [TestMethod]
-        public void metroLyricsBasics()
+		[Test]
+        public void lyricWikiNormalBasics()
         {
-            String lyr = PROVIDER.getLyrics("Lil Wayne", "We Be Steady Mobbin''", "");
+			String lyr = getProvider("LyricWiki").getLyrics("Magic!", "Rude", "");
 
             Console.WriteLine(lyr);
 
@@ -41,10 +39,11 @@ namespace LyricsUnitTests
         }
 
         [Timeout(3000)]
-        [TestMethod]
-        public void metroLyricsNonAsciiSpaceEdgeCase()
+		[Test]
+		[Ignore("seems not available anymore")]
+        public void lyricWikiGracenoteBasics()
         {
-            String lyr = PROVIDER.getLyrics("Lil Wayne", "Mr. Carter", "");
+			String lyr = getProvider("LyricWiki Gracenote").getLyrics("112", "Anywhere (Ft. Lil Zane)", "");
 
             Console.WriteLine(lyr);
 

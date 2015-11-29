@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{029CDB6C-8690-42D5-AA53-16F53BE33A66}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>LyricsNUnit</RootNamespace>
+    <AssemblyName>LyricsNUnit</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Package|AnyCPU' ">
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="nunit.framework">
+      <HintPath>..\packages\NUnit.3.0.0\lib\net45\nunit.framework.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AzLyricsTests.cs" />
+    <Compile Include="CuspajzTests.cs" />
+    <Compile Include="HindiLyricsTests.cs" />
+    <Compile Include="LetrasMusBrTests.cs" />
+    <Compile Include="LyricsTests.cs" />
+    <Compile Include="LyricWikiTests.cs" />
+    <Compile Include="MetroLyricsTests.cs" />
+    <Compile Include="OldiesLyricsTests.cs" />
+    <Compile Include="PinkRadioTests.cs" />
+    <Compile Include="RapGeniusTests.cs" />
+    <Compile Include="SmritiTests.cs" />
+    <Compile Include="SongLyricsTests.cs" />
+    <Compile Include="TekstowoTests.cs" />
+    <Compile Include="TekstyTests.cs" />
+    <Compile Include="UrbanLyricsTests.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LyricsReloaded\mb_LyricsReloaded.csproj">
+      <Project>{0EBB89EE-8500-4DD9-B7E9-52D5AE85DEFC}</Project>
+      <Name>mb_LyricsReloaded</Name>
+    </ProjectReference>
+  </ItemGroup>
+</Project>

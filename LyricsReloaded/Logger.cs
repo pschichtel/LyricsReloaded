@@ -57,6 +57,7 @@ namespace CubeIsland.LyricsReloaded
             {
                 try
                 {
+					Console.WriteLine("Closing log");
                     writer.Close();
                 }
                 catch (ObjectDisposedException)

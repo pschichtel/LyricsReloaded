@@ -19,21 +19,19 @@
 */
 
 using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using CubeIsland.LyricsReloaded.Provider;
 
 namespace LyricsUnitTests
 {
-    [TestClass]
-    public class UrbanLyricsTests
+    [TestFixture]
+	public class PinkRadioTests : BaseTest
     {
-        private static readonly Provider PROVIDER = LyricsTests.getProvider("Urban Lyrics");
-
-        [Timeout(3000)]
-        [TestMethod]
-        public void urbanLyricsBasics()
+        [Timeout(4000)]
+		[Test]
+        public void pinkRadioBasics()
         {
-            String lyr = PROVIDER.getLyrics("50 Cent", "Buzzin' (Remix)", "");
+			String lyr = getProvider("Pink Radio").getLyrics("", "Sa tvojih usana", "");
 
             Console.WriteLine(lyr);
 

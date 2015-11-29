@@ -19,21 +19,19 @@
 */
 
 using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using CubeIsland.LyricsReloaded.Provider;
 
 namespace LyricsUnitTests
 {
-    [TestClass]
-    public class TekstowoTests
+    [TestFixture]
+	public class OldiesLyrics : BaseTest
     {
-        private static readonly Provider PROVIDER = LyricsTests.getProvider("Tekstowo");
-
         [Timeout(3000)]
-        [TestMethod]
-        public void tekstowoBasics()
+		[Test]
+        public void oldiesLyricsBasics()
         {
-            String lyr = PROVIDER.getLyrics("Daniel Olbrychski", "Wyrzeźbiłem twoją twarz", "");
+			String lyr = getProvider("Oldies Lyrics").getLyrics("RODNEY CROWELL", "Why Don't We Talk About It", "");
 
             Console.WriteLine(lyr);
 

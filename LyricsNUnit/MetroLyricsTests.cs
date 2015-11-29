@@ -19,21 +19,30 @@
 */
 
 using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using CubeIsland.LyricsReloaded.Provider;
 
 namespace LyricsUnitTests
 {
-    [TestClass]
-    public class SmritiTests
+    [TestFixture]
+	public class MetroLyricsTests : BaseTest
     {
-        private static readonly Provider PROVIDER = LyricsTests.getProvider("Smriti");
+        [Timeout(3000)]
+		[Test]
+        public void metroLyricsBasics()
+        {
+			String lyr = getProvider("MetroLyrics").getLyrics("Lil Wayne", "We Be Steady Mobbin''", "");
+
+            Console.WriteLine(lyr);
+
+            Assert.IsFalse(String.IsNullOrWhiteSpace(lyr), "Lyrics not found!");
+        }
 
         [Timeout(3000)]
-        [TestMethod]
-        public void smritiBasics()
+		[Test]
+        public void metroLyricsNonAsciiSpaceEdgeCase()
         {
-            String lyr = PROVIDER.getLyrics("", "ba.Dii mushkil se huaa teraa meraa saath piyaa", "");
+			String lyr = getProvider("MetroLyrics").getLyrics("Lil Wayne", "Mr. Carter", "");
 
             Console.WriteLine(lyr);
 

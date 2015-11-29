@@ -19,21 +19,19 @@
 */
 
 using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using CubeIsland.LyricsReloaded.Provider;
 
 namespace LyricsUnitTests
 {
-    [TestClass]
-    public class SongLyricsTests
+    [TestFixture]
+	public class SongLyricsTests : BaseTest
     {
-        private static readonly Provider PROVIDER = LyricsTests.getProvider("Song Lyrics");
-
         [Timeout(3000)]
-        [TestMethod]
+		[Test]
         public void songLyricsBasics()
         {
-            String lyr = PROVIDER.getLyrics("die Ärzte", "Schrei nach Liebe", "");
+			String lyr = getProvider("Song Lyrics").getLyrics("die Ärzte", "Schrei nach Liebe", "");
 
             Console.WriteLine(lyr);
 

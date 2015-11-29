@@ -19,31 +19,23 @@
 */
 
 using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using CubeIsland.LyricsReloaded;
+using NUnit.Framework;
 using CubeIsland.LyricsReloaded.Provider;
 
 namespace LyricsUnitTests
 {
-    public class LyricsTests
+    [TestFixture]
+	public class RapGeniusTests : BaseTest
     {
-        private static LyricsReloaded lr = null;
-
-        public static LyricsReloaded getLyricsReloaded()
+        [Timeout(3000)]
+		[Test]
+        public void rapGeniusBasics()
         {
-            if (lr == null)
-            {
-                lr = new LyricsReloaded(".");
-                lr.loadConfigurations();
-            }
-            return lr;
-        }
+			String lyr = getProvider("Rap Genius").getLyrics("Nesli", "Niente Di Più", "");
 
-        public static Provider getProvider(string name)
-        {
-            Provider p = getLyricsReloaded().getProviderManager().getProvider(name);
-            Assert.IsNotNull(p, "Provider '" + name + "' not found!");
-            return p;
+            Console.WriteLine(lyr);
+
+            Assert.IsFalse(String.IsNullOrWhiteSpace(lyr), "Lyrics not found!");
         }
     }
 }

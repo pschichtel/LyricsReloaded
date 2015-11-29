@@ -1,0 +1,42 @@
+﻿<Properties StartupItem="LyricsReloaded/mb_LyricsReloaded.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="LyricsNUnit/PinkRadioTests.cs">
+    <Files>
+      <File FileName="LyricsNUnit/LyricsTests.cs" Line="29" Column="2" />
+      <File FileName="LyricsReloaded/Provider/ProviderManager.cs" Line="89" Column="76" />
+      <File FileName="LyricsReloaded/Filters/Filter.cs" Line="260" Column="41" />
+      <File FileName="LyricsReloaded/Logger.cs" Line="59" Column="18" />
+      <File FileName="LyricsReloaded/LyricsReloaded.cs" Line="68" Column="37" />
+      <File FileName="LyricsNUnit/PinkRadioTests.cs" Line="33" Column="10" />
+      <File FileName="LyricsNUnit/AzLyricsTests.cs" Line="33" Column="10" />
+      <File FileName="LyricsNUnit/CuspajzTests.cs" Line="33" Column="4" />
+      <File FileName="LyricsNUnit/HindiLyricsTests.cs" Line="33" Column="10" />
+      <File FileName="LyricsNUnit/LetrasMusBrTests.cs" Line="35" Column="49" />
+      <File FileName="LyricsNUnit/LyricWikiTests.cs" Line="45" Column="10" />
+      <File FileName="LyricsNUnit/MetroLyricsTests.cs" Line="44" Column="10" />
+      <File FileName="LyricsNUnit/OldiesLyricsTests.cs" Line="33" Column="10" />
+      <File FileName="LyricsNUnit/packages.config" Line="3" Column="61" />
+      <File FileName="LyricsNUnit/RapGeniusTests.cs" Line="33" Column="10" />
+      <File FileName="LyricsNUnit/SmritiTests.cs" Line="34" Column="38" />
+      <File FileName="LyricsNUnit/SongLyricsTests.cs" Line="34" Column="43" />
+      <File FileName="LyricsNUnit/TekstowoTests.cs" Line="33" Column="10" />
+      <File FileName="LyricsNUnit/TekstyTests.cs" Line="34" Column="38" />
+      <File FileName="LyricsNUnit/UrbanLyricsTests.cs" Line="32" Column="40" />
+      <File FileName="LyricsReloaded/app.config" Line="1" Column="1" />
+      <File FileName="LyricsReloaded/packages.config" Line="2" Column="11" />
+    </Files>
+    <Pads>
+      <Pad Id="MonoDevelop.NUnit.TestPad">
+        <State name="__root__">
+          <Node name="LyricsReloaded" expanded="True">
+            <Node name="LyricsNUnit" selected="True" />
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
