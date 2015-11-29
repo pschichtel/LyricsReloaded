@@ -109,7 +109,7 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PostBuildEvent>
     mkdir "$(TargetDir)merged"
     chmod +x "$(SolutionDir)packages\ilmerge.2.13.0307\ILMerge.exe"
