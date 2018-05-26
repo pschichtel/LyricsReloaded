@@ -3,6 +3,8 @@ LyricsReloaded
 
 A rewrite of the Lyrics plugin of MusicBee.
 
+New version [1.1.4 here](https://github.com/mbfrankz/LyricsReloaded/releases/download/v1.1.4/mb_LyricsReloaded.zip)
+
 Bug Tracker
 -----------
 GitHub: [LyricsReloaded](https://github.com/mbfrankz/LyricsReloaded/issues)
