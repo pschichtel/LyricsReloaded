@@ -1,0 +1,36 @@
+﻿name: Musixmatch
+
+variables:
+    artist:
+        type: artist
+        filters:
+        - strip_diacritics
+        - lowercase
+        - [regex, "'", ""]
+        - [regex, "/", " "]
+        - [regex, '\s&(?=\s)', " "]
+        - [regex, '(?<=\W|\s)+(feat.+|ft[\W\s]+|(f\.\s)).+', ""]
+        - [regex, '[^\sa-z0-9]\s*', ""]
+        - [strip_nonascii, -]
+    title:
+        type: title
+        filters:
+        - strip_diacritics
+        - lowercase
+        - [regex, " '|' |/", " "]
+        - [regex, "'", " "]
+        - [regex, '\.+|,+|/+|(\W+(?=$))|(^\W+)', ""]
+        - [regex, '\s&(?=\s)', " and"]
+        - [strip_nonascii, -]
+
+config:
+    url: "http://www.musixmatch.com/lyrics/{artist}/{title}"
+    pattern: ['<p class="mxm-lyrics__content ">\s*(?<lyrics>.*?)</span>', s]
+
+post-filters:
+- strip_html
+- [regex, '\s*googletag.*\);', "\n", s]
+- [regex, "’", "'"]
+- entity_decode
+- clean_spaces
+- utf8_encode

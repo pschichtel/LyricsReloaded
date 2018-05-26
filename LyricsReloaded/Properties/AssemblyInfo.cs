@@ -27,11 +27,11 @@ using System.Resources;
 // Attribute gesteuert. Ändern Sie diese Attributwerte, um die Informationen zu ändern,
 // die mit einer Assembly verknüpft sind.
 [assembly: AssemblyTitle("LyricsReloaded")]
-[assembly: AssemblyDescription("The new lyrics fetcher")]
+[assembly: AssemblyDescription("Enhanced Lyric Fetching for MusicBee")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Cube Island")]
+[assembly: AssemblyCompany("Authored by Cube Island, Maintained by Frank")]
 [assembly: AssemblyProduct("LyricsReloaded")]
-[assembly: AssemblyCopyright("Copyright ©  2013-2014")]
+[assembly: AssemblyCopyright("Copyright ©  2013-2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -53,6 +53,6 @@ using System.Resources;
 // Sie können alle Werte angeben oder die standardmäßigen Build- und Revisionsnummern 
 // übernehmen, indem Sie "*" eingeben:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.1.2.0")]
-[assembly: AssemblyFileVersion("1.1.2.0")]
+[assembly: AssemblyVersion("1.1.4.0")]
+[assembly: AssemblyFileVersion("1.1.4.0")]
 [assembly: NeutralResourcesLanguageAttribute("en")]

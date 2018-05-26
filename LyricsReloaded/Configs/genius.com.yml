@@ -1,0 +1,40 @@
+﻿name: Genius
+
+variables:
+    artist:
+        type: artist
+        filters:
+        - strip_diacritics
+        - lowercase
+        - [replace, "!!!", "chk-chik-chick"]
+        - [regex, '(?<=\W|\s)+(feat.+|ft[\W\s]+|(f\.\s)).+', ""]
+        - [regex, '\.+|,+|(\W+(?=$))|(^\W+)', ""]
+        - [regex, "'", ""]
+        - [regex, '(?<=[a-z0-9%])[^\sa-z0-9%]+(?=[a-z0-9%]+)', "-"]
+        - [regex, '((?<=\s)([^a-z0-9\s-])+(\s|\W)+)|((?<=\w)([^a-z0-9-])+(\s|\W)+)', " "]
+        - [strip_nonascii, -]
+    title:
+        type: title
+        filters:
+        - strip_diacritics
+        - lowercase
+        - [replace, "!!!", "chk-chik-chick"]
+        - [regex, '(?<=\W|\s)+(feat.+|ft[\W\s]+|(f\.\s)).+', ""]
+        - [regex, '\s&(?=\s)', " and"]
+        - [regex, '\.+|,+|(\W+(?=$))|(^\W+)', ""]
+        - [regex, "'", ""]
+        - [regex, '(?<=[a-z0-9%])[^\sa-z0-9%]+(?=[a-z0-9%]+)', "-"]
+        - [regex, '((?<=\s)([^a-z0-9\s-])+(\s|\W)+)|((?<=\w)([^a-z0-9-])+(\s|\W)+)', " "]
+        - [strip_nonascii, -]
+
+config:
+    url: "http://genius.com/{artist}-{title}-lyrics"
+    pattern: ['<div\s+class="song_body-lyrics"[^>]*?>[\s\S]*?<p>(?<lyrics>[\s\S]*?)</p>', s]
+
+post-filters:
+- strip_html
+- clean_spaces
+- utf8_encode
+- [regex, 'googletag.*\);', "\n"]
+- [regex, '\[.{1,75}\]', ""]
+- [regex, "’", "'"]
