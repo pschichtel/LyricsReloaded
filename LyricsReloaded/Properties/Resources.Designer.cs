@@ -195,6 +195,71 @@ namespace CubeIsland.LyricsReloaded.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to name: LyricWiki Gracenote
+        ///
+        ///variables:
+        ///    artist:
+        ///        type: artist
+        ///        filters:
+        ///        - [regex, &quot;\\s+&quot;, _]
+        ///        - urlencode
+        ///    title:
+        ///        type: title
+        ///        filters: artist 
+        ///
+        ///post-filters:
+        ///- br2nl
+        ///- p2break
+        ///- strip_html
+        ///- entity_decode
+        ///- utf8_encode
+        ///- trim
+        ///
+        ///config:
+        ///    url: &quot;http://lyrics.wikia.com/Gracenote:{artist}:{title}&quot;
+        ///    pattern: &quot;&apos;lyricbox&apos;&gt;.*?&lt;/div&gt;\\s*(?&lt;lyrics&gt;.*?)&lt;!--&quot;
+        ///.
+        /// </summary>
+        public static string provider_lyrics_wikia_gn {
+            get {
+                return ResourceManager.GetString("provider_lyrics_wikia_gn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to name: MetroLyrics
+        ///
+        ///variables:
+        ///    artist:
+        ///        type: artist
+        ///        filters:
+        ///        - strip_diacritics
+        ///        - lowercase
+        ///        - [regex, &apos;[^\sa-z0-9]\s*&apos;, &quot;&quot;]
+        ///        - [strip_nonascii, -]
+        ///    title:
+        ///        type: title
+        ///        filters: artist
+        ///
+        ///config:
+        ///    url: &quot;http://www.metrolyrics.com/{title}-lyrics-{artist}.html&quot;
+        ///    pattern: [&apos;&lt;div id=&quot;lyrics-body&quot;&gt;(?&lt;lyrics&gt;.*?)&lt;/div&gt;&apos;, s]
+        ///    
+        ///post-filters:
+        ///- br2nl
+        ///- strip_html
+        ///- strip_links
+        ///- entity_decode
+        ///- clean_spaces
+        ///- utf8_encod [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string provider_metrolyrics_com {
+            get {
+                return ResourceManager.GetString("provider_metrolyrics_com", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to name: Musixmatch
         ///
         ///variables:
