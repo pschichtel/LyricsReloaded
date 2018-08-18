@@ -133,6 +133,9 @@
   <data name="provider_letras_mus_br" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\configs\letras.mus.br.yml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
+  <data name="provider_lyrics_wikia_com" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Configs\lyrics.wikia.com.yml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
   <data name="provider_lyrics_wikia_gn" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Configs\lyrics.wikia.com-gn.yml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>

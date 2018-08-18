@@ -195,6 +195,38 @@ namespace CubeIsland.LyricsReloaded.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to name: LyricWiki
+        ///
+        ///variables:
+        ///    artist:
+        ///        type: artist
+        ///        filters:
+        ///        - [regex, &quot;\\s+&quot;, _]
+        ///        - urlencode
+        ///    title:
+        ///        type: title
+        ///        filters: artist 
+        ///
+        ///post-filters:
+        ///- br2nl
+        ///- p2break
+        ///- strip_html
+        ///- entity_decode
+        ///- utf8_encode
+        ///- trim
+        ///
+        ///config:
+        ///    url: &quot;http://lyrics.wikia.com/{artist}:{title}&quot;
+        ///    pattern: &quot;&apos;lyricbox&apos;&gt;.*?&lt;/div&gt;(?&lt;lyrics&gt;.*?)&lt;!--&quot;
+        ///.
+        /// </summary>
+        public static string provider_lyrics_wikia_com {
+            get {
+                return ResourceManager.GetString("provider_lyrics_wikia_com", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to name: LyricWiki Gracenote
         ///
         ///variables:
