@@ -38,3 +38,5 @@ post-filters:
 - [regex, 'googletag.*\);', "\n"]
 - [regex, '\[.{1,75}\]', ""]
 - [regex, "’", "'"]
+- [replace, "\n\n", "\n"]
+- trim

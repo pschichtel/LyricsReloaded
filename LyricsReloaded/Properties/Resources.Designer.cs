@@ -195,7 +195,7 @@ namespace CubeIsland.LyricsReloaded.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to name: LyricWiki
+        ///   Looks up a localized string similar to name: LyricWiki Reloaded
         ///
         ///variables:
         ///    artist:
@@ -227,7 +227,7 @@ namespace CubeIsland.LyricsReloaded.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to name: LyricWiki Gracenote
+        ///   Looks up a localized string similar to name: LyricWiki Gracenote Reloaded
         ///
         ///variables:
         ///    artist:
@@ -438,6 +438,29 @@ namespace CubeIsland.LyricsReloaded.Properties {
         public static string provider_songlyrics_com {
             get {
                 return ResourceManager.GetString("provider_songlyrics_com", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to name: T2 Lyrics (English)
+        ///
+        ///variables:
+        ///    title:
+        ///        type: title
+        ///        filters:
+        ///        - urlencode
+        ///
+        ///config:
+        ///    url: &quot;http://www.tamil2lyrics.com/lyrics/{title}-song-lyrics/&quot;
+        ///    pattern: [&apos;&lt;div id=&quot;English&quot; class=&quot;tabcontent&quot;&gt;&apos;, s]
+        ///    
+        ///post-filters:
+        ///- trim
+        ///- utf8_encode.
+        /// </summary>
+        public static string provider_tamil2lyrics_com {
+            get {
+                return ResourceManager.GetString("provider_tamil2lyrics_com", resourceCulture);
             }
         }
         

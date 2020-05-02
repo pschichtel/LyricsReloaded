@@ -98,6 +98,7 @@
     <None Include="Configs\musixmatch.com-asian.yml" />
     <None Include="Configs\musixmatch.com.yml" />
     <None Include="Configs\smriti.com.yml" />
+    <None Include="Configs\tamil2lyrics.com.yml" />
     <None Include="Configs\www.hindilyrics.net.yml" />
     <None Include="Configs\lyrics.wikia.com-gn.yml" />
     <None Include="Configs\lyrics.wikia.com.yml" />

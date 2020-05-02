@@ -31,7 +31,7 @@ using System.Resources;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Authored by Cube Island, Maintained by Frank")]
 [assembly: AssemblyProduct("LyricsReloaded")]
-[assembly: AssemblyCopyright("Copyright ©  2013-2018")]
+[assembly: AssemblyCopyright("Copyright ©  2013-2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -53,6 +53,6 @@ using System.Resources;
 // Sie können alle Werte angeben oder die standardmäßigen Build- und Revisionsnummern 
 // übernehmen, indem Sie "*" eingeben:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.1.6.0")]
-[assembly: AssemblyFileVersion("1.1.6.0")]
+[assembly: AssemblyVersion("1.1.7.0")]
+[assembly: AssemblyFileVersion("1.1.7.0")]
 [assembly: NeutralResourcesLanguageAttribute("en")]
