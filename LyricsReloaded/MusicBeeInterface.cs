@@ -1,13 +1,14 @@
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
+using System.Collections.Generic;
 
 namespace MusicBeePlugin
 {
     public partial class Plugin
     {
         public const short PluginInfoVersion = 1;
-        public const short MinInterfaceVersion = 23;
-        public const short MinApiRevision = 27;
+        public const short MinInterfaceVersion = 41;
+        public const short MinApiRevision = 53;
 
         [StructLayout(LayoutKind.Sequential)]
         public struct MusicBeeApiInterface
@@ -18,6 +19,18 @@ namespace MusicBeePlugin
                 if (MusicBeeVersion == MusicBeeVersion.v2_0)
                     // MusicBee version 2.0 - Api methods > revision 25 are not available
                     CopyMemory(ref this, apiInterfacePtr, 456);
+                else if (MusicBeeVersion == MusicBeeVersion.v2_1)
+                    CopyMemory(ref this, apiInterfacePtr, 516);
+                else if (MusicBeeVersion == MusicBeeVersion.v2_2)
+                    CopyMemory(ref this, apiInterfacePtr, 584);
+                else if (MusicBeeVersion == MusicBeeVersion.v2_3)
+                    CopyMemory(ref this, apiInterfacePtr, 596);
+                else if (MusicBeeVersion == MusicBeeVersion.v2_4)
+                    CopyMemory(ref this, apiInterfacePtr, 604);
+                else if (MusicBeeVersion == MusicBeeVersion.v2_5)
+                    CopyMemory(ref this, apiInterfacePtr, 648);
+                else if (MusicBeeVersion == MusicBeeVersion.v3_0)
+                    CopyMemory(ref this, apiInterfacePtr, 652);
                 else
                     CopyMemory(ref this, apiInterfacePtr, Marshal.SizeOf(this));
             }
@@ -26,8 +39,20 @@ namespace MusicBeePlugin
                 get {
                     if (ApiRevision <= 25)
                         return MusicBeeVersion.v2_0;
-                    else
+                    else if (ApiRevision <= 31)
                         return MusicBeeVersion.v2_1;
+                    else if (ApiRevision <= 33)
+                        return MusicBeeVersion.v2_2;
+                    else if (ApiRevision <= 38)
+                        return MusicBeeVersion.v2_3;
+                    else if (ApiRevision <= 43)
+                        return MusicBeeVersion.v2_4;
+                    else if (ApiRevision <= 47)
+                        return MusicBeeVersion.v2_5;
+                    else if (ApiRevision <= 48)
+                        return MusicBeeVersion.v3_0;
+                    else
+                        return MusicBeeVersion.v3_1;
                 }
             }
             public short InterfaceVersion;
@@ -43,6 +68,7 @@ namespace MusicBeePlugin
             public Library_SetFileTagDelegate Library_SetFileTag;
             public Library_CommitTagsToFileDelegate Library_CommitTagsToFile;
             public Library_GetLyricsDelegate Library_GetLyrics;
+            [Obsolete("Use Library_GetArtworkEx")]
             public Library_GetArtworkDelegate Library_GetArtwork;
             public Library_QueryFilesDelegate Library_QueryFiles;
             public Library_QueryGetNextFileDelegate Library_QueryGetNextFile;
@@ -93,8 +119,11 @@ namespace MusicBeePlugin
             public MB_SendNotificationDelegate MB_SendNotification;
             public MB_AddMenuItemDelegate MB_AddMenuItem;
             public Setting_GetFieldNameDelegate Setting_GetFieldName;
+            [Obsolete("Use Library_QueryFilesEx", true)]
             public Library_QueryGetAllFilesDelegate Library_QueryGetAllFiles;
+            [Obsolete("Use NowPlayingList_QueryFilesEx", true)]
             public Library_QueryGetAllFilesDelegate NowPlayingList_QueryGetAllFiles;
+            [Obsolete("Use Playlist_QueryFilesEx", true)]
             public Library_QueryGetAllFilesDelegate Playlist_QueryGetAllFiles;
             public MB_CreateBackgroundTaskDelegate MB_CreateBackgroundTask;
             public MB_SetBackgroundTaskMessageDelegate MB_SetBackgroundTaskMessage;
@@ -156,7 +185,7 @@ namespace MusicBeePlugin
             public MB_OpenFilterInTabDelegate MB_OpenFilterInTab;
             // api version 25
             public MB_SetWindowSizeDelegate MB_SetWindowSize;
-            public Library_GetArtistPictureDelegate Library_GetArtistPicture_Managed;
+            public Library_GetArtistPictureDelegate Library_GetArtistPicture;
             public Pending_GetFileUrlDelegate Pending_GetFileUrl;
             public Pending_GetFilePropertyDelegate Pending_GetFileProperty;
             public Pending_GetFileTagDelegate Pending_GetFileTag;
@@ -164,12 +193,84 @@ namespace MusicBeePlugin
             public Player_GetButtonEnabledDelegate Player_GetButtonEnabled;
             // api version 27
             public NowPlayingList_MoveFilesDelegate NowPlayingList_MoveFiles;
+            // api version 28
+            public Library_GetArtworkDelegate Library_GetArtworkUrl;
+            public Library_GetArtistPictureThumbDelegate Library_GetArtistPictureThumb;
+            public NowPlaying_GetArtworkDelegate NowPlaying_GetArtworkUrl;
+            public NowPlaying_GetArtworkDelegate NowPlaying_GetDownloadedArtworkUrl;
+            public NowPlaying_GetArtistPictureThumbDelegate NowPlaying_GetArtistPictureThumb;
+            // api version 29
+            public Playlist_IsInListDelegate Playlist_IsInList;
+            // api version 30
+            public Library_GetArtistPictureUrlsDelegate Library_GetArtistPictureUrls;
+            public NowPlaying_GetArtistPictureUrlsDelegate NowPlaying_GetArtistPictureUrls;
+            // api version 31
+            public Playlist_AddFilesDelegate Playlist_AppendFiles;
+            // api version 32
+            public Sync_FileStartDelegate Sync_FileStart;
+            public Sync_FileEndDelegate Sync_FileEnd;
+            // api version 33
+            public Library_QueryFilesExDelegate Library_QueryFilesEx;
+            public Library_QueryFilesExDelegate NowPlayingList_QueryFilesEx;
+            public Playlist_QueryFilesExDelegate Playlist_QueryFilesEx;
+            public Playlist_MoveFilesDelegate Playlist_MoveFiles;
+            public Playlist_PlayNowDelegate Playlist_PlayNow;
+            public NowPlaying_IsSoundtrackDelegate NowPlaying_IsSoundtrack;
+            public NowPlaying_GetArtistPictureUrlsDelegate NowPlaying_GetSoundtrackPictureUrls;
+            public Library_GetDevicePersistentIdDelegate Library_GetDevicePersistentId;
+            public Library_SetDevicePersistentIdDelegate Library_SetDevicePersistentId;
+            public Library_FindDevicePersistentIdDelegate Library_FindDevicePersistentId;
+            public Setting_GetValueDelegate Setting_GetValue;
+            public Library_AddFileToLibraryDelegate Library_AddFileToLibrary;
+            public Playlist_DeletePlaylistDelegate Playlist_DeletePlaylist;
+            public Library_GetSyncDeltaDelegate Library_GetSyncDelta;
+            // api version 35
+            public Library_GetFileTagsDelegate Library_GetFileTags;
+            public NowPlaying_GetFileTagsDelegate NowPlaying_GetFileTags;
+            public NowPlayingList_GetFileTagsDelegate NowPlayingList_GetFileTags;
+            // api version 43
+            public MB_AddTreeNodeDelegate MB_AddTreeNode;
+            public MB_DownloadFileDelegate MB_DownloadFile;
+            // api version 47
+            public Setting_GetFileConvertCommandLineDelegate Setting_GetFileConvertCommandLine;
+            public Player_OpenStreamHandleDelegate Player_OpenStreamHandle;
+            public Player_UpdatePlayStatisticsDelegate Player_UpdatePlayStatistics;
+            public Library_GetArtworkExDelegate Library_GetArtworkEx;
+            public Library_SetArtworkExDelegate Library_SetArtworkEx;
+            public MB_GetVisualiserInformationDelegate MB_GetVisualiserInformation;
+            public MB_ShowVisualiserDelegate MB_ShowVisualiser;
+            public MB_GetPluginViewInformationDelegate MB_GetPluginViewInformation;
+            public MB_ShowPluginViewDelegate MB_ShowPluginView;
+            public Player_GetOutputDevicesDelegate Player_GetOutputDevices;
+            public Player_SetOutputDeviceDelegate Player_SetOutputDevice;
+            // api version 48
+            public MB_UninistallPluginDelegate MB_UninstallPlugin;
+            // api version 50
+            public Player_ActionDelegate Player_PlayPreviousAlbum;
+            public Player_ActionDelegate Player_PlayNextAlbum;
+            // api version 51
+            public Podcasts_QuerySubscriptionsDelegate Podcasts_QuerySubscriptions;
+            public Podcasts_GetSubscriptionDelegate Podcasts_GetSubscription;
+            public Podcasts_GetSubscriptionArtworkDelegate Podcasts_GetSubscriptionArtwork;
+            public Podcasts_GetSubscriptionEpisodesDelegate Podcasts_GetSubscriptionEpisodes;
+            public Podcasts_GetSubscriptionEpisodeDelegate Podcasts_GetSubscriptionEpisode;
+            // api version 52
+            public NowPlaying_GetSoundGraphExDelegate NowPlaying_GetSoundGraphEx;
+            // api version 53
+            public Sync_FileStartDelegate Sync_FileDeleteStart;
+            public Sync_FileEndDelegate Sync_FileDeleteEnd;
         }
 
         public enum MusicBeeVersion
         {
             v2_0 = 0,
-            v2_1 = 1
+            v2_1 = 1,
+            v2_2 = 2,
+            v2_3 = 3,
+            v2_4 = 4,
+            v2_5 = 5,
+            v3_0 = 6,
+            v3_1 = 7
         }
 
         public enum PluginType
@@ -181,7 +282,13 @@ namespace MusicBeePlugin
             PanelView = 4,
             DataStream = 5,
             InstantMessenger = 6,
-            Storage = 7
+            Storage = 7,
+            VideoPlayer = 8,
+            DSP = 9,
+            TagRetrieval = 10,
+            TagOrArtworkRetrieval = 11,
+            Upnp = 12,
+            WebBrowser = 13
         }
 
         [StructLayout(LayoutKind.Sequential)]
@@ -208,7 +315,8 @@ namespace MusicBeePlugin
             StartupOnly = 0x0,
             PlayerEvents = 0x1,
             DataStreamEvents = 0x2,
-            TagEvents = 0x04
+            TagEvents = 0x04,
+            DownloadEvents = 0x08
         }
 
         public enum NotificationType
@@ -221,7 +329,7 @@ namespace MusicBeePlugin
             AutoDjStopped = 4,
             VolumeMuteChanged = 5,
             VolumeLevelChanged = 6,
-            NowPlayingListChanged = 7,
+            [Obsolete("Use PlayingTracksChanged")] NowPlayingListChanged = 7,
             NowPlayingListEnded = 18,
             NowPlayingArtworkReady = 8,
             NowPlayingLyricsReady = 9,
@@ -232,7 +340,27 @@ namespace MusicBeePlugin
             PlayCountersChanged = 13,
             ScreenSaverActivating = 14,
             ShutdownStarted = 17,
-            EmbedInPanel = 19
+            EmbedInPanel = 19,
+            PlayerRepeatChanged = 20,
+            PlayerShuffleChanged = 21,
+            PlayerEqualiserOnOffChanged = 22,
+            PlayerScrobbleChanged = 23,
+            ReplayGainChanged = 24,
+            FileDeleting = 25,
+            FileDeleted = 26,
+            ApplicationWindowChanged = 27,
+            StopAfterCurrentChanged = 28,
+            LibrarySwitched = 29,
+            FileAddedToLibrary = 30,
+            FileAddedToInbox = 31,
+            SynchCompleted = 32,
+            DownloadCompleted = 33,
+            MusicBeeStarted = 34,
+            PlayingTracksChanged = 35,
+            PlayingTracksQueueChanged = 36,
+			PlaylistCreated = 37,
+			PlaylistUpdated = 38,
+			PlaylistDeleted = 39
         }
 
         public enum PluginCloseReason
@@ -249,7 +377,16 @@ namespace MusicBeePlugin
             StorageFailed = 3,
             FilesRetrievedChanged = 4,
             FilesRetrievedNoChange = 5,
-            FilesRetrievedFail = 6
+            FilesRetrievedFail = 6,
+            LyricsDownloaded = 7,
+            StorageEject = 8,
+            SuspendPlayCounters = 9,
+            ResumePlayCounters = 10,
+            EnablePlugin = 11,
+            DisablePlugin = 12,
+            RenderingDevicesChanged = 13,
+            FullscreenOn = 14,
+            FullscreenOff = 15
         }
 
         public enum FilePropertyType
@@ -267,6 +404,7 @@ namespace MusicBeePlugin
             PlayCount = 14,
             SkipCount = 15,
             Duration = 16,
+            Status = 21,
             NowPlayingListIndex = 78,  // only has meaning when called from NowPlayingList_* commands
             ReplayGainTrack = 94,
             ReplayGainAlbum = 95
@@ -281,6 +419,11 @@ namespace MusicBeePlugin
             Artist = 32,             // displayed artist
             MultiArtist = 33,        // individual artists, separated by a null char
 			PrimaryArtist = 19,      // first artist from multi-artist tagged file, otherwise displayed artist
+            Artists = 144,
+            ArtistsWithArtistRole = 145,
+            ArtistsWithPerformerRole = 146,
+            ArtistsWithGuestRole = 147,
+            ArtistsWithRemixerRole = 148,
             Artwork = 40,
             BeatsPerMin = 41,
             Composer = 43,           // displayed composer
@@ -296,10 +439,18 @@ namespace MusicBeePlugin
             Custom7 = 97,
             Custom8 = 98,
             Custom9 = 99,
+            Custom10 = 128,
+            Custom11 = 129,
+            Custom12 = 130,
+            Custom13 = 131,
+            Custom14 = 132,
+            Custom15 = 133,
+            Custom16 = 134,
             DiscNo = 52,
             DiscCount = 54,
             Encoder = 55,
             Genre = 59,
+            Genres = 143,
             GenreCategory = 60,
             Grouping = 61,
             Keywords = 84,
@@ -326,7 +477,88 @@ namespace MusicBeePlugin
             Virtual7 = 123,
             Virtual8 = 124,
             Virtual9 = 125,
-            Year = 88
+            Virtual10 = 135,
+            Virtual11 = 136,
+            Virtual12 = 137,
+            Virtual13 = 138,
+            Virtual14 = 139,
+            Virtual15 = 140,
+            Virtual16 = 141,
+            Virtual17 = 149,
+            Virtual18 = 150,
+            Virtual19 = 151,
+            Virtual20 = 152,
+            Virtual21 = 153,
+            Virtual22 = 154,
+            Virtual23 = 155,
+            Virtual24 = 156,
+            Virtual25 = 157,
+            Year = 88,
+            SortTitle = 163,
+            SortAlbum = 164,
+            SortAlbumArtist = 165,
+            SortArtist = 166,
+            SortComposer = 167,
+            Work = 168,
+            MovementName = 169,
+            MovementNo = 170,
+            MovementCount = 171,
+            ShowMovement = 172,
+            Language = 173,
+            OriginalArtist = 174,
+            OriginalYear = 175,
+            OriginalTitle = 177
+        }
+
+        public enum FileCodec
+        {
+            Unknown = -1,
+            Mp3 = 1,
+            Aac = 2,
+            Flac = 3,
+            Ogg = 4,
+            WavPack = 5,
+            Wma = 6,
+            Tak = 7,
+            Mpc = 8,
+            Wave = 9,
+            Asx = 10,
+            Alac = 11,
+            Aiff = 12,
+            Pcm = 13,
+            Opus = 15,
+            Spx = 16,
+            Dsd = 17,
+            AacNoContainer = 18
+        }
+
+        public enum EncodeQuality
+        {
+            SmallSize = 1,
+            Portable = 2,
+            HighQuality = 3,
+            Archiving = 4
+        }
+
+        [Flags()]
+        public enum LibraryCategory
+        {
+            Music = 0,
+            Audiobook = 1,
+            Video = 2,
+            Inbox = 4
+        }
+
+        public enum DeviceIdType
+        {
+            MusicBeeNativeId = 0,
+            GooglePlay = 1,
+            AppleDevice = 2,
+            GooglePlay2 = 3,
+            AppleDevice2 = 4,
+			WebDrivePluginOneDrive = 5,
+			WebDrivePluginGoogleDrive = 6,
+			WebDrivePluginDropBox = 7
         }
 
         public enum DataType
@@ -337,9 +569,58 @@ namespace MusicBeePlugin
             Rating = 3
         }
 
+        public enum SettingId
+        {
+            CompactPlayerFlickrEnabled = 1,
+            FileTaggingPreserveModificationTime = 2,
+            LastDownloadFolder = 3,
+            ArtistGenresOnly = 4,
+            IgnoreNamePrefixes = 5,
+            IgnoreNameChars = 6,
+            PlayCountTriggerPercent = 7,
+            PlayCountTriggerSeconds = 8,
+            SkipCountTriggerPercent = 9,
+            SkipCountTriggerSeconds = 10,
+            CustomWebLinkName1 = 11,
+            CustomWebLinkName2 = 12,
+            CustomWebLinkName3 = 13,
+            CustomWebLinkName4 = 14,
+            CustomWebLinkName5 = 15,
+            CustomWebLinkName6 = 16,
+            CustomWebLinkName7 = 29,
+            CustomWebLinkName8 = 30,
+            CustomWebLinkName9 = 31,
+            CustomWebLinkName10 = 32,
+            CustomWebLink1 = 17,
+            CustomWebLink2 = 18,
+            CustomWebLink3 = 19,
+            CustomWebLink4 = 20,
+            CustomWebLink5 = 21,
+            CustomWebLink6 = 22,
+            CustomWebLink7 = 33,
+            CustomWebLink8 = 34,
+            CustomWebLink9 = 35,
+            CustomWebLink10 = 36,
+            CustomWebLinkNowPlaying1 = 23,
+            CustomWebLinkNowPlaying2 = 24,
+            CustomWebLinkNowPlaying3 = 25,
+            CustomWebLinkNowPlaying4 = 26,
+            CustomWebLinkNowPlaying5 = 27,
+            CustomWebLinkNowPlaying6 = 28,
+            CustomWebLinkNowPlaying7 = 37,
+            CustomWebLinkNowPlaying8 = 38,
+            CustomWebLinkNowPlaying9 = 39,
+            CustomWebLinkNowPlaying10 = 40
+        }
+
         public enum ComparisonType
         {
             Is = 0,
+            IsNot = 1,
+            Contains = 4,
+            DoesNotContain = 5,
+            StartsWith = 6,
+            EndsWith = 7,
             IsSimilar = 20
         }
 
@@ -392,6 +673,7 @@ namespace MusicBeePlugin
 
         public enum SkinElement
         {
+            SkinSubPanel = 0,
             SkinInputControl = 7,
             SkinInputPanel = 10,
             SkinInputPanelLabel = 14,
@@ -414,7 +696,10 @@ namespace MusicBeePlugin
         public enum PluginPanelDock
         {
             ApplicationWindow = 0,
-            TrackAndArtistPanel = 1
+            TrackAndArtistPanel = 1,
+            TextBox = 3,
+            ComboBox = 4,
+            MainPanel = 5
         }
 
         
@@ -425,10 +710,63 @@ namespace MusicBeePlugin
             Album = 2,
             Smart = 3
         }
+        
+        public enum PlayStatisticType
+        {
+            NoChange = 0,
+            IncreasePlayCount = 1,
+            IncreaseSkipCount = 2
+        }
 
         public enum Command
         {
             NavigateTo = 1
+        }
+        
+        public enum DownloadTarget
+        {
+            Inbox = 0,
+            MusicLibrary = 1,
+            SpecificFolder = 3
+        }
+
+        [Flags()]
+        public enum PictureLocations: byte
+        {
+            None = 0,
+            EmbedInFile = 1,
+            LinkToOrganisedCopy = 2,
+            LinkToSource = 4,
+            FolderThumb = 8
+        }
+
+        public enum WindowState
+        {
+            Off = -1,
+            Normal = 0,
+            Fullscreen = 1,
+            Desktop = 2
+        }
+
+        public enum SubscriptionMetaDataType
+        {
+            Id = 0,
+            Title = 1,
+            Grouping = 2,
+            Genre = 3,
+            Description = 4,
+            DounloadedCount = 5
+        }
+
+        public enum EpisodeMetaDataType
+        {
+            Id = 0,
+            Title = 1,
+            DateTime = 2,
+            Description = 3,
+            Duration = 4,
+            IsDownloaded = 5,
+            HasBeenPlayed = 6
         }
 
         public delegate void MB_ReleaseStringDelegate(string p1);
@@ -437,6 +775,7 @@ namespace MusicBeePlugin
         public delegate void MB_RefreshPanelsDelegate();
         public delegate void MB_SendNotificationDelegate(CallbackType type);
         public delegate System.Windows.Forms.ToolStripItem MB_AddMenuItemDelegate(string menuPath, string hotkeyDescription, EventHandler handler);
+        public delegate bool MB_AddTreeNodeDelegate(string treePath, string name, System.Drawing.Bitmap icon, EventHandler openHandler, EventHandler closeHandler);
         public delegate void MB_RegisterCommandDelegate(string command, EventHandler handler);
         public delegate void MB_CreateBackgroundTaskDelegate(System.Threading.ThreadStart taskCallback, System.Windows.Forms.Form owner);
         public delegate void MB_CreateParameterisedBackgroundTaskDelegate(System.Threading.ParameterizedThreadStart taskCallback, object parameters, System.Windows.Forms.Form owner);
@@ -450,6 +789,12 @@ namespace MusicBeePlugin
         public delegate bool MB_InvokeCommandDelegate(Command command, object parameter);
         public delegate bool MB_OpenFilterInTabDelegate(MetaDataType field1, ComparisonType comparison1, string value1, MetaDataType field2, ComparisonType comparison2, string value2);
         public delegate bool MB_SetWindowSizeDelegate(int width, int height);
+        public delegate bool MB_DownloadFileDelegate(string url, DownloadTarget target, string targetFolder, bool cancelDownload);
+        public delegate bool MB_GetVisualiserInformationDelegate(out string[] visualiserNames, out string defaultVisualiserName, out WindowState defaultState, out WindowState currentState);
+        public delegate bool MB_ShowVisualiserDelegate(string visualiserName, WindowState state);
+        public delegate bool MB_GetPluginViewInformationDelegate(string pluginFilename, out string[] viewNames, out string defaultViewName, out WindowState defaultState, out WindowState currentState);
+        public delegate bool MB_ShowPluginViewDelegate(string pluginFilename, string viewName, WindowState state);
+        public delegate bool MB_UninistallPluginDelegate(string pluginFilename, string password);
         public delegate string Setting_GetFieldNameDelegate(MetaDataType field);
         public delegate string Setting_GetPersistentStoragePathDelegate();
         public delegate string Setting_GetSkinDelegate();
@@ -459,16 +804,29 @@ namespace MusicBeePlugin
         public delegate DataType Setting_GetDataTypeDelegate(MetaDataType field);
         public delegate string Setting_GetLastFmUserIdDelegate();
         public delegate string Setting_GetWebProxyDelegate();
+        public delegate bool Setting_GetValueDelegate(SettingId settingId, out object value);
+        public delegate string Setting_GetFileConvertCommandLineDelegate(FileCodec codec, EncodeQuality encodeQuality);
         public delegate string Library_GetFilePropertyDelegate(string sourceFileUrl, FilePropertyType type);
         public delegate string Library_GetFileTagDelegate(string sourceFileUrl, MetaDataType field);
+        public delegate bool Library_GetFileTagsDelegate(string sourceFileUrl, MetaDataType[] fields, out string[] results);
         public delegate bool Library_SetFileTagDelegate(string sourceFileUrl, MetaDataType field, string value);
+        public delegate string Library_GetDevicePersistentIdDelegate(string sourceFileUrl, DeviceIdType idType);
+        public delegate bool Library_SetDevicePersistentIdDelegate(string sourceFileUrl, DeviceIdType idType, string value);
+        public delegate bool Library_FindDevicePersistentIdDelegate(DeviceIdType idType, string[] ids, out string[] values);
         public delegate bool Library_CommitTagsToFileDelegate(string sourceFileUrl);
+        public delegate string Library_AddFileToLibraryDelegate(string sourceFileUrl, LibraryCategory category);
+        public delegate bool Library_GetSyncDeltaDelegate(string[] cachedFiles, DateTime updatedSince, LibraryCategory categories, out string[] newFiles, out string[] updatedFiles, out string[] deletedFiles);
         public delegate string Library_GetLyricsDelegate(string sourceFileUrl, LyricsType type);
         public delegate string Library_GetArtworkDelegate(string sourceFileUrl, int index);
+        public delegate bool Library_GetArtworkExDelegate(string sourceFileUrl, int index, bool retrievePictureData, out PictureLocations pictureLocations, out string pictureUrl, out byte[] imageData);
+        public delegate bool Library_SetArtworkExDelegate(string sourceFileUrl, int index, byte[] imageData);
         public delegate string Library_GetArtistPictureDelegate(string artistName, int fadingPercent, int fadingColor);
+        public delegate bool Library_GetArtistPictureUrlsDelegate(string artistName, bool localOnly, out string[] urls);
+        public delegate string Library_GetArtistPictureThumbDelegate(string artistName);
         public delegate bool Library_QueryFilesDelegate(string query);
         public delegate string Library_QueryGetNextFileDelegate();
         public delegate string Library_QueryGetAllFilesDelegate();
+        public delegate bool Library_QueryFilesExDelegate(string query, out string[] files);
         public delegate string Library_QuerySimilarArtistsDelegate(string artistName, double minimumArtistSimilarityRating);
         public delegate bool Library_QueryLookupTableDelegate(string keyTags, string valueTags, string query);
         public delegate string Library_QueryGetLookupTableValueDelegate(string key);
@@ -502,15 +860,24 @@ namespace MusicBeePlugin
         public delegate bool Player_SetCrossfadeDelegate(bool crossfade);
         public delegate ReplayGainMode Player_GetReplayGainModeDelegate();
         public delegate bool Player_SetReplayGainModeDelegate(ReplayGainMode mode);
+        public delegate int Player_OpenStreamHandleDelegate(string url, bool useMusicBeeSettings, bool enableDsp, ReplayGainMode gainType);
+        public delegate bool Player_UpdatePlayStatisticsDelegate(string url, PlayStatisticType countType, bool disableScrobble);
+        public delegate bool Player_GetOutputDevicesDelegate(out string[] deviceNames, out string activeDeviceName);
+        public delegate bool Player_SetOutputDeviceDelegate(string deviceName);
         public delegate string NowPlaying_GetFileUrlDelegate();
         public delegate int NowPlaying_GetDurationDelegate();
         public delegate string NowPlaying_GetFilePropertyDelegate(FilePropertyType type);
         public delegate string NowPlaying_GetFileTagDelegate(MetaDataType field);
+        public delegate bool NowPlaying_GetFileTagsDelegate(MetaDataType[] fields, out string[] results);
         public delegate string NowPlaying_GetLyricsDelegate();
         public delegate string NowPlaying_GetArtworkDelegate();
         public delegate string NowPlaying_GetArtistPictureDelegate(int fadingPercent);
+        public delegate bool NowPlaying_GetArtistPictureUrlsDelegate(bool localOnly, out string[] urls);
+        public delegate string NowPlaying_GetArtistPictureThumbDelegate();
+        public delegate bool NowPlaying_IsSoundtrackDelegate();
         public delegate int NowPlaying_GetSpectrumDataDelegate(float[] fftData);
         public delegate bool NowPlaying_GetSoundGraphDelegate(float[] graphData);
+        public delegate bool NowPlaying_GetSoundGraphExDelegate(float[] graphData, float[] peakData);
         public delegate int NowPlayingList_GetCurrentIndexDelegate();
         public delegate int NowPlayingList_GetNextIndexDelegate(int offset);
         public delegate bool NowPlayingList_IsAnyPriorTracksDelegate();
@@ -518,6 +885,7 @@ namespace MusicBeePlugin
         public delegate string NowPlayingList_GetFileUrlDelegate(int index);
         public delegate string NowPlayingList_GetFilePropertyDelegate(int index, FilePropertyType type);
         public delegate string NowPlayingList_GetFileTagDelegate(int index, MetaDataType field);
+        public delegate bool NowPlayingList_GetFileTagsDelegate(int index, MetaDataType[] fields, out string[] results);
         public delegate bool NowPlayingList_ActionDelegate();
         public delegate bool NowPlayingList_FileActionDelegate(string sourceFileUrl);
         public delegate bool NowPlayingList_FilesActionDelegate(string[] sourceFileUrl);
@@ -527,16 +895,29 @@ namespace MusicBeePlugin
         public delegate PlaylistFormat Playlist_GetTypeDelegate(string playlistUrl);
         public delegate bool Playlist_QueryPlaylistsDelegate();
         public delegate string Playlist_QueryGetNextPlaylistDelegate();
+        public delegate bool Playlist_IsInListDelegate(string playlistUrl, string filename);
         public delegate bool Playlist_QueryFilesDelegate(string playlistUrl);
+        public delegate bool Playlist_QueryFilesExDelegate(string playlistUrl, out string[] filenames);
         public delegate string Playlist_CreatePlaylistDelegate(string folderName, string playlistName, string[] filenames);
+        public delegate bool Playlist_DeletePlaylistDelegate(string playlistUrl);
         public delegate bool Playlist_SetFilesDelegate(string playlistUrl, string[] filenames);
+        public delegate bool Playlist_AddFilesDelegate(string playlistUrl, string[] filenames);
         public delegate bool Playlist_RemoveAtDelegate(string playlistUrl, int index);
+        public delegate bool Playlist_MoveFilesDelegate(string playlistUrl, int[] fromIndices, int toIndex);
+        public delegate bool Playlist_PlayNowDelegate(string playlistUrl);
         public delegate string Pending_GetFileUrlDelegate();
         public delegate string Pending_GetFilePropertyDelegate(FilePropertyType field);
         public delegate string Pending_GetFileTagDelegate(MetaDataType field);
+        public delegate bool Podcasts_QuerySubscriptionsDelegate(string query, out string[] ids);
+        public delegate bool Podcasts_GetSubscriptionDelegate(string id, out string[] subscription);
+        public delegate bool Podcasts_GetSubscriptionArtworkDelegate(string id, int index, out byte[] imageData);
+        public delegate bool Podcasts_GetSubscriptionEpisodesDelegate(string id, out string[] urls);
+        public delegate bool Podcasts_GetSubscriptionEpisodeDelegate(string id, int index, out string[] episode);
+        public delegate string Sync_FileStartDelegate(string filename);
+        public delegate void Sync_FileEndDelegate(string filename, bool success, string errorMessage);
 
         [System.Security.SuppressUnmanagedCodeSecurity()]
         [DllImport("kernel32.dll")]
         private static extern void CopyMemory(ref MusicBeeApiInterface mbApiInterface, IntPtr src, int length);
-    }
+    };
 }

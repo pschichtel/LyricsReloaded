@@ -49,7 +49,7 @@ namespace MusicBeePlugin
             info.Type = PluginType.LyricsRetrieval;
             info.VersionMajor = 1;
             info.VersionMinor = 1;
-            info.Revision = 6;
+            info.Revision = 8;
             info.MinInterfaceVersion = 20;
             info.MinApiRevision = 25;
             info.ReceiveNotifications = ReceiveNotificationFlags.StartupOnly;
@@ -136,7 +136,7 @@ namespace MusicBeePlugin
 
         public String RetrieveLyrics(String source, String artist, String title, String album, bool preferSynced, String providerName)
         {
-            lyricsReloaded.getLogger().debug("Lyrics request: {0} - {1} - {2} - {3} - {4}", source, artist, title, album, providerName);
+            lyricsReloaded.getLogger().debug("Lyrics request: {0} - {1} - {2} - {3}", artist, title, album, providerName);
             Provider provider = lyricsReloaded.getProviderManager().getProvider(providerName);
             if (provider == null)
             {
@@ -148,11 +148,11 @@ namespace MusicBeePlugin
 
             if (String.IsNullOrWhiteSpace(lyrics))
             {
-                lyricsReloaded.getLogger().debug("no lyrics found");
+                lyricsReloaded.getLogger().debug("no lyrics found from {0}", providerName);
                 return null;
             }
 
-            lyricsReloaded.getLogger().debug("lyrics found");
+            lyricsReloaded.getLogger().debug("lyrics found from {0}!", providerName);
 
             return lyrics;
         }

@@ -195,70 +195,6 @@ namespace CubeIsland.LyricsReloaded.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to name: LyricWiki Reloaded
-        ///
-        ///variables:
-        ///    artist:
-        ///        type: artist
-        ///        filters:
-        ///        - [regex, &quot;\\s+&quot;, _]
-        ///        - urlencode
-        ///    title:
-        ///        type: title
-        ///        filters: artist 
-        ///
-        ///post-filters:
-        ///- br2nl
-        ///- p2break
-        ///- strip_html
-        ///- entity_decode
-        ///- utf8_encode
-        ///- trim
-        ///
-        ///config:
-        ///    url: &quot;http://lyrics.wikia.com/{artist}:{title}&quot;
-        ///    pattern: &quot;&apos;lyricbox&apos;&gt;.*?&lt;/div&gt;(?&lt;lyrics&gt;.*?)&lt;!--&quot;
-        ///.
-        /// </summary>
-        public static string provider_lyrics_wikia_com {
-            get {
-                return ResourceManager.GetString("provider_lyrics_wikia_com", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to name: LyricWiki Gracenote Reloaded
-        ///
-        ///variables:
-        ///    artist:
-        ///        type: artist
-        ///        filters:
-        ///        - [regex, &quot;\\s+&quot;, _]
-        ///        - urlencode
-        ///    title:
-        ///        type: title
-        ///        filters: artist 
-        ///
-        ///post-filters:
-        ///- br2nl
-        ///- p2break
-        ///- strip_html
-        ///- entity_decode
-        ///- utf8_encode
-        ///- trim
-        ///
-        ///config:
-        ///    url: &quot;http://lyrics.wikia.com/Gracenote:{artist}:{title}&quot;
-        ///    pattern: &quot;&apos;lyricbox&apos;&gt;.*?&lt;/div&gt;\\s*(?&lt;lyrics&gt;.*?)&lt;!--&quot;
-        ///.
-        /// </summary>
-        public static string provider_lyrics_wikia_gn {
-            get {
-                return ResourceManager.GetString("provider_lyrics_wikia_gn", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to name: MetroLyrics
         ///
         ///variables:
@@ -438,29 +374,6 @@ namespace CubeIsland.LyricsReloaded.Properties {
         public static string provider_songlyrics_com {
             get {
                 return ResourceManager.GetString("provider_songlyrics_com", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to name: T2 Lyrics (English)
-        ///
-        ///variables:
-        ///    title:
-        ///        type: title
-        ///        filters:
-        ///        - urlencode
-        ///
-        ///config:
-        ///    url: &quot;http://www.tamil2lyrics.com/lyrics/{title}-song-lyrics/&quot;
-        ///    pattern: [&apos;&lt;div id=&quot;English&quot; class=&quot;tabcontent&quot;&gt;&apos;, s]
-        ///    
-        ///post-filters:
-        ///- trim
-        ///- utf8_encode.
-        /// </summary>
-        public static string provider_tamil2lyrics_com {
-            get {
-                return ResourceManager.GetString("provider_tamil2lyrics_com", resourceCulture);
             }
         }
         
