@@ -61,36 +61,6 @@ namespace CubeIsland.LyricsReloaded.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to name: A-Z Lyrics Universe
-        ///
-        ///variables:
-        ///    artist:
-        ///        type: artist
-        ///        filters:
-        ///        - lowercase
-        ///        - strip_nonascii
-        ///    title:
-        ///        type: title
-        ///        filters: artist
-        ///
-        ///headers:
-        ///    User-Agent: &apos;Mozilla/5.0 (Windows NT 6.3; WOW64; rv:30.0) Gecko/20100101 Firefox/30.0&apos; # Firefox 30 Win x64 user agent
-        ///
-        ///config:
-        ///    url: &quot;http://www.azlyrics.com/lyrics/{artist}/{title}.html&quot;
-        ///    pattern: [&apos;&lt;!-- start of lyrics --&gt;(?&lt;lyrics&gt;.+?)&lt;!-- end of lyrics --&gt;&apos;, s]
-        ///    
-        ///post-filters:
-        ///- strip_html
-        ///- tri [rest of string was truncated]&quot;;.
-        /// </summary>
-        public static string provider_azlyrics_com {
-            get {
-                return ResourceManager.GetString("provider_azlyrics_com", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to name: &quot;Cušpajz&quot;
         ///
         ///variables:
