@@ -29,13 +29,15 @@ variables:
 
 config:
     url: "http://genius.com/{artist}-{title}-lyrics"
-    pattern: ['<div\s+class="song_body-lyrics"[^>]*?>[\s\S]*?<p>(?<lyrics>[\s\S]*?)</p>', s]
+    pattern: ['<div class="lyrics">(?<lyrics>[\s\S]*?)</div>', s]
 
 post-filters:
 - strip_html
 - clean_spaces
 - utf8_encode
 - [regex, 'googletag.*\);', "\n"]
+- [regex, '<!--sse-->', ""]
+- [regex, '<!--/sse-->', ""]
 - [regex, '\[.{1,75}\]', ""]
 - [regex, "’", "'"]
 - [replace, "\n\n", "\n"]
