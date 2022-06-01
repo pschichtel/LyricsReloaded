@@ -15,30 +15,18 @@ variables:
         - [strip_nonascii, -]
     title:
         type: title
-        filters:
-        - strip_diacritics
-        - lowercase
-        - [replace, "!!!", "chk-chik-chick"]
-        - [regex, '(?<=\W|\s)+(feat.+|ft[\W\s]+|(f\.\s)).+', ""]
-        - [regex, '\s&(?=\s)', " and"]
-        - [regex, '\.+|,+|(\W+(?=$))|(^\W+)', ""]
-        - [regex, "'", ""]
-        - [regex, '(?<=[a-z0-9%])[^\sa-z0-9%]+(?=[a-z0-9%]+)', "-"]
-        - [regex, '((?<=\s)([^a-z0-9\s-])+(\s|\W)+)|((?<=\w)([^a-z0-9-])+(\s|\W)+)', " "]
-        - [strip_nonascii, -]
+        filters: artist
 
 config:
-    url: "http://genius.com/{artist}-{title}-lyrics"
-    pattern: ['<div class="lyrics">(?<lyrics>[\s\S]*?)</div>', s]
+    url: "https://genius.com/{artist}-{title}-lyrics"
+    pattern: ['<div data-lyrics-container="true" class="Lyrics__Container-sc-1ynbvzw-6 jYfhrf">(?<lyrics>.*)<div class="Lyrics__Footer-sc-', 's']
 
 post-filters:
+- br2nl
 - strip_html
-- clean_spaces
 - utf8_encode
-- [regex, 'googletag.*\);', "\n"]
-- [regex, '<!--sse-->', ""]
-- [regex, '<!--/sse-->', ""]
+- entity_decode
+- clean_spaces
 - [regex, '\[.{1,75}\]', ""]
-- [regex, "’", "'"]
-- [replace, "\n\n", "\n"]
+- [regex, '\n{2,}',"\n\n", 's']
 - trim

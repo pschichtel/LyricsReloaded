@@ -25,12 +25,11 @@ variables:
 
 config:
     url: "http://www.musixmatch.com/lyrics/{artist}/{title}"
-    pattern: ['<p class="mxm-lyrics__content ">\s*(?<lyrics>.*?)</span>', s]
+    pattern: ['<p class="mxm-lyrics__content.*?">(?<lyrics>.*?)<div [^>]*"lyrics-report".*?>', s]
 
 post-filters:
+- [regex, "<script.*?</script>", "", s]
 - strip_html
-- [regex, '\s*googletag.*\);', "\n", s]
-- [regex, "’", "'"]
+- utf8_encode
 - entity_decode
 - clean_spaces
-- utf8_encode
