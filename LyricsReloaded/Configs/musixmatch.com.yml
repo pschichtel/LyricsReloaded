@@ -29,6 +29,7 @@ config:
 
 post-filters:
 - [regex, "<script.*?</script>", "", s]
+- [regex, '<div class="inline_video_ad_container_container">', "\n", s]
 - strip_html
 - utf8_encode
 - entity_decode
