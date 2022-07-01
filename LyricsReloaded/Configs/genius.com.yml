@@ -12,8 +12,8 @@ variables:
         - [regex, "'", ""]
         - [regex, '(?<=[a-z0-9%])[^\sa-z0-9%]+(?=[a-z0-9%]+)', "-"]
         - [regex, '((?<=\s)([^a-z0-9\s-])+(\s|\W)+)|((?<=\w)([^a-z0-9-])+(\s|\W)+)', " "]
-		- [regex, '\s&(?=\s)', " and"]
         - [strip_nonascii, -]
+        - [regex, '\s&(?=\s)', " and"]
     title:
         type: title
         filters: artist
