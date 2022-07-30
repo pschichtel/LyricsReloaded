@@ -36,6 +36,7 @@ x64/
 *.vspscc
 *.vssscc
 .builds
+.vs/
 
 # Visual C++ cache files
 ipch/
@@ -112,3 +113,4 @@ UpgradeLog*.XML
 # Monodevelop
 *.userprefs
 
+/LyricsReloaded/MusicBeeInterfaceOLD.cs

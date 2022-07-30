@@ -94,11 +94,13 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="Configs\cuspajz.com.yml" />
+    <None Include="Configs\genius.com.yml" />
+    <None Include="Configs\musixmatch.com-asian.yml" />
+    <None Include="Configs\musixmatch.com.yml" />
     <None Include="Configs\smriti.com.yml" />
     <None Include="Configs\www.hindilyrics.net.yml" />
     <None Include="Configs\lyrics.wikia.com-gn.yml" />
     <None Include="Configs\lyrics.wikia.com.yml" />
-    <None Include="Configs\pinkradio.com.yml" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -110,13 +112,18 @@
     <None Include="Configs\metrolyrics.com.yml" />
     <None Include="Configs\letras.mus.br.yml" />
     <None Include="Configs\teksty.org.yml" />
-    <None Include="Configs\tekstowo.pl.yml" />
     <None Include="Configs\oldielyrics.com.yml" />
-    <None Include="Configs\rapgenius.com.yml" />
     <None Include="Configs\urbanlyrics.com.yml" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>if "$(ConfigurationName)"=="Release" (
+    if not exist "$(TargetDir)merged" mkdir "$(TargetDir)merged"
+
+    "$(SolutionDir)packages\ilmerge.2.13.0307\ILMerge.exe" "/out:$(TargetDir)merged\$(TargetFileName)" "$(TargetPath)" "$(TargetDir)YamlDotNet.Core.dll" "$(TargetDir)YamlDotNet.RepresentationModel.dll"
+)</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
@@ -132,6 +139,6 @@
       <EmbeddedResource Include="@(ReferenceCopyLocalPaths)" Condition="'%(ReferenceCopyLocalPaths.Name)' == 'YamlDotNet.Core'">
         <LogicalName>%(ReferenceCopyLocalPaths.DestinationSubDirectory)%(ReferenceCopyLocalPaths.Filename)%(ReferenceCopyLocalPaths.Extension)</LogicalName>
       </EmbeddedResource>
-     </ItemGroup>
+    </ItemGroup>
   </Target>
 </Project>

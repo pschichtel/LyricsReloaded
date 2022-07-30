@@ -1,0 +1,29 @@
+name: "Musixmatch_Asian"
+
+variables:
+    artist:
+        type: artist
+        filters:
+        - [regex, ",|[.]", ""]
+        - [regex, "'|/| ", "-"]
+        - [regex, '\s&(?=\s)', "-"]
+        - [regex, '[-]+', "-"]
+    title:
+        type: title
+        filters:
+        - [regex, ",|[.]", ""]
+        - [regex, " '|' ", " "]
+        - [regex, " |'|/", "-"]
+        - [regex, '[-]+', "-"]
+
+config:
+    url: "http://www.musixmatch.com/lyrics/{artist}/{title}"
+    pattern: ['<p class="mxm-lyrics__content ">\s*(?<lyrics>.*?)(</span>|<div[^>]*"lyrics-report")', s]
+
+post-filters:
+- strip_html
+- [regex, '\s*googletag.*\);', "\n", s]
+- [regex, "’", "'"]
+- entity_decode
+- clean_spaces
+- utf8_encode

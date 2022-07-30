@@ -149,7 +149,7 @@ namespace CubeIsland.LyricsReloaded
                 try
                 {
                     bool result = false;
-                    WebResponse respone = cl.get("https://raw.githubusercontent.com/pschichtel/LyricsReloaded/stable/LyricsReloaded/Properties/AssemblyInfo.cs");
+                    WebResponse respone = cl.get("https://raw.githubusercontent.com/mbfrankz/LyricsReloaded/stable/LyricsReloaded/Properties/AssemblyInfo.cs");
                     if (respone != null)
                     {
                         String content = respone.getContent();

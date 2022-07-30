@@ -21,6 +21,7 @@
 using CubeIsland.LyricsReloaded;
 using CubeIsland.LyricsReloaded.Provider;
 using System;
+using System.Drawing;
 using System.Collections.Generic;
 using System.Net;
 using System.Windows.Forms;
@@ -41,18 +42,18 @@ namespace MusicBeePlugin
             musicBee.Initialise(apiPtr);
 
             info.PluginInfoVersion = PluginInfoVersion;
-            info.Name = "Lyrics Reloaded!";
-            info.Description = "Lyrics loading done properly!";
-            info.Author = "Phillip Schichtel <Quick_Wango>";
+            info.Name = "Lyrics Reloaded";
+            info.Description = "Enhanced Lyrics Retrieval for MusicBee";
+            info.Author = "Created by Phillip Schichtel <Quick_Wango>, Maintained by Frank";
             info.TargetApplication = "MusicBee";
             info.Type = PluginType.LyricsRetrieval;
             info.VersionMajor = 1;
-            info.VersionMinor = 0;
-            info.Revision = 1;
+            info.VersionMinor = 1;
+            info.Revision = 11;
             info.MinInterfaceVersion = 20;
             info.MinApiRevision = 25;
             info.ReceiveNotifications = ReceiveNotificationFlags.StartupOnly;
-            info.ConfigurationPanelHeight = 0;
+            info.ConfigurationPanelHeight = 20;
 
             try
             {
@@ -135,7 +136,7 @@ namespace MusicBeePlugin
 
         public String RetrieveLyrics(String source, String artist, String title, String album, bool preferSynced, String providerName)
         {
-            lyricsReloaded.getLogger().debug("Lyrics request: {0} - {1} - {2} - {3} - {4}", source, artist, title, album, providerName);
+            lyricsReloaded.getLogger().debug("Lyrics request: {0} - {1} - {2} - {3}", artist, title, album, providerName);
             Provider provider = lyricsReloaded.getProviderManager().getProvider(providerName);
             if (provider == null)
             {
@@ -147,11 +148,11 @@ namespace MusicBeePlugin
 
             if (String.IsNullOrWhiteSpace(lyrics))
             {
-                lyricsReloaded.getLogger().debug("no lyrics found");
+                lyricsReloaded.getLogger().debug("no lyrics found from {0}", providerName);
                 return null;
             }
 
-            lyricsReloaded.getLogger().debug("lyrics found");
+            lyricsReloaded.getLogger().debug("lyrics found from {0}!", providerName);
 
             return lyrics;
         }
@@ -161,15 +162,34 @@ namespace MusicBeePlugin
             lyricsReloaded.uninstall();
         }
 
-        #region "MusicBee implementations"
         public bool Configure(IntPtr panelHandle)
         {
-            return true;
+            // save any persistent settings in a sub-folder of this path
+            string dataPath = musicBee.Setting_GetPersistentStoragePath();
+            // panelHandle will only be set if you set about.ConfigurationPanelHeight to a non-zero value
+            // keep in mind the panel width is scaled according to the font the user has selected
+            // if about.ConfigurationPanelHeight is set to 0, you can display your own popup window
+            if (panelHandle != IntPtr.Zero)
+            {
+                Panel configPanel = (Panel)Panel.FromHandle(panelHandle);
+                Label prompt = new Label();
+                prompt.AutoSize = true;
+                prompt.Location = new Point(0, 0);
+                prompt.Text = "Manage providers at Edit->Edit Preferences->Tags(2)->auto-tagging->lyrics:";
+               configPanel.Controls.AddRange(new Control[] {prompt});
+            }
+
+
+            return false;
         }
 
+        // called by MusicBee when the user clicks Apply or Save in the MusicBee Preferences screen.
+        // its up to you to figure out whether anything has changed and needs updating
         public void SaveSettings()
-        {}
+        {
+            // save any persistent settings in a sub-folder of this path
+            string dataPath = musicBee.Setting_GetPersistentStoragePath();
+        }
 
-        #endregion
     }
 }

@@ -1,9 +1,9 @@
-LyricsReloaded [![Build Status](https://travis-ci.org/pschichtel/LyricsReloaded.svg?branch=master)](https://travis-ci.org/pschichtel/LyricsReloaded)
+LyricsReloaded
 ==============
 
 A rewrite of the Lyrics plugin of MusicBee.
 
-Contact pschichtel on github.com if you want to maintain this project.
+New version [1.1.14 here](https://github.com/mbfrankz/LyricsReloaded/releases/tag/1.1.14/)
 
 Unmaintained
 ------------
@@ -11,7 +11,7 @@ As I stopped using MusicBee as part of my migration away from Windows, I stopped
 
 Bug Tracker
 -----------
-GitHub: [LyricsReloaded](https://github.com/pschichtel/LyricsReloaded/issues)
+GitHub: [LyricsReloaded](https://github.com/mbfrankz/LyricsReloaded/issues)
 
 Documentation
 -------------
