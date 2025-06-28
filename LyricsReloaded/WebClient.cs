@@ -236,7 +236,7 @@ namespace CubeIsland.LyricsReloaded
                     if (String.Compare(response.ContentEncoding, "gzip", StringComparison.OrdinalIgnoreCase) == 0)
                     {
                         // gzip compression detected, wrap the stream with a decompressing gzip stream
-                        lyricsReloaded.getLogger().debug("gzip compression detected");
+                        // lyricsReloaded.getLogger().debug("gzip compression detected");
                         responsesStream = new GZipStream(responsesStream, CompressionMode.Decompress);
                     }
                     MemoryStream content = new MemoryStream();

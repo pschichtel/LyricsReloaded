@@ -19,7 +19,7 @@ namespace CubeIsland.LyricsReloaded.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -59,375 +59,41 @@ namespace CubeIsland.LyricsReloaded.Properties {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to name: A-Z Lyrics Universe
-        ///
-        ///variables:
-        ///    artist:
-        ///        type: artist
-        ///        filters:
-        ///        - lowercase
-        ///        - strip_nonascii
-        ///    title:
-        ///        type: title
-        ///        filters: artist
-        ///
-        ///headers:
-        ///    User-Agent: &apos;Mozilla/5.0 (Windows NT 6.3; WOW64; rv:30.0) Gecko/20100101 Firefox/30.0&apos; # Firefox 30 Win x64 user agent
-        ///
-        ///config:
-        ///    url: &quot;http://www.azlyrics.com/lyrics/{artist}/{title}.html&quot;
-        ///    pattern: [&apos;&lt;!-- Usage of azlyrics.com content by any third-party lyrics provider is prohibited by [rest of string was truncated]&quot;;.
-        /// </summary>
-        public static string provider_azlyrics_com {
-            get {
-                return ResourceManager.GetString("provider_azlyrics_com", resourceCulture);
-            }
+		
+        public static string provider_genius
+		{
+            get{return ResourceManager.GetString("provider_genius", resourceCulture);}
         }
         
-        /// <summary>
-        ///   Looks up a localized string similar to name: &quot;Cušpajz&quot;
-        ///
-        ///variables:
-        ///    artist:
-        ///        type: artist
-        ///        filters:
-        ///        - strip_diacritics
-        ///        - lowercase
-        ///        - [strip_nonascii, -]
-        ///    title:
-        ///        type: title
-        ///        filters: artist
-        ///
-        ///config:
-        ///    url: &quot;http://cuspajz.com/tekstovi-pjesama/pjesma/{artist}/{title}.html&quot;
-        ///    pattern: [&apos;&lt;p\sclass=&quot;text\sclearfix&quot;&gt;(?&lt;lyrics&gt;[\s\S]*?)&lt;/p&gt;&apos;, s]
-        ///    
-        ///post-filters:
-        ///- strip_html
-        ///- entity_decode.
-        /// </summary>
-        public static string provider_cuspajz_com {
-            get {
-                return ResourceManager.GetString("provider_cuspajz_com", resourceCulture);
-            }
+        /*public static string provider_musixmatch
+		{
+            get{return ResourceManager.GetString("provider_musixmatch", resourceCulture);}
+        }*/
+		
+        public static string provider_bing
+		{
+            get{return ResourceManager.GetString("provider_bing", resourceCulture);}
         }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to name: Genius
-        ///
-        ///variables:
-        ///    artist:
-        ///        type: artist
-        ///        filters:
-        ///        - strip_diacritics
-        ///        - lowercase
-        ///        - [replace, &quot;!!!&quot;, &quot;chk-chik-chick&quot;]
-        ///        - [regex, &apos;(?&lt;=\W|\s)+(feat.+|ft[\W\s]+|(f\.\s)).+&apos;, &quot;&quot;]
-        ///        - [regex, &apos;\.+|,+|(\W+(?=$))|(^\W+)&apos;, &quot;&quot;]
-        ///        - [regex, &quot;&apos;&quot;, &quot;&quot;]
-        ///        - [regex, &apos;(?&lt;=[a-z0-9%])[^\sa-z0-9%]+(?=[a-z0-9%]+)&apos;, &quot;-&quot;]
-        ///        - [regex, &apos;((?&lt;=\s)([^a-z0-9\s-])+(\s|\W)+)|((?&lt;=\w)([^a-z0-9-])+(\s|\W)+)&apos;, &quot; &quot;]
-        ///        - [strip_nonascii, -]
-        /// [rest of string was truncated]&quot;;.
-        /// </summary>
-        public static string provider_genius_com {
-            get {
-                return ResourceManager.GetString("provider_genius_com", resourceCulture);
-            }
+		
+		public static string provider_letras
+		{
+            get{return ResourceManager.GetString("provider_letras", resourceCulture);}
         }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to name: Hindi Lyrics
-        ///
-        ///variables:
-        ///    title:
-        ///        type: title
-        ///        filters:
-        ///        - urlencode
-        ///
-        ///config:
-        ///    url: &quot;http://www.hindilyrics.net/lyrics/of-{title}.html&quot;
-        ///    pattern: [&apos;&lt;font face=&quot;verdana&quot;&gt;(?&lt;lyrics&gt;.*?)&lt;/font&gt;&apos;, s]
-        ///    
-        ///post-filters:
-        ///- trim
-        ///- utf8_encode.
-        /// </summary>
-        public static string provider_hindilyrics_net {
-            get {
-                return ResourceManager.GetString("provider_hindilyrics_net", resourceCulture);
-            }
+		
+        public static string provider_genius_fuzzy
+		{
+            get{return ResourceManager.GetString("provider_genius (fuzzy)", resourceCulture);}
         }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to name: &quot;Letras de músicas&quot;
-        ///
-        ///variables:
-        ///    artist:
-        ///        type: artist
-        ///        filters:
-        ///        - lowercase
-        ///        - [strip_nonascii, -]
-        ///    title:
-        ///        type: title
-        ///        filters: artist
-        ///
-        ///config:
-        ///    url: &quot;http://letras.mus.br/{artist}/{title}/&quot;
-        ///    pattern: [&apos;&lt;div id=&quot;div_letra&quot;[^&gt;]*&gt;(?&lt;lyrics&gt;.*?)&lt;/div&gt;&apos;, s]
-        ///    
-        ///post-filters:
-        ///- p2break
-        ///- strip_html
-        ///- clean_spaces
-        ///- utf8_encode.
-        /// </summary>
-        public static string provider_letras_mus_br {
-            get {
-                return ResourceManager.GetString("provider_letras_mus_br", resourceCulture);
-            }
+		
+		/*public static string provider_musixmatch_fuzzy
+		{
+            get{return ResourceManager.GetString("provider_musixmatch (fuzzy)", resourceCulture);}
         }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to name: MetroLyrics
-        ///
-        ///variables:
-        ///    artist:
-        ///        type: artist
-        ///        filters:
-        ///        - strip_diacritics
-        ///        - lowercase
-        ///        - [regex, &apos;[^\sa-z0-9]\s*&apos;, &quot;&quot;]
-        ///        - [strip_nonascii, -]
-        ///    title:
-        ///        type: title
-        ///        filters: artist
-        ///
-        ///config:
-        ///    url: &quot;http://www.metrolyrics.com/{title}-lyrics-{artist}.html&quot;
-        ///    pattern: [&apos;&lt;div id=&quot;lyrics-body&quot;&gt;(?&lt;lyrics&gt;.*?)&lt;/div&gt;&apos;, s]
-        ///    
-        ///post-filters:
-        ///- br2nl
-        ///- strip_html
-        ///- strip_links
-        ///- entity_decode
-        ///- clean_spaces
-        ///- utf8_encod [rest of string was truncated]&quot;;.
-        /// </summary>
-        public static string provider_metrolyrics_com {
-            get {
-                return ResourceManager.GetString("provider_metrolyrics_com", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to name: Musixmatch
-        ///
-        ///variables:
-        ///    artist:
-        ///        type: artist
-        ///        filters:
-        ///        - strip_diacritics
-        ///        - lowercase
-        ///        - [regex, &quot;&apos;&quot;, &quot;&quot;]
-        ///        - [regex, &quot;/&quot;, &quot; &quot;]
-        ///        - [regex, &apos;\s&amp;(?=\s)&apos;, &quot; &quot;]
-        ///        - [regex, &apos;(?&lt;=\W|\s)+(feat.+|ft[\W\s]+|(f\.\s)).+&apos;, &quot;&quot;]
-        ///        - [regex, &apos;[^\sa-z0-9]\s*&apos;, &quot;&quot;]
-        ///        - [strip_nonascii, -]
-        ///    title:
-        ///        type: title
-        ///        filters:
-        ///        - strip_diacritics
-        ///        - lowercase
-        ///        - [regex, &quot; &apos;|&apos; |/&quot;, &quot; &quot;]
-        ///        - [ [rest of string was truncated]&quot;;.
-        /// </summary>
-        public static string provider_musixmatch_com {
-            get {
-                return ResourceManager.GetString("provider_musixmatch_com", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to name: &quot;Musixmatch_Asian&quot;
-        ///
-        ///variables:
-        ///    artist:
-        ///        type: artist
-        ///        filters:
-        ///        - [regex, &quot;,|[.]&quot;, &quot;&quot;]
-        ///        - [regex, &quot;&apos;|/| &quot;, &quot;-&quot;]
-        ///        - [regex, &apos;\s&amp;(?=\s)&apos;, &quot;-&quot;]
-        ///        - [regex, &apos;[-]+&apos;, &quot;-&quot;]
-        ///    title:
-        ///        type: title
-        ///        filters:
-        ///        - [regex, &quot;,|[.]&quot;, &quot;&quot;]
-        ///        - [regex, &quot; &apos;|&apos; &quot;, &quot; &quot;]
-        ///        - [regex, &quot; |&apos;|/&quot;, &quot;-&quot;]
-        ///        - [regex, &apos;[-]+&apos;, &quot;-&quot;]
-        ///
-        ///config:
-        ///    url: &quot;http://www.musixmatch.com/lyrics/{artist}/{title}&quot;
-        ///    pattern: [&apos;&lt;p class=&quot;mxm-ly [rest of string was truncated]&quot;;.
-        /// </summary>
-        public static string provider_musixmatch_com_asian {
-            get {
-                return ResourceManager.GetString("provider_musixmatch_com_asian", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to name: Oldies Lyrics
-        ///
-        ///variables:
-        ///    artist:
-        ///        type: artist
-        ///        filters:
-        ///        - strip_diacritics
-        ///        - lowercase
-        ///        - [regex, &apos;[^\sa-z0-9]\s*&apos;, &quot;&quot;]
-        ///        - [strip_nonascii, _]
-        ///    title:
-        ///        type: title
-        ///        filters: artist
-        ///
-        ///config:
-        ///    url: &quot;http://oldielyrics.com/lyrics/{artist}/{title}.html&quot;
-        ///    pattern: [&apos;&lt;div\s+class=&quot;lyrics&quot;[^&gt;]*&gt;\s*&lt;p&gt;(?&lt;lyrics&gt;.+)&lt;/p&gt;\s*&lt;/div&gt;&apos;, s]
-        ///    
-        ///post-filters:
-        ///- br2nl
-        ///- p2break
-        ///- strip_html
-        ///- strip_links
-        ///- entity_decode
-        ///- clean_spaces
-        ///- utf8_enco [rest of string was truncated]&quot;;.
-        /// </summary>
-        public static string provider_oldielyrics_com {
-            get {
-                return ResourceManager.GetString("provider_oldielyrics_com", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to name: Smriti
-        ///
-        ///variables:
-        ///    title:
-        ///        type: title
-        ///        filters:
-        ///        - lowercase
-        ///        - [regex, &apos;[^\sa-z0-9]\s*&apos;, &quot;&quot;]
-        ///        - [strip_nonascii, -]
-        ///
-        ///config:
-        ///    url: &quot;http://smriti.com/hindi-songs/{title}&quot;
-        ///    pattern: [&apos;&lt;div class=&quot;songbody&quot;&gt;(?&lt;lyrics&gt;.*?)&lt;/div&gt;&apos;, s]
-        ///    
-        ///post-filters:
-        ///- strip_html
-        ///- trim
-        ///- utf8_encode.
-        /// </summary>
-        public static string provider_smriti_com {
-            get {
-                return ResourceManager.GetString("provider_smriti_com", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to name: Song Lyrics
-        ///
-        ///variables:
-        ///    artist:
-        ///        type: artist
-        ///        filters:
-        ///        - lowercase
-        ///        - [regex, &apos;[^\sa-z0-9]&apos;, &quot;&quot;]
-        ///        - [strip_nonascii, -]
-        ///    title:
-        ///        type: title
-        ///        filters: artist
-        ///
-        ///config:
-        ///    url: &quot;http://www.songlyrics.com/{artist}/{title}-lyrics/&quot;
-        ///    pattern: [&apos;&lt;div id=&quot;songLyricsDiv-outer&quot;&gt;(?&lt;lyrics&gt;.*?)&lt;/div&gt;&apos;, s]
-        ///    
-        ///post-filters:
-        ///- strip_html
-        ///- entity_decode
-        ///- clean_spaces
-        ///- utf8_encode
-        ///- [fix_broken_chars, &apos;Ã&apos;, ISO-8859-1]
-        ///- [replace, &apos;þ&apos;, &apos;ß&apos;].
-        /// </summary>
-        public static string provider_songlyrics_com {
-            get {
-                return ResourceManager.GetString("provider_songlyrics_com", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to name: Teksty
-        ///
-        ///variables:
-        ///    artist:
-        ///        type: artist
-        ///        filters:
-        ///        - strip_diacritics
-        ///        - [replace, &apos;ł&apos;, l]
-        ///        - lowercase
-        ///        - [strip_nonascii, -]
-        ///    title:
-        ///        type: title
-        ///        filters: artist
-        ///
-        ///config:
-        ///    url: &quot;http://teksty.org/{artist},{title},tekst-piosenki&quot;
-        ///    pattern: [&apos;&lt;div\s+class=&quot;songText&quot;[^&gt;]*&gt;(?&lt;lyrics&gt;.*?)&lt;/div&gt;&apos;, s]
-        ///    
-        ///post-filters:
-        ///- strip_html
-        ///- clean_spaces
-        ///- utf8_encode.
-        /// </summary>
-        public static string provider_teksty_org {
-            get {
-                return ResourceManager.GetString("provider_teksty_org", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to name: Urban Lyrics
-        ///
-        ///variables:
-        ///    artist:
-        ///        type: artist
-        ///        filters:
-        ///        - lowercase
-        ///        - strip_nonascii
-        ///    title:
-        ///        type: title
-        ///        filters: artist
-        ///
-        ///config:
-        ///    url: &quot;http://www.urbanlyrics.com/lyrics/{artist}/{title}.html&quot;
-        ///    pattern: [&apos;&lt;!-- lyrics start --&gt;(?&lt;lyrics&gt;.+?)&lt;!-- lyrics end --&gt;&apos;, s]
-        ///    
-        ///post-filters:
-        ///- strip_html
-        ///- utf8_encode.
-        /// </summary>
-        public static string provider_urbanlyrics_com {
-            get {
-                return ResourceManager.GetString("provider_urbanlyrics_com", resourceCulture);
-            }
-        }
+		
+		public static string provider_deezer_fuzzy
+		{
+            get{return ResourceManager.GetString("provider_deezer (fuzzy)", resourceCulture);}
+        }*/
+		
     }
 }

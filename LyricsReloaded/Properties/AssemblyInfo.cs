@@ -29,9 +29,9 @@ using System.Resources;
 [assembly: AssemblyTitle("LyricsReloaded")]
 [assembly: AssemblyDescription("Enhanced Lyric Fetching for MusicBee")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Authored by Cube Island, Maintained by Frank")]
+[assembly: AssemblyCompany("Authored by Cube Island")]
 [assembly: AssemblyProduct("LyricsReloaded")]
-[assembly: AssemblyCopyright("Copyright ©  2013-2022")]
+[assembly: AssemblyCopyright("Copyright ©  2013-2024")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -53,6 +53,6 @@ using System.Resources;
 // Sie können alle Werte angeben oder die standardmäßigen Build- und Revisionsnummern 
 // übernehmen, indem Sie "*" eingeben:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.1.14.0")]
-[assembly: AssemblyFileVersion("1.1.14.0")]
+[assembly: AssemblyVersion("1.2.4")]
+[assembly: AssemblyFileVersion("1.2.4")]
 [assembly: NeutralResourcesLanguageAttribute("en")]

@@ -1,0 +1,25 @@
+name: Bing
+loader: static
+
+variables:
+    artist:
+        type: artist
+        filters:
+        - lowercase
+        
+    title:
+        type: title
+        filters: artist
+
+config:
+    url: "https://www.bing.com/search?q={title}+{artist}+lyrics&form=QBLH"
+    pattern: ['class="verse tc_translate">(?<lyrics>.*)', 's']
+
+post-filters:
+- [regex, '<br/></div><div class="verse tc_translate">', '<br/><br/>']
+- br2nl
+- [regex, 'Songwriters[\s\S]*', '']
+- strip_html
+- utf8_encode
+- entity_decode
+- trim

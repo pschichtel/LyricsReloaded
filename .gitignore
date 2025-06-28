@@ -114,3 +114,4 @@ UpgradeLog*.XML
 *.userprefs
 
 /LyricsReloaded/MusicBeeInterfaceOLD.cs
+.idea/

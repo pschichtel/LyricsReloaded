@@ -384,7 +384,7 @@ namespace CubeIsland.LyricsReloaded.Provider
             {
                 if (providers.ContainsKey(provider.getName()))
                 {
-                    logger.info("The provider {0} does already exist and will be replaced.", provider.getName());
+                    logger.warn("The provider <{0}> already exists and will therefore be replaced.", provider.getName());
                     providers.Remove(provider.getName());
                 }
                 providers.Add(provider.getName(), provider);

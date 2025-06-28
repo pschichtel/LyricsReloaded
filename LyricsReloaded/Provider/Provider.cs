@@ -114,13 +114,12 @@ namespace CubeIsland.LyricsReloaded.Provider
                 }
             }
 
-
             lyricsReloaded.getLogger().info("{0} tries to load the lyrics...", name);
             Lyrics lyrics = loader.getLyrics(this, variableValues);
 
             if (lyrics == null)
             {
-                lyricsReloaded.getLogger().info("No lyrics found.");
+                // lyricsReloaded.getLogger().info("No lyrics found.");
                 return null;
             }
 

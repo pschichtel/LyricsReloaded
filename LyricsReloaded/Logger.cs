@@ -21,6 +21,7 @@
 using System;
 using System.Text;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace CubeIsland.LyricsReloaded
 {
@@ -47,7 +48,16 @@ namespace CubeIsland.LyricsReloaded
                 writer = new StreamWriter(fileInfo.FullName, true, Encoding.UTF8);
                 writer.AutoFlush = false;
             }
-            writer.WriteLine(DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss") + " [" + type.ToUpper() + "] " + string.Format(message, args));
+			
+			// <additions> by Mayibongwe
+			string newLine = "";
+			if (type == "debug" && message.Contains("Lyrics request") == true)
+			{
+				newLine = Environment.NewLine;
+			}
+			// </additions>
+			
+			writer.WriteLine(DateTime.Now.ToString(newLine + "dd/MM/yyyy hh:mm:ss") + " [" + type.ToUpper() + "] " + string.Format(message, args));
             writer.Flush();
         }
 
@@ -63,8 +73,42 @@ namespace CubeIsland.LyricsReloaded
                 {}
             }
         }
-
-        public void debug(string message, params object[] args)
+		
+		// <additions> by Mayibongwe
+		public static void clearLog(string path)
+		{	
+			if(File.Exists(path))
+			{
+				string content = "";
+				int numMatches;
+				
+				using (StreamReader reader = File.OpenText(path))
+				{
+					content = reader.ReadToEnd();
+				}
+				
+				MatchCollection matches = Regex.Matches(content, @"version.*?started!");
+				numMatches = matches.Count;
+				
+				if(numMatches >= 10)
+				{
+					File.WriteAllText(path, "");
+				}
+			}
+		}
+		
+		public void success(string message, params object[] args)
+        {
+            write("success", message, args);
+        }
+		
+		public void fail(string message, params object[] args)
+        {
+            write("fail", message, args);
+        }
+		// </additions>
+		
+		public void debug(string message, params object[] args)
         {
             write("debug", message, args);
         }

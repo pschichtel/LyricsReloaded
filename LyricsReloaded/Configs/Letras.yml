@@ -1,0 +1,26 @@
+name: Letras
+loader: static
+
+variables:
+    artist:
+        type: artist
+        filters:
+        - lowercase
+        - [replace," ",-]
+        
+    title:
+        type: title
+        filters: artist
+
+config:
+    url: "https://www.letras.com/{artist}+/{title}"
+    pattern: ['<div class="lyric-original.*?<p>(?<lyrics>.*)', 's']
+
+post-filters:
+- [regex, '</p><p>', '<br/><br/>']
+- br2nl
+- [regex, '</p>  </div>[\s\S]*', '']
+- strip_html
+- utf8_encode
+- entity_decode
+- trim

@@ -44,6 +44,7 @@ namespace CubeIsland.LyricsReloaded
         private string defaultUserAgent;
         private WebProxy proxy;
         private bool down = false;
+		public readonly Settings showSource;
 
         public LyricsReloaded(string configurationPath)
         {
@@ -51,15 +52,37 @@ namespace CubeIsland.LyricsReloaded
             name = asm.GetName().Name;
             dataFolder = Path.Combine(configurationPath, name);
             Directory.CreateDirectory(dataFolder);
-            logger = new Logger(Path.Combine(dataFolder, name + ".log"));
+			
+			// <additions> by Mayibongwe
+			string logPath = getFilePath("Log.log");
+			string iniPath = getFilePath("Settings.ini");
+			
+			if (File.Exists(getFilePath(name + ".log")))
+			{
+				System.IO.File.Move(getFilePath(name + ".log"), logPath);
+			}
+			
+			if (File.Exists(getFilePath(name + ".ini")))
+			{
+				System.IO.File.Move(getFilePath(name + ".ini"), iniPath);
+			}
+			
+			showSource = new Settings("showSource", " enabled=\"false\"", " position=\"bottom\"", iniPath);
+			
+			Logger.clearLog(logPath);
+			// </additions>
+			
+			logger = new Logger(logPath);
 
             logger.info("{0} in version {1} started!", name, asm.GetName().Version.ToString());
 
             providerManager = new ProviderManager(this);
 
             providerManager.registerLoaderFactory(new StaticLoaderFactory(this));
+            providerManager.registerLoaderFactory(new SearchLoaderFactory(this));
+            providerManager.registerLoaderFactory(new apiLoaderFactory(this));
 
-            defaultUserAgent = "Firefox";
+            defaultUserAgent = "Chrome";
             proxy = null;
         }
 
@@ -67,8 +90,15 @@ namespace CubeIsland.LyricsReloaded
 		{
             shutdown();
         }
-
-        public Logger getLogger()
+		
+		// <addition> by Mayibongwe
+		public string getFilePath(string filename)
+		{
+			return Path.Combine(dataFolder, filename);
+		}
+		// </addition>
+		
+		public Logger getLogger()
         {
             return logger;
         }
@@ -105,34 +135,6 @@ namespace CubeIsland.LyricsReloaded
                 down = true;
                 providerManager.shutdown();
 				logger.close();
-            }
-        }
-
-        public void uninstall()
-        {
-            DirectoryInfo di = new DirectoryInfo(Path.Combine(dataFolder, FolderNames.PROVIDERS));
-
-            if (di.GetFiles("*.yml").Length <= 0)
-            {
-                try
-                {
-                    logger.debug("Removing the providers folder...");
-                    di.Delete(true);
-                }
-                catch (Exception e)
-                {
-                    logger.warn("Failed to remove provider folder: {0}", e.Message);
-                }                  
-            }
-
-            try
-            {
-                logger.debug("Removing the data folder...");
-                (new DirectoryInfo(Path.Combine(dataFolder, FolderNames.DATA))).Delete(true);
-            }
-            catch (Exception e)
-            {
-                logger.warn("Failed to remove provider folder: {0}", e.Message);
             }
         }
 
@@ -186,7 +188,7 @@ namespace CubeIsland.LyricsReloaded
         {
             loadDefaultConfiguration();
 
-            DirectoryInfo di = new DirectoryInfo(Path.Combine(dataFolder, FolderNames.PROVIDERS));
+            DirectoryInfo di = new DirectoryInfo(getFilePath(FolderNames.PROVIDERS));
             if (!di.Exists)
             {
                 try
@@ -228,7 +230,7 @@ namespace CubeIsland.LyricsReloaded
                 object value = propInfo.GetValue(null, null);
                 if (value is String)
                 {
-                    logger.debug("Loading config from field {0}", propInfo.Name);
+                    logger.debug("Loading config from default {0}", propInfo.Name);
                     providerManager.loadProvider(value as String);
                 }
             }

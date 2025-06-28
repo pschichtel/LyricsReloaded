@@ -1,4 +1,4 @@
-﻿/*
+/*
     Copyright 2013 Phillip Schichtel
 
     This file is part of LyricsReloaded.
@@ -56,13 +56,12 @@ namespace CubeIsland.LyricsReloaded.Provider.Loader
         public Lyrics getLyrics(Provider provider, Dictionary<string, string> variables)
         {
             string url = constructUrl(variables);
-
             lyricsReloaded.getLogger().debug("The constructed URL: {0}", url);
 
             try
             {
                 WebResponse response = client.get(url, provider.getHeaders());
-                String lyrics = pattern.apply(response.getContent());
+                String lyrics = pattern.apply(response.getContent(), "lyrics");
                 if (lyrics == null)
                 {
                     lyricsReloaded.getLogger().warn("The pattern {0} didn't match!", pattern);
@@ -165,14 +164,14 @@ namespace CubeIsland.LyricsReloaded.Provider.Loader
 
         public Pattern(string regex, string options)
             : this(new Regex(regex, DEFAULT_OPTIONS | regexOptionsFromString(options)))
-        { }
+        {}
 
-        public String apply(string content)
-        {
+        public String apply(string content, string returnGroup)
+        {	
             Match match = regex.Match(content);
             if (match.Success)
             {
-                return match.Groups["lyrics"].ToString();
+				return match.Groups[returnGroup].ToString();
             }
             return null;
         }
@@ -232,7 +231,7 @@ namespace CubeIsland.LyricsReloaded.Provider.Loader
             {
                 throw new InvalidConfigurationException("No pattern specified!");
             }
-
+			
             return new Regex(regex, options | regexOptionsFromString(regexOptions));
         }
 
@@ -277,6 +276,6 @@ namespace CubeIsland.LyricsReloaded.Provider.Loader
         {
             return regex.ToString();
         }
+		
     }
-
 }

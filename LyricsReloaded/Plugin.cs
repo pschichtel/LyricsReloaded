@@ -21,6 +21,7 @@
 using CubeIsland.LyricsReloaded;
 using CubeIsland.LyricsReloaded.Provider;
 using System;
+using System.IO;
 using System.Drawing;
 using System.Collections.Generic;
 using System.Net;
@@ -42,18 +43,18 @@ namespace MusicBeePlugin
             musicBee.Initialise(apiPtr);
 
             info.PluginInfoVersion = PluginInfoVersion;
-            info.Name = "Lyrics Reloaded";
-            info.Description = "Enhanced Lyrics Retrieval for MusicBee";
-            info.Author = "Created by Phillip Schichtel <Quick_Wango>, Maintained by Frank";
+            info.Name = "Lyrics Reloaded v1.2.3";
+            info.Description = "Manage providers at Tags (2) -> auto-tagging -> lyrics";
+            info.Author = "Created by Phillip Schichtel <Quick_Wango>, {Frank, Mayibongwe}";
             info.TargetApplication = "MusicBee";
             info.Type = PluginType.LyricsRetrieval;
             info.VersionMajor = 1;
-            info.VersionMinor = 1;
-            info.Revision = 11;
+            info.VersionMinor = 2;
+            info.Revision = 2;
             info.MinInterfaceVersion = 20;
             info.MinApiRevision = 25;
             info.ReceiveNotifications = ReceiveNotificationFlags.StartupOnly;
-            info.ConfigurationPanelHeight = 20;
+            info.ConfigurationPanelHeight = 27;
 
             try
             {
@@ -101,13 +102,13 @@ namespace MusicBeePlugin
                         lyricsReloaded.setProxy(proxy);
                     }
 
-                    lyricsReloaded.checkForNewVersion(newAvailable => {
-                        if (newAvailable)
-                        {
-                            MessageBox.Show("A new version is available!", "LyricsReloaded!");
-                        }
-                    });
-
+                /* 	lyricsReloaded.checkForNewVersion(newAvailable => {
+                  	if (newAvailable)
+                		{
+                      	MessageBox.Show("A new version is available!", "LyricsReloaded!");
+                		}
+					});
+				*/
                     break;
             }
         }
@@ -115,7 +116,7 @@ namespace MusicBeePlugin
         public void Close(PluginCloseReason reason)
         {
             //MessageBox.Show("Close(" + reason + ")");
-            lyricsReloaded.getLogger().info("Plugin disabled");
+            lyricsReloaded.getLogger().info("Plugin disabled" + Environment.NewLine);
             lyricsReloaded.shutdown();
             lyricsReloaded = null;
         }
@@ -135,7 +136,7 @@ namespace MusicBeePlugin
         }
 
         public String RetrieveLyrics(String source, String artist, String title, String album, bool preferSynced, String providerName)
-        {
+        {		
             lyricsReloaded.getLogger().debug("Lyrics request: {0} - {1} - {2} - {3}", artist, title, album, providerName);
             Provider provider = lyricsReloaded.getProviderManager().getProvider(providerName);
             if (provider == null)
@@ -148,48 +149,55 @@ namespace MusicBeePlugin
 
             if (String.IsNullOrWhiteSpace(lyrics))
             {
-                lyricsReloaded.getLogger().debug("no lyrics found from {0}", providerName);
+                lyricsReloaded.getLogger().fail("no lyrics found from {0}", providerName);
                 return null;
             }
-
-            lyricsReloaded.getLogger().debug("lyrics found from {0}!", providerName);
-
+			
+            lyricsReloaded.getLogger().success("lyrics found from {0}!", providerName);
+			
+			// <addition> by Mayibongwe
+			if (lyricsReloaded.showSource.IsSettingEnabled("state") == true)
+			{
+				if (lyricsReloaded.showSource.IsSettingEnabled("position") == true)
+				{
+					return lyrics = "Source: " + providerName + Environment.NewLine + Environment.NewLine + lyrics;
+				}
+				else
+				{	
+					return lyrics += Environment.NewLine + Environment.NewLine + "Source: " + providerName;
+				}
+			}
+			// </addition>
+			
             return lyrics;
         }
-
-        public void Uninstall()
-        {
-            lyricsReloaded.uninstall();
-        }
-
+		
+		// <addition> by Mayibongwe
         public bool Configure(IntPtr panelHandle)
         {
-            // save any persistent settings in a sub-folder of this path
-            string dataPath = musicBee.Setting_GetPersistentStoragePath();
-            // panelHandle will only be set if you set about.ConfigurationPanelHeight to a non-zero value
-            // keep in mind the panel width is scaled according to the font the user has selected
-            // if about.ConfigurationPanelHeight is set to 0, you can display your own popup window
             if (panelHandle != IntPtr.Zero)
             {
-                Panel configPanel = (Panel)Panel.FromHandle(panelHandle);
-                Label prompt = new Label();
-                prompt.AutoSize = true;
-                prompt.Location = new Point(0, 0);
-                prompt.Text = "Manage providers at Edit->Edit Preferences->Tags(2)->auto-tagging->lyrics:";
-               configPanel.Controls.AddRange(new Control[] {prompt});
+                lyricsReloaded.showSource.createPanel(panelHandle,(ComboBox)musicBee.MB_AddPanel(null, PluginPanelDock.ComboBox));
             }
-
-
+			
             return false;
         }
-
-        // called by MusicBee when the user clicks Apply or Save in the MusicBee Preferences screen.
-        // its up to you to figure out whether anything has changed and needs updating
+		
         public void SaveSettings()
         {
-            // save any persistent settings in a sub-folder of this path
-            string dataPath = musicBee.Setting_GetPersistentStoragePath();
+			lyricsReloaded.showSource.saveSettings();
         }
-
+		
+        public void Uninstall()
+        {
+            lyricsReloaded = null;
+			string dataFolder = Path.Combine(musicBee.Setting_GetPersistentStoragePath(), "mb_LyricsReloaded");
+			
+			if (Directory.Exists(dataFolder))
+			{
+				Directory.Delete(dataFolder, true);
+			}		
+        }
+		// </addition>
     }
 }
