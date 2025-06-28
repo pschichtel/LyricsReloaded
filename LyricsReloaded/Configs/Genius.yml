@@ -1,4 +1,5 @@
 ﻿name: Genius
+loader: static
 
 variables:
     artist:
@@ -13,13 +14,14 @@ variables:
         - [regex, '(?<=[a-z0-9%])[^\sa-z0-9%]+(?=[a-z0-9%]+)', "-"]
         - [regex, '((?<=\s)([^a-z0-9\s-])+(\s|\W)+)|((?<=\w)([^a-z0-9-])+(\s|\W)+)', " "]
         - [strip_nonascii, -]
+        
     title:
         type: title
         filters: artist
 
 config:
     url: "https://genius.com/{artist}-{title}-lyrics"
-    pattern: ['<div data-lyrics-container="true" class="Lyrics__Container-sc-1ynbvzw-.*?">(?<lyrics>.*)<div class="LyricsFooter__Container.*?">', 's']
+    pattern: ['<div data-lyrics-container="true" class="Lyrics-sc-1bcc94c6-1.*?">(?<lyrics>.*)<div class="LyricsFooter-sc-c3476ba7-0.*?">', 's']
 
 post-filters:
 - [regex, 'You might also like</div>', "\n"]
@@ -32,6 +34,5 @@ post-filters:
 - utf8_encode
 - entity_decode
 - clean_spaces
-- [regex, '\[.{1,75}\]', ""]
 - [regex, '\n{2,}',"\n\n", 's']
 - trim
