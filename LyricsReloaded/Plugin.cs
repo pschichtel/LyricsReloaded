@@ -43,14 +43,14 @@ namespace MusicBeePlugin
             musicBee.Initialise(apiPtr);
 
             info.PluginInfoVersion = PluginInfoVersion;
-            info.Name = "Lyrics Reloaded v1.2.5";
+            info.Name = "Lyrics Reloaded v1.2.6";
             info.Description = "Manage providers at Tags (2) -> auto-tagging -> lyrics";
             info.Author = "Created by Phillip Schichtel <Quick_Wango>, {Frank, Mayibongwe}";
             info.TargetApplication = "MusicBee";
             info.Type = PluginType.LyricsRetrieval;
             info.VersionMajor = 1;
             info.VersionMinor = 2;
-            info.Revision = 2;
+            info.Revision = 6;
             info.MinInterfaceVersion = 20;
             info.MinApiRevision = 25;
             info.ReceiveNotifications = ReceiveNotificationFlags.StartupOnly;

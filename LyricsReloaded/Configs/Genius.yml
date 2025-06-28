@@ -34,5 +34,7 @@ post-filters:
 - utf8_encode
 - entity_decode
 - clean_spaces
+- [regex, '\[.{1,75}\]', ""]
 - [regex, '\n{2,}',"\n\n", 's']
+- [regex, '\[(\[)',"$1", 's']
 - trim
